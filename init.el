@@ -269,6 +269,10 @@
 
 (setq switch-to-buffer-preserve-window-point nil)
 
+(when (linux-p)
+  (require 'uim)
+  (define-key global-map (kbd "C-'") 'uim-mode))
+
 ;;========================================
 ;; el-get(packages)
 ;;========================================
