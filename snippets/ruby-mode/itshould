@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: itshould
+# key: itshould
+# --
+it { should $0 }

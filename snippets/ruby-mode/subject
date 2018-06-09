@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: subject
+# key: subject
+# --
+subject { $0 }

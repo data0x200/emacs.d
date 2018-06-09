@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: itshouldnot
+# key: itshouldnot
+# --
+it { should_not $0 }

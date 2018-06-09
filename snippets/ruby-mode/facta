@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: facta
+# key: facta
+# binding: direct-keybinding
+# --
+FactoryBot.attributes_for(:$1)

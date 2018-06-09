@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: FactoryGirl.create
+# key: factc
+# --
+FactoryBot.create(:$0)

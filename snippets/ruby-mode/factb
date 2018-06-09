@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: factb
+# key: factb
+# binding: direct-keybinding
+# --
+FactoryBot.build(:$0)

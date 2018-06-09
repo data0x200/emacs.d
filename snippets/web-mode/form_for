@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: form_for
+# key: form_for
+# binding: direct-keybinding
+# --
+<%= form_for(${1:params}) do |f| %>
+  ${2:body}
+<% end %>

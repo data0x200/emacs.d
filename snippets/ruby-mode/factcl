@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: factcl
+# key: factcl
+# --
+FactoryBot.create_list(:$1, $2)

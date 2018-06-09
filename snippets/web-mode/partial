@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: partial
+# key: partial
+# binding: direct-keybinding
+# --
+<%= render partial: $1 %>

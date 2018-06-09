@@ -1,0 +1,7 @@
+/*
+!/.gitignore
+!/init.el
+!/config.d
+/config.d/*.elc
+!/Cask
+!/snippets
