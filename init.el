@@ -270,8 +270,15 @@
 (setq switch-to-buffer-preserve-window-point nil)
 
 (when (linux-p)
-  (require 'uim)
-  (define-key global-map (kbd "C-'") 'uim-mode))
+  (require 'uim-leim)
+  (setq default-input-method "japanese-skk-uim")
+  ;; Set UTF-8 as preferred character encoding (default is euc-jp).
+  (setq uim-lang-code-alist
+        (cons '("Japanese" "Japanese" utf-8 "UTF-8")
+              (delete (assoc "Japanese" uim-lang-code-alist)
+                      uim-lang-code-alist)))
+  (setq uim-default-im-prop '("action_skk_hiragana"))
+  (global-set-key (kbd "C-'") 'toggle-input-method))
 
 ;;========================================
 ;; el-get(packages)
