@@ -516,7 +516,9 @@
   (setq rust-format-on-save t))
 (el-get-bundle! racer
   (add-hook 'rust-mode-hook 'racer-mode)
-  (add-hook 'racer-mode-hook 'eldoc-mode))
+  (add-hook 'racer-mode-hook 'eldoc-mode)
+  (evil-define-key 'normal racer-mode-map (kbd "C-]")
+    'racer-find-definition))
 (el-get-bundle! flycheck-rust
   (with-eval-after-load 'rust-mode
     (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))

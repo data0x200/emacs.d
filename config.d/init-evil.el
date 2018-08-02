@@ -62,4 +62,4 @@
 ;; visual-map
 (define-key evil-visual-state-map (kbd ";") 'evil-ex)
 
-(define-key minibuffer-local-isearch-map (kbd "C-w") 'backward-kill-word)
+(define-key nil minibuffer-local-isearch-map (kbd "C-w") 'backward-kill-word)
