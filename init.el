@@ -518,7 +518,9 @@
   (add-hook 'rust-mode-hook 'racer-mode)
   (add-hook 'racer-mode-hook 'eldoc-mode)
   (evil-define-key 'normal racer-mode-map (kbd "C-]")
-    'racer-find-definition))
+    'racer-find-definition)
+  (evil-define-key 'normal racer-mode-map (kbd "C-o")
+    'pop-tag-mark))
 (el-get-bundle! flycheck-rust
   (with-eval-after-load 'rust-mode
     (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
