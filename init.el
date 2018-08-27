@@ -514,7 +514,7 @@
 
 (el-get-bundle! rust-mode
   (setq rust-format-on-save t))
-(el-get-bundle! racer
+(el-get-bundle! racer in emacs-racer
   (add-hook 'rust-mode-hook 'racer-mode)
   (add-hook 'racer-mode-hook 'eldoc-mode)
   (evil-define-key 'normal racer-mode-map (kbd "C-]")
@@ -608,7 +608,7 @@
       (add-to-list 'load-path golint-emacs)
       (require 'golint)))
   (let ((gocode-emacs-company (concat (getenv "GOPATH") "src/github.com/nsf/gocode/emacs-company")))
-    (when (file-exists-p gocode-emacs)
+    (when (file-exists-p gocode-emacs-company)
       (add-to-list 'load-path gocode-emacs-company)
       (when (require 'company-go nil t)
         (add-hook 'go-mode-hook (lambda()
@@ -821,7 +821,7 @@
  '(helm-projectile-sources-list
    (quote
     (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
- '(package-selected-packages (quote (robe racer))))
+ '(package-selected-packages (quote (robe))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
