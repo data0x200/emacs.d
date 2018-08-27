@@ -455,6 +455,8 @@
    '(company-tooltip-common-selection
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
+(el-get-bundle! tigersoldier/company-lsp
+  (push 'company-lsp company-backends))
 
 ;; Programming Language
 
@@ -521,9 +523,19 @@
     'racer-find-definition)
   (evil-define-key 'normal racer-mode-map (kbd "C-o")
     'pop-tag-mark))
-(el-get-bundle! flycheck-rust
-  (with-eval-after-load 'rust-mode
-    (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
+;; (el-get-bundle! flycheck-rust
+;;   (with-eval-after-load 'rust-mode
+;;     (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
+(el-get-bundle! emacs-lsp/lsp-mode)
+(el-get-bundle! emacs-lsp/lsp-rust
+  :depends (lsp-mode)
+  (with-eval-after-load 'lsp-mode
+    (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
+    (require 'lsp-rust)
+    (require 'lsp-imenu)
+    (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
+    (add-hook 'rust-mode-hook #'lsp-rust-enable)
+    (add-hook 'rust-mode-hook #'flycheck-mode)))
 (el-get-bundle! toml-mode)
 
 ;; Ruby
@@ -545,7 +557,6 @@
   (define-key ruby-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target)
   (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
 (el-get-bundle robe
-  (add-hook 'ruby-mode-hook 'robe-mode)
   (add-hook 'ruby-mode-hook (lambda()
                               (set (make-local-variable 'company-backends)
                                    '(company-robe company-yasnippet company-keywords company-dabbrev))
