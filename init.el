@@ -563,7 +563,7 @@
   (add-to-list 'auto-mode-alist '("\\.less$" . less-css-mode)))
 
 (el-get-bundle scss-mode
-  (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+  (add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
   (defun scss-hook ()
     (setq indent-tabs-mode nil)
     (setq css-basic-offset 2)
