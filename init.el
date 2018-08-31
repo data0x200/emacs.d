@@ -456,6 +456,7 @@
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle! tigersoldier/company-lsp
+  :denpends (company-mode lsp-mode)
   (push 'company-lsp company-backends))
 
 ;; Programming Language
@@ -523,9 +524,9 @@
     'racer-find-definition)
   (evil-define-key 'normal racer-mode-map (kbd "C-o")
     'pop-tag-mark))
-;; (el-get-bundle! flycheck-rust
-;;   (with-eval-after-load 'rust-mode
-;;     (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
+(el-get-bundle! flycheck-rust
+  (with-eval-after-load 'rust-mode
+    (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
 (el-get-bundle! emacs-lsp/lsp-mode)
 (el-get-bundle! emacs-lsp/lsp-rust
   :depends (lsp-mode)
