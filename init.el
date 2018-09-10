@@ -535,8 +535,8 @@
     (require 'lsp-rust)
     (require 'lsp-imenu)
     (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
-    (add-hook 'rust-mode-hook #'lsp-rust-enable)
-    (add-hook 'rust-mode-hook #'flycheck-mode)))
+    (add-hook 'rust-mode-hook 'lsp-rust-enable)
+    (add-hook 'rust-mode-hook 'flycheck-mode)))
 (el-get-bundle! toml-mode)
 
 ;; Ruby
