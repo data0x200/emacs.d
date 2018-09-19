@@ -456,7 +456,7 @@
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle! tigersoldier/company-lsp
-  :denpends (company-mode lsp-mode)
+  :denpends (company-mode emacs-lsp/lsp-mode)
   (push 'company-lsp company-backends))
 
 ;; Programming Language
@@ -558,6 +558,8 @@
   (define-key ruby-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target)
   (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
 (el-get-bundle robe
+  (evil-define-key 'normal robe-mode-map (kbd "C-]")
+    'robe-jump)
   (add-hook 'ruby-mode-hook (lambda()
                               (set (make-local-variable 'company-backends)
                                    '(company-robe company-yasnippet company-keywords company-dabbrev))
@@ -640,7 +642,7 @@
 
 
 ;;;; C
-(add-hook 'c-mode-hook '(lambda () (setq tab-width 4)))
+(add-hook 'c-mode-hook '(lambda () (setq tab-width 8)))
 
 ;;;; Gauche
 (setq scheme-program-name "gosh -i")
