@@ -335,9 +335,6 @@
   (add-hook 'c-mode-hook 'fci-mode))
 
 ;; Utility
-;;;; magit
-(el-get-bundle! magit)
-
 ;;;; popwin
 (el-get-bundle! popwin)
 
@@ -455,8 +452,10 @@
    '(company-tooltip-common-selection
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
+(el-get-bundle! lsp-mode in emacs-lsp/lsp-mode)
+(el-get-bundle! s)
 (el-get-bundle! tigersoldier/company-lsp
-  :denpends (company-mode emacs-lsp/lsp-mode)
+  :denpends (company-mode lsp-mode s)
   (push 'company-lsp company-backends))
 
 ;; Programming Language
@@ -518,6 +517,7 @@
 (el-get-bundle! rust-mode
   (setq rust-format-on-save t))
 (el-get-bundle! racer in emacs-racer
+  :depends (f pos-tip)
   (add-hook 'rust-mode-hook 'racer-mode)
   (add-hook 'racer-mode-hook 'eldoc-mode)
   (evil-define-key 'normal racer-mode-map (kbd "C-]")
