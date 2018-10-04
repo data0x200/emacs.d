@@ -614,6 +614,8 @@
   (setenv "GOPATH" (expand-file-name "~/"))
   (add-to-list 'auto-mode-alist '("\\.go" . go-mode))
   (add-hook 'before-save-hook 'gofmt-before-save)
+  (evil-define-key 'normal go-mode-map (kbd "C-]")
+    'godef-jump)
   (font-lock-add-keywords
    'go-mode
    '(("\\b\\(err\\)\\b" 1 '((:foreground "yellow") (:weight bold)) t)))

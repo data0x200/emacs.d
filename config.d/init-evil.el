@@ -58,6 +58,7 @@
 (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
 (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
 (define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line)
+(define-key evil-insert-state-map (kbd "C-x C-s") 'save-buffer)
 
 ;; visual-map
 (define-key evil-visual-state-map (kbd ";") 'evil-ex)
