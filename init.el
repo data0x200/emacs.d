@@ -269,17 +269,6 @@
 
 (setq switch-to-buffer-preserve-window-point nil)
 
-(when (linux-p)
-  (require 'uim-leim)
-  (setq default-input-method "japanese-skk-uim")
-  ;; Set UTF-8 as preferred character encoding (default is euc-jp).
-  (setq uim-lang-code-alist
-        (cons '("Japanese" "Japanese" utf-8 "UTF-8")
-              (delete (assoc "Japanese" uim-lang-code-alist)
-                      uim-lang-code-alist)))
-  (setq uim-default-im-prop '("action_skk_hiragana"))
-  (global-set-key (kbd "C-'") 'toggle-input-method))
-
 ;;========================================
 ;; el-get(packages)
 ;;========================================
@@ -307,6 +296,25 @@
     (exec-path-from-shell-copy-env "LANG")
     (exec-path-from-shell-copy-env "GOPATH")
     (exec-path-from-shell-copy-env "GOROOT")))
+
+;;;; input method
+(when (linux-p)
+  (require 'mozc)
+  (setq default-input-method "japanese-mozc")
+  (setq mozc-candidate-style 'overlay)
+  ;; (add-hook 'ibus-mode-hook
+  ;;           (lambda ()
+  ;;             (define-key mozc-mode-map (kbd "C-[") 'toggle-input-method)))
+
+  ;; (setq default-input-method "japanese-skk-uim")
+  ;; ;; Set UTF-8 as preferred character encoding (default is euc-jp).
+  ;; (setq uim-lang-code-alist
+  ;;       (cons '("Japanese" "Japanese" utf-8 "UTF-8")
+  ;;             (delete (assoc "Japanese" uim-lang-code-alist)
+  ;;                     uim-lang-code-alist)))
+  ;; (setq uim-default-im-prop '("action_skk_hiragana"))
+  (global-set-key (kbd "C-'") 'toggle-input-method)
+  )
 
 ;;;; theme
 (el-get-bundle hbin/molokai-theme

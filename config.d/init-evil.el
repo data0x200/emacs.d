@@ -12,8 +12,11 @@
 (defun evil-escape-or-quit (&optional prompt)
   (interactive)
   (cond
-   ((or (evil-normal-state-p) (evil-insert-state-p) (evil-visual-state-p)
-        (evil-replace-state-p) (evil-visual-state-p)) [escape])
+   ((or (evil-normal-state-p)
+        (evil-insert-state-p)
+        (evil-visual-state-p)
+        (evil-replace-state-p)
+        (evil-visual-state-p)) [escape])
    (t "C-g")))
 (define-key key-translation-map (kbd "C-[") 'evil-escape-or-quit)
 (define-key evil-operator-state-map (kbd "C-[") 'evil-escape-or-quit)
@@ -64,3 +67,10 @@
 (define-key evil-visual-state-map (kbd ";") 'evil-ex)
 
 (define-key minibuffer-local-isearch-map (kbd "C-w") 'backward-kill-word)
+
+(add-hook 'evil-insert-state-entry-hook
+          (lambda ()
+            (interactive)
+            (if current-input-method
+                (progn
+                  (deactivate-input-method)))))
