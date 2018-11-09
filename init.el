@@ -229,7 +229,7 @@
 
 ;; Indent Settings
 ;; Tabを使わず2文字のスペースを利用する
-(setq-default tab-width 2)
+(setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 
 ;; 改行コードを表示
