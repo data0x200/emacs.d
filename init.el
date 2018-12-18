@@ -712,8 +712,8 @@
 ;;;; PKGBUILD
 (add-to-list 'auto-mode-alist '("PKGBUILD$" . sh-mode))
 (defun sh-indent-hook ()
-  (sh-basic-offset 2)
-  (sh-indentation 2))
+  (setq sh-basic-offset 2)
+  (setq sh-indentation 2))
 (add-hook 'sh-mode-hook 'sh-indent-hook)
 
 
