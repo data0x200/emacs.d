@@ -598,7 +598,6 @@
   (yas-global-mode t))
 
 ;;;; Go
-
 (el-get-bundle go-mode
   (setenv "GOPATH" (expand-file-name "~/"))
   (add-to-list 'auto-mode-alist '("\\.go" . go-mode))
@@ -633,7 +632,10 @@
 
 
 ;;;; C
-(add-hook 'c-mode-hook '(lambda () (setq tab-width 8)))
+(el-get-bundle! clang-format
+  (add-hook 'before-save-hook (lambda ()
+                                (when (eq major-mode 'c-mode)
+                                  (clang-format-buffer)))))
 
 ;;;; Gauche
 (setq scheme-program-name "gosh -i")
