@@ -633,9 +633,17 @@
 
 ;;;; C
 (el-get-bundle! clang-format
-  (add-hook 'before-save-hook (lambda ()
-                                (when (eq major-mode 'c-mode)
-                                  (clang-format-buffer)))))
+  (defun my/clang-format ()
+    (interactive)
+    (when (eq major-mode 'c-mode)
+      (clang-format-buffer)))
+  (defun toggle-clang-format-hook ()
+    (interactive)
+    (cond ((memq 'my/clang-format before-save-hook)
+           (remove-hook 'before-save-hook 'my/clang-format))
+          (t
+           (add-hook 'before-save-hook 'my/clang-format))))
+  (add-hook 'before-save-hook 'my/clang-format))
 
 ;;;; Gauche
 (setq scheme-program-name "gosh -i")
