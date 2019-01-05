@@ -517,12 +517,11 @@
   (with-eval-after-load 'rust-mode
     (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
 (el-get-bundle! emacs-lsp/lsp-mode)
-(el-get-bundle! emacs-lsp/lsp-rust
+(el-get-bundle! data0x200/lsp-rust
   :depends (lsp-mode)
   (with-eval-after-load 'lsp-mode
     (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
     (require 'lsp-rust)
-    (require 'lsp-imenu)
     (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
     (add-hook 'rust-mode-hook 'lsp-rust-enable)
     (add-hook 'rust-mode-hook 'flycheck-mode)))
