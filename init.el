@@ -315,7 +315,7 @@
   (set-face-attribute 'hl-paren-face nil :weight 'bold))
 
 (el-get-bundle fill-column-indicator
-  (setq-default fci-rule-column 80)
+  (setq-default fci-rule-column 120)
   (add-hook 'coffee-mode-hook 'fci-mode)
   (add-hook 'emacs-lisp-mode-hook 'fci-mode)
   (add-hook 'common-lisp-mode-hook 'fci-mode)
@@ -529,7 +529,8 @@
 
 ;; Ruby
 (el-get-bundle! ruby-mode)
-(el-get-bundle! rubocop)
+(el-get-bundle! rubocop
+  (define-key ruby-mode-map (kbd "C-c C-e") 'rubocop-autocorrect-current-file))
 (el-get-bundle! emacsmirror/ruby-block
   (ruby-block-mode t))
 (el-get-bundle! ruby-electric

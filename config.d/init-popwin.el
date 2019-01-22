@@ -21,4 +21,4 @@
 ;; Scheme
 (push '"*scheme*" popwin:special-display-config)
 ;; Rubocop
-(push '("^\*RuboCop.*$" :stick t :dedicated t :regexp t :position :bottom :height 0.2) popwin:special-display-config)
+(push '("^\*RuboCop.*$" :dedicated t :regexp t :position :bottom :height 0.2) popwin:special-display-config)
