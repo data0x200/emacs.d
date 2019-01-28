@@ -396,7 +396,7 @@
 ;;;; flycheck
 (el-get-bundle! flycheck
   (add-hook 'after-init-hook 'global-flycheck-mode)
-  (setq flycheck-eslintrc ".eslintrc.js"))
+  (setq flycheck-eslintrc ".eslintrc"))
 
 ;;;; open-junk-file
 (el-get-bundle open-junk-file
