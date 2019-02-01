@@ -631,6 +631,8 @@
             (lambda ()
               (define-key racket-mode-map (kbd "C-c r") 'racket-run))))
 
+;;;; PHP
+(el-get-bundle php-mode)
 
 ;;;; C
 (el-get-bundle! clang-format
