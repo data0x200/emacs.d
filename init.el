@@ -441,7 +441,7 @@
   (define-key company-active-map (kbd "C-s") 'company-filter-candidates)
   ;; TABで候補を設定
   (define-key company-active-map (kbd "C-i") 'company-complete-selection)
-  (define-key company-active-map (kbd "TAB") 'company-complete-selection)
+  (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
   (define-key company-active-map (kbd "C-h") nil)
   (define-key company-active-map (kbd "C-w") nil)
 
@@ -535,11 +535,9 @@
 (el-get-bundle! flycheck-rust
   (with-eval-after-load 'rust-mode
     (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
-(el-get-bundle! emacs-lsp/lsp-mode)
 (el-get-bundle! data0x200/lsp-rust
   :depends (lsp-mode)
   (with-eval-after-load 'lsp-mode
-    (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
     (require 'lsp-rust)
     (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
     (add-hook 'rust-mode-hook 'lsp-rust-enable)
@@ -565,14 +563,8 @@
   (define-key ruby-mode-map (kbd "C-c C-.") 'rspec-verify-single)
   (define-key ruby-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target)
   (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
-(el-get-bundle robe
-  (evil-define-key 'normal robe-mode-map (kbd "C-]")
-    'robe-jump)
-  (add-hook 'ruby-mode-hook (lambda()
-                              (set (make-local-variable 'company-backends)
-                                   '(company-robe company-yasnippet company-keywords company-dabbrev))
-                              (robe-mode)
-                              (company-mode))))
+(el-get-bundle! eglot
+  (add-hook 'ruby-mode-hook 'eglot-ensure))
 
 ;;;; CSS
 (defun css-indent-hook()
@@ -652,6 +644,9 @@
 
 ;;;; PHP
 (el-get-bundle php-mode)
+
+;;;; Swift
+(el-get-bundle swift-mode)
 
 ;;;; C
 (el-get-bundle! clang-format
@@ -858,7 +853,7 @@
  '(helm-projectile-sources-list
    (quote
     (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
- '(package-selected-packages (quote (robe))))
+ '(package-selected-packages (quote (eglot))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
