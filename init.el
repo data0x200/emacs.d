@@ -314,7 +314,6 @@
 ;; Utility
 ;;; Org mode
 (define-key ctrl-q-map (kbd "C-m") 'org-capture)
-
 (setq org-capture-templates
       '(("m"
          "✍ Memo"
@@ -327,10 +326,30 @@
          (file+headline "~/.memo/memo.org" "TODOs")
          "* TODO %?")))
 (setq org-agenda-files '("~/.memo/memo.org"))
+(define-key ctrl-q-map (kbd "a") 'org-agenda)
 
 (el-get-bundle org-pomodoro
   (when (require 'org-agenda nil t)
-    (define-key org-agenda-mode-map (kbd "p") 'org-pomodoro)))
+    (define-key org-agenda-mode-map (kbd "p") 'org-pomodoro))
+  (add-hook 'org-pomodoro-started-hook (lambda () (org-pomodoro-notify
+                                                   "Start org-pomodoro"
+                                                   "Let's focus for 25 minutes!")))
+  (add-hook 'org-pomodoro-finished-hook (lambda () (notifications-notify
+                                                    "Finish org-pomodoro"
+                                                    "Well done! Take a break."))))
+
+;;;; Highlight Indent Guides
+(el-get-bundle! highlight-indent-guides in highlight-indentation-guides
+  (setq highlight-indent-guides-auto-enabled t)
+  (setq highlight-indent-guides-responsive t)
+  (setq highlight-indent-guides-method 'character)
+  (setq highlight-indent-guides-character ?\|)
+  (add-hook 'yaml-mode-hook 'highlight-indent-guides-mode))
+
+;;;; beacon
+(el-get-bundle! beacon
+  (setq beacon-color "yellow")
+  (beacon-mode t))
 
 ;;;; popwin
 (el-get-bundle! popwin)
@@ -449,10 +468,11 @@
    '(company-tooltip-common-selection
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
-(el-get-bundle! lsp-mode in emacs-lsp/lsp-mode)
-(el-get-bundle! s)
+(el-get-bundle! lsp-mode)
+(el-get-bundle! lsp-ui
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 (el-get-bundle! tigersoldier/company-lsp
-  :denpends (company-mode lsp-mode s)
+  :depends (company-mode lsp-mode s)
   (push 'company-lsp company-backends))
 
 ;; Programming Language
@@ -552,8 +572,6 @@
   (define-key ruby-mode-map (kbd "C-c C-.") 'rspec-verify-single)
   (define-key ruby-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target)
   (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
-(el-get-bundle! eglot
-  (add-hook 'ruby-mode-hook 'eglot-ensure))
 
 ;;;; CSS
 (defun css-indent-hook()
@@ -591,7 +609,8 @@
 
 ;;;; YAML
 (el-get-bundle yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
+  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)))
 
 ;;;; Yasnippet
 (el-get-bundle! yasnippet
