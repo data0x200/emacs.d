@@ -420,9 +420,14 @@
   (define-key git-gutter-map (kbd "C-a") 'git-gutter:stage-hunk))
 (el-get-bundle! git-gutter-fringe)
 
+;;;; flymake
+(el-get-bundle! meqif/flymake-diagnostic-at-point
+  :features (flymake-diagnostic-at-point)
+  :depends (popup)
+  (add-hook 'flymake-mode-hook 'flymake-diagnostic-at-point-mode))
+
 ;;;; flycheck
 (el-get-bundle! flycheck
-  (add-hook 'after-init-hook 'global-flycheck-mode)
   (setq flycheck-eslintrc ".eslintrc"))
 
 ;;;; open-junk-file
