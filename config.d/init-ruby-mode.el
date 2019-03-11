@@ -22,7 +22,6 @@
 (add-hook 'ruby-mode-hook
           (lambda ()
             (progn
-              (lsp)
               (setq ruby-deep-indent-paren nil)
               (setq ruby-deep-indent-paren-style t)
               (make-local-variable 'ac-ignore-case)
