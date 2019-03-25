@@ -39,3 +39,4 @@
 (define-key ctrl-q-map (kbd "ho") 'helm-semantic-or-imenu)
 (define-key ctrl-q-map (kbd "C-f") 'helm-find-files)
 (define-key ctrl-q-map (kbd "hf") 'helm-find-files)
+(define-key ctrl-q-map (kbd "G") 'helm-google-suggest)

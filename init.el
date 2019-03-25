@@ -338,6 +338,13 @@
                                                     "Finish org-pomodoro"
                                                     "Well done! Take a break."))))
 
+;;;; google translate
+(el-get-bundle! google-translate
+  (custom-set-variables
+   '(google-translate-default-source-language "en")
+   '(google-translate-default-target-language "ja"))
+  (define-key ctrl-q-map (kbd "t") 'google-translate-at-point))
+
 ;;;; Highlight Indent Guides
 (el-get-bundle! highlight-indent-guides in highlight-indentation-guides
   (setq highlight-indent-guides-auto-enabled t)

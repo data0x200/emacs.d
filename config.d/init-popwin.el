@@ -1,7 +1,7 @@
 ;; ========================================
 ;; popwin
 ;; ========================================
-(popwin-mode 1)
+(popwin-mode t)
 (setq popwin:popup-window-height 30)
 (setq popwin:popup-window-width 100)
 (setq popwin:popup-window-position 'bottom)
@@ -22,3 +22,5 @@
 (push '"*scheme*" popwin:special-display-config)
 ;; Rubocop
 (push '("^\*RuboCop.*$" :dedicated t :regexp t :position :bottom :height 0.2) popwin:special-display-config)
+;; Google Translate
+(push '("*Google Translate" :position :right) popwin:special-display-config)
