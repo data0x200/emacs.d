@@ -435,7 +435,10 @@
 
 ;;;; flycheck
 (el-get-bundle! flycheck
-  (setq flycheck-eslintrc ".eslintrc"))
+  (setq flycheck-eslintrc ".eslintrc")
+  (add-hook 'ruby-mode-hook (lambda ()
+                              (setq flycheck-checker 'ruby-rubocop)
+                              (flycheck-mode t))))
 
 ;;;; open-junk-file
 (el-get-bundle open-junk-file
@@ -801,10 +804,21 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(google-translate-default-source-language "en")
+ '(google-translate-default-target-language "ja")
  '(helm-projectile-sources-list
    (quote
     (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
- '(package-selected-packages (quote (eglot))))
+ '(package-selected-packages (quote (eglot)))
+ '(safe-local-variable-values
+   (quote
+    ((eval setq-local flycheck-command-wrapper-function
+           (lambda
+             (command)
+             (append
+              (quote
+               ("bundle" "exec"))
+              command)))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
