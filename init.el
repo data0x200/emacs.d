@@ -546,27 +546,8 @@
 
 ;;;; Rust
 
-(el-get-bundle! rust-mode
-  (setq rust-format-on-save t))
-(el-get-bundle! racer in emacs-racer
-  :depends (f pos-tip)
-  (add-hook 'rust-mode-hook 'racer-mode)
-  (add-hook 'racer-mode-hook 'eldoc-mode)
-  (evil-define-key 'normal racer-mode-map (kbd "C-]")
-    'racer-find-definition)
-  (evil-define-key 'normal racer-mode-map (kbd "C-o")
-    'pop-tag-mark))
-(el-get-bundle! flycheck-rust
-  (with-eval-after-load 'rust-mode
-    (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
-(el-get-bundle! data0x200/lsp-rust
-  :depends (lsp-mode)
-  (with-eval-after-load 'lsp-mode
-    (require 'lsp-rust)
-    (add-hook 'lsp-after-open-hook 'lsp-enable-imenu)
-    (add-hook 'rust-mode-hook 'lsp-rust-enable)
-    (add-hook 'rust-mode-hook 'flycheck-mode)))
-(el-get-bundle! toml-mode)
+(el-get-bundle elpa:rustic)
+(el-get-bundle toml-mode)
 
 ;; Ruby
 (el-get-bundle! ruby-mode)
@@ -809,7 +790,7 @@
  '(helm-projectile-sources-list
    (quote
     (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
- '(package-selected-packages (quote (eglot)))
+ '(package-selected-packages (quote (rustic eglot)))
  '(safe-local-variable-values
    (quote
     ((eval setq-local flycheck-command-wrapper-function
