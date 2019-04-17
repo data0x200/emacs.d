@@ -485,6 +485,7 @@
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle! lsp-mode)
 (el-get-bundle! lsp-ui
+  (add-hook 'rust-mode-hook 'lsp)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 (el-get-bundle! tigersoldier/company-lsp
   :depends (company-mode lsp-mode s)
@@ -546,7 +547,11 @@
 
 ;;;; Rust
 
-(el-get-bundle elpa:rustic)
+(el-get-bundle! rust-mode
+  (setq rust-format-on-save t))
+(el-get-bundle! flycheck-rust
+  (with-eval-after-load 'rust-mode
+    (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
 (el-get-bundle toml-mode)
 
 ;; Ruby
@@ -790,7 +795,7 @@
  '(helm-projectile-sources-list
    (quote
     (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
- '(package-selected-packages (quote (rustic eglot)))
+ '(package-selected-packages (quote (eglot)))
  '(safe-local-variable-values
    (quote
     ((eval setq-local flycheck-command-wrapper-function
