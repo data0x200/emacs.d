@@ -483,12 +483,12 @@
    '(company-tooltip-common-selection
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
-(el-get-bundle! lsp-mode)
-(el-get-bundle! lsp-ui
+(el-get-bundle lsp-mode)
+(el-get-bundle lsp-ui
   (add-hook 'rust-mode-hook 'lsp)
   (add-hook 'php-mode-hook 'lsp)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-(el-get-bundle! tigersoldier/company-lsp
+(el-get-bundle tigersoldier/company-lsp
   :depends (company-mode lsp-mode s)
   (push 'company-lsp company-backends))
 
