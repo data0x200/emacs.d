@@ -328,16 +328,6 @@
 (setq org-agenda-files '("~/.memo/memo.org"))
 (define-key ctrl-q-map (kbd "a") 'org-agenda)
 
-(el-get-bundle org-pomodoro
-  (when (require 'org-agenda nil t)
-    (define-key org-agenda-mode-map (kbd "p") 'org-pomodoro))
-  (add-hook 'org-pomodoro-started-hook (lambda () (org-pomodoro-notify
-                                                   "Start org-pomodoro"
-                                                   "Let's focus for 25 minutes!")))
-  (add-hook 'org-pomodoro-finished-hook (lambda () (notifications-notify
-                                                    "Finish org-pomodoro"
-                                                    "Well done! Take a break."))))
-
 ;;;; google translate
 (el-get-bundle! google-translate
   (custom-set-variables
