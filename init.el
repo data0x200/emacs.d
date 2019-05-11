@@ -518,9 +518,7 @@
   (add-hook 'web-mode-hook '(lambda ()
                               (enable-minor-mode
                                '("\\.jsx?\\'" . prettier-js-mode)))))
-(el-get-bundle json-mode
-  (add-to-list 'auto-mode-alist '("\\.json$" . json-mode)))
-(el-get-bundle! coffee-mode
+(el-get-bundle coffee-mode
   (when (require 'quickrun nil t )
     (define-key coffee-mode-map (kbd "C-q C-q") 'quickrun-compile-only))
   (add-to-list 'auto-mode-alist '("\\.cjsx$" . coffee-mode)))
@@ -590,6 +588,7 @@
   (add-to-list 'auto-mode-alist '("\\.es6$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.js[x]?$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tag$" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
   (add-hook 'web-mode-hook (lambda ()
                              (setq web-mode-enable-auto-quoting nil)
                              (setq web-mode-auto-close-style 1)
