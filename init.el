@@ -304,7 +304,6 @@
 
 (el-get-bundle fill-column-indicator
   (setq-default fci-rule-column 120)
-  (add-hook 'coffee-mode-hook 'fci-mode)
   (add-hook 'emacs-lisp-mode-hook 'fci-mode)
   (add-hook 'common-lisp-mode-hook 'fci-mode)
   (add-hook 'lisp-mode-hook 'fci-mode)
@@ -518,10 +517,6 @@
   (add-hook 'web-mode-hook '(lambda ()
                               (enable-minor-mode
                                '("\\.jsx?\\'" . prettier-js-mode)))))
-(el-get-bundle coffee-mode
-  (when (require 'quickrun nil t )
-    (define-key coffee-mode-map (kbd "C-q C-q") 'quickrun-compile-only))
-  (add-to-list 'auto-mode-alist '("\\.cjsx$" . coffee-mode)))
 
 ;;;; Lua
 
