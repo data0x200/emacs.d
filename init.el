@@ -579,8 +579,9 @@
 
 (el-get-bundle web-mode
   (add-to-list 'auto-mode-alist '("\\.erb$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.es6$" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.hbs$" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.js[x]?$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tag$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
