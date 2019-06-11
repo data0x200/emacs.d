@@ -259,11 +259,6 @@
 ;;========================================
 
 ;; General
-;;;; Load config files
-(when load-file-name
-  (setq user-emacs-directory (file-name-directory load-file-name)))
-(setq el-get-user-package-directory (locate-user-emacs-file "config.d"))
-
 ;;;; el-get
 (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
 (unless (require 'el-get nil 'noerror)
@@ -347,8 +342,35 @@
   (setq beacon-color "yellow")
   (beacon-mode t))
 
-;;;; popwin
-(el-get-bundle! popwin)
+;; ========================================
+;; popwin
+;; ========================================
+(el-get-bundle! popwin
+  (popwin-mode t)
+  (setq popwin:popup-window-height 30)
+  (setq popwin:popup-window-width 100)
+  (setq popwin:popup-window-position 'bottom)
+  (setq popwin:close-popup-window-timer-interval 1.0)
+
+  (global-set-key (kbd "C-c") popwin:keymap)
+
+  (setq helm-samewindow nil)
+  (push '("*quickrun*" :position :right) popwin:special-display-config)
+  (push '("*compilation*" :position :right) popwin:special-display-config)
+  (push '(" *auto-async-byte-compile*") popwin:special-display-config)
+  (push '("*git now*") popwin:special-display-config)
+  (push '("*git-gutter+-diff*") popwin:special-display-config)
+  ;; (push '("^\*helm .+\*$" :regexp t :position :right) popwin:special-display-config)
+  ;; Sly
+  (push 'mrepl-mode popwin:special-display-config)
+  ;; Scheme
+  (push '"*scheme*" popwin:special-display-config)
+  ;; Rubocop
+  (push '("^\*RuboCop.*$" :dedicated t :regexp t :position :bottom :height 0.2) popwin:special-display-config)
+  ;; Google Translate
+  (push '("*Google Translate" :position :right) popwin:special-display-config)
+  ;; Rust
+  (push '("*rustfmt*" :position :right) popwin:special-display-config))
 
 ;;;; quicrun
 (el-get-bundle quickrun
@@ -362,7 +384,9 @@
   (set-face-background 'elscreen-tab-other-screen-face "gray40")
   (elscreen-start))
 
-;;;; evil
+;;========================================
+;; evil
+;;========================================
 (el-get-bundle evil
   :before (setq evil-want-C-u-scroll t
                 evil-want-C-i-jump t
@@ -370,7 +394,83 @@
                 evil-ex-search-vim-style-regexp t
                 evil-esc-delay 0
                 evil-bigword "^ \_\t\r\n"
-                evil-ex-complete-emacs-commands t))
+                evil-ex-complete-emacs-commands t)
+
+  (evil-mode 1)
+  (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
+  (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
+
+  ;; global-config
+  (setq-default evil-shift-width 2)
+
+  ;; esc quits
+  (defun evil-escape-or-quit (&optional prompt)
+    (interactive)
+    (cond
+     ((or (evil-normal-state-p)
+          (evil-insert-state-p)
+          (evil-visual-state-p)
+          (evil-replace-state-p)
+          (evil-visual-state-p)) [escape])
+     (t "C-g")))
+  (define-key key-translation-map (kbd "C-[") 'evil-escape-or-quit)
+  (define-key evil-operator-state-map (kbd "C-[") 'evil-escape-or-quit)
+  (define-key evil-normal-state-map [escape] 'keyboard-quit)
+  (define-key evil-insert-state-map (kbd "C-[") [escape])
+
+  (define-key minibuffer-local-map (kbd "C-[") 'keyboard-quit)
+  (define-key minibuffer-local-ns-map (kbd "C-[") 'keyboard-quit)
+  (define-key minibuffer-local-completion-map (kbd "C-[") [escape])
+  (define-key minibuffer-local-must-match-map (kbd "C-[") [escape])
+  (define-key minibuffer-local-isearch-map (kbd "C-[") [escape])
+
+  (define-key minibuffer-local-map [escape] 'keyboard-quit)
+  (define-key minibuffer-local-ns-map [escape] 'keyboard-quit)
+  (define-key minibuffer-local-completion-map [escape] 'keyboard-quit)
+  (define-key minibuffer-local-must-match-map [escape] 'keyboard-quit)
+  (define-key minibuffer-local-isearch-map [escape] 'keyboard-quit)
+
+  (define-key isearch-mode-map (kbd "C-w") 'backward-kill-word)
+
+  ;; key mappings
+  ;; normal map
+  (define-key evil-normal-state-map (kbd "C-p") 'previous-line)
+  (define-key evil-normal-state-map (kbd "C-n") 'next-line)
+  (define-key evil-normal-state-map (kbd ";") nil)
+  (define-key evil-normal-state-map (kbd ";") 'evil-ex)
+  (define-key evil-normal-state-map (kbd "C-h") 'help)
+  (define-key evil-normal-state-map (kbd "C-q C-t") 'toggle-cleanup-spaces)
+  (define-key evil-normal-state-map (kbd "SPC") ctrl-q-map)
+  (eval-after-load 'helm
+    '(progn
+       (define-key evil-normal-state-map "\C-a\C-x" 'helm-M-x)
+       (define-key evil-normal-state-map "\C-a\C-a" 'helm-for-files)
+       (define-key evil-normal-state-map "\C-a\C-b" 'helm-buffers-list)
+       (define-key evil-normal-state-map "\C-a\C-o" 'helm-imenu)
+       (define-key evil-normal-state-map "\C-a\C-g" 'helm-ls-git-ls)))
+
+  ;; insert map
+  (define-key evil-insert-state-map (kbd "C-d") nil)
+  (define-key evil-insert-state-map (kbd "C-p") nil)
+  (define-key evil-insert-state-map (kbd "C-n") nil)
+  (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
+  (define-key evil-insert-state-map (kbd "C-k") 'kill-line)
+  (define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line)
+  (define-key evil-insert-state-map (kbd "C-x C-s") 'save-buffer)
+
+  ;; visual-map
+  (define-key evil-visual-state-map (kbd ";") 'evil-ex)
+
+  (define-key minibuffer-local-isearch-map (kbd "C-w") 'backward-kill-word)
+
+  (add-hook 'evil-insert-state-entry-hook
+            (lambda ()
+              (interactive)
+              (if current-input-method
+                  (progn
+                    (deactivate-input-method)))))
+  (eval-after-load 'company-mode
+    (define-key evil-insert-state-map (kbd "C-i") 'company-complete)))
 (el-get-bundle! evil-leader
   (evil-leader/set-leader (kbd "\\"))
   (evil-leader/set-key
@@ -399,12 +499,69 @@
   :depends mode-line-color)
 
 ;;;; helm
-(el-get-bundle helm)
+;;========================================
+;; Helm
+;;========================================
+(el-get-bundle helm
+  ;; 候補を表示するまでの時間
+  ;; default 0.5
+  (setq helm-idle-delay 0.1)
+  ;; 候補の最大表示数
+  ;; default 50
+  (setq helm-candidate-number-limit 100)
+  ;; 候補が多いときの体感速度を早める
+  ;; チカチカしないようにする
+  (setq helm-quick-update nil)
+
+  (setq helm-split-window-default-side 'right)
+
+  ;; key mapping
+  (eval-after-load 'helm
+    '(progn
+       (define-key helm-map (kbd "C-h") 'delete-backward-char)
+       (define-key helm-map (kbd "C-w") 'backward-kill-word)
+       (define-key helm-map (kbd "C-v") 'helm-next-source)
+       (define-key helm-map (kbd "M-v") 'helm-previous-source)))
+  (eval-after-load 'helm-files
+    '(progn
+       (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
+       (define-key helm-find-files-map (kbd "C-w") 'helm-find-files-up-one-level)
+       (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)))
+
+  ;; key mapping
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (define-key ctrl-q-map (kbd "C-x") 'helm-M-x)
+  (define-key ctrl-q-map (kbd "hx") 'helm-M-x)
+  (define-key ctrl-q-map (kbd "C-a") 'helm-mini)
+  (define-key ctrl-q-map (kbd "ha") 'helm-mini)
+  (define-key ctrl-q-map (kbd "g g") 'helm-git-grep-at-point)
+  (define-key ctrl-q-map (kbd "g G") 'helm-git-grep)
+  (define-key ctrl-q-map (kbd "C-o") 'helm-semantic-or-imenu)
+  (define-key ctrl-q-map (kbd "ho") 'helm-semantic-or-imenu)
+  (define-key ctrl-q-map (kbd "C-f") 'helm-find-files)
+  (define-key ctrl-q-map (kbd "hf") 'helm-find-files)
+  (define-key ctrl-q-map (kbd "G") 'helm-google-suggest))
+
 (el-get-bundle helm-git-grep)
 (el-get-bundle helm-ghq)
 (el-get-bundle projectile)
 (el-get-bundle helm-projectile
-  :depends (helm projectile))
+  :depends (helm projectile)
+  (define-key ctrl-q-map (kbd "C-g") 'helm-projectile)
+  (define-key ctrl-q-map (kbd "h g") 'helm-projectile)
+  (define-key ctrl-q-map (kbd "h t") 'helm-projectile)
+  (define-key ctrl-q-map (kbd "g r") 'helm-projectile)
+
+  (eval-after-load 'helm
+    '(progn
+       (require 'helm-locate)
+       (define-key helm-generic-files-map (kbd "C-w") 'backward-kill-word)))
+  (projectile-mode)
+
+  (custom-set-variables
+   '(helm-projectile-sources-list '(helm-source-projectile-buffers-list
+                                    helm-source-projectile-recentf-list
+                                    helm-source-projectile-files-list))))
 
 ;;;; git
 (el-get-bundle git-gutter
@@ -539,7 +696,36 @@
 (el-get-bundle toml-mode)
 
 ;; Ruby
-(el-get-bundle! ruby-mode)
+(el-get-bundle! ruby-mode
+
+  (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("Berksfile" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("config.ru" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.gemspec" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.json.jbuilder" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.json.ruby" . ruby-mode))
+  (add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode))
+  (defun toggle-ruby-mode-set-encoding ()
+    "set-encoding ruby-mode"
+    (interactive)
+    (setq ruby-insert-encoding-magic-comment (if ruby-insert-encoding-magic-comment nil t)))
+  (define-key ruby-mode-map "\C-ce" 'toggle-ruby-mode-set-encoding)
+  (setq ruby-insert-encoding-magic-comment nil)
+
+  ;;========================================
+  ;; Hooks
+  ;;========================================
+  (add-hook 'ruby-mode-hook
+            (lambda ()
+              (progn
+                (lsp)
+                (setq ruby-deep-indent-paren nil)
+                (setq ruby-deep-indent-paren-style t)
+                (setq ruby-insert-encoding-magic-comment nil)))))
 (el-get-bundle! rubocop
   (define-key ruby-mode-map (kbd "C-c C-e") 'rubocop-autocorrect-current-file))
 (el-get-bundle! emacsmirror/ruby-block
