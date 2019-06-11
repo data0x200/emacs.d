@@ -74,3 +74,4 @@
             (if current-input-method
                 (progn
                   (deactivate-input-method)))))
+(define-key evil-insert-state-map (kbd "C-i") 'company-complete)
