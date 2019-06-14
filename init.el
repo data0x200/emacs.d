@@ -574,6 +574,7 @@
 (el-get-bundle! git-gutter-fringe)
 
 ;;;; flymake
+(el-get-bundle flymake-easy)
 (el-get-bundle! meqif/flymake-diagnostic-at-point
   :features (flymake-diagnostic-at-point)
   :depends (popup)
@@ -683,6 +684,7 @@
 
 (el-get-bundle rust-mode
   (setq rust-format-on-save t))
+(el-get-bundle flymake-rust)
 (el-get-bundle toml-mode)
 
 ;; Ruby
@@ -735,14 +737,13 @@
   (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
 
 ;;;; CSS
+(el-get-bundle flymake-eslint)
+
 (defun css-indent-hook()
   (setq indent-tabs-mode nil)
   (setq css-basic-offset 2)
   (setq css-indent-offset 2))
 (add-hook 'css-mode-hook 'css-indent-hook)
-
-(el-get-bundle less-css-mode
-  (add-to-list 'auto-mode-alist '("\\.less$" . less-css-mode)))
 
 (el-get-bundle scss-mode
   (add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
@@ -767,8 +768,7 @@
                              (setq web-mode-markup-indent-offset 2)
                              (setq web-mode-code-indent-offset 2)
                              (setq web-mode-css-indent-offset 2)
-                             (when (or (equal web-mode-content-type "jsx") (equal web-mode-content-type "js"))
-                               (flycheck-add-mode 'javascript-eslint 'web-mode)))))
+                             (flymake-eslint-enable))))
 
 ;;;; YAML
 (el-get-bundle yaml-mode
@@ -957,7 +957,7 @@
  '(helm-projectile-sources-list
    (quote
     (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
- '(package-selected-packages (quote (eglot)))
+ '(package-selected-packages (quote (flymake-eslint flymake-rust eglot)))
  '(safe-local-variable-values
    (quote
     ((eval setq-local flycheck-command-wrapper-function
