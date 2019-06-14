@@ -573,13 +573,6 @@
   (define-key git-gutter-map (kbd "C-a") 'git-gutter:stage-hunk))
 (el-get-bundle! git-gutter-fringe)
 
-;;;; flymake
-(el-get-bundle flymake-easy)
-(el-get-bundle! meqif/flymake-diagnostic-at-point
-  :features (flymake-diagnostic-at-point)
-  :depends (popup)
-  (add-hook 'flymake-mode-hook 'flymake-diagnostic-at-point-mode))
-
 ;;;; open-junk-file
 (el-get-bundle open-junk-file
   (setq open-junk-file-format "~/.memo/junk/%Y-%m-%d-%H%M%S."))
@@ -684,7 +677,6 @@
 
 (el-get-bundle rust-mode
   (setq rust-format-on-save t))
-(el-get-bundle flymake-rust)
 (el-get-bundle toml-mode)
 
 ;; Ruby
@@ -737,8 +729,6 @@
   (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
 
 ;;;; CSS
-(el-get-bundle flymake-eslint)
-
 (defun css-indent-hook()
   (setq indent-tabs-mode nil)
   (setq css-basic-offset 2)
@@ -767,8 +757,7 @@
                              (setq web-mode-auto-close-style 1)
                              (setq web-mode-markup-indent-offset 2)
                              (setq web-mode-code-indent-offset 2)
-                             (setq web-mode-css-indent-offset 2)
-                             (flymake-eslint-enable))))
+                             (setq web-mode-css-indent-offset 2))))
 
 ;;;; YAML
 (el-get-bundle yaml-mode
@@ -957,16 +946,7 @@
  '(helm-projectile-sources-list
    (quote
     (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
- '(package-selected-packages (quote (flymake-eslint flymake-rust eglot)))
- '(safe-local-variable-values
-   (quote
-    ((eval setq-local flycheck-command-wrapper-function
-           (lambda
-             (command)
-             (append
-              (quote
-               ("bundle" "exec"))
-              command)))))))
+ '(package-selected-packages (quote (flymake-eslint flymake-rust eglot))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
