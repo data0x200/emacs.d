@@ -579,13 +579,6 @@
   :depends (popup)
   (add-hook 'flymake-mode-hook 'flymake-diagnostic-at-point-mode))
 
-;;;; flycheck
-(el-get-bundle! flycheck
-  (setq flycheck-eslintrc ".eslintrc")
-  (add-hook 'ruby-mode-hook (lambda ()
-                              (setq flycheck-checker 'ruby-rubocop)
-                              (flycheck-mode t))))
-
 ;;;; open-junk-file
 (el-get-bundle open-junk-file
   (setq open-junk-file-format "~/.memo/junk/%Y-%m-%d-%H%M%S."))
@@ -688,11 +681,8 @@
 
 ;;;; Rust
 
-(el-get-bundle! rust-mode
+(el-get-bundle rust-mode
   (setq rust-format-on-save t))
-(el-get-bundle! flycheck-rust
-  (with-eval-after-load 'rust-mode
-    (add-hook 'flycheck-mode-hook 'flycheck-rust-setup)))
 (el-get-bundle toml-mode)
 
 ;; Ruby
