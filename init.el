@@ -342,6 +342,9 @@
   (setq beacon-color "yellow")
   (beacon-mode t))
 
+;;;; twittering-mode
+(el-get-bundle twittering-mode)
+
 ;; ========================================
 ;; popwin
 ;; ========================================
