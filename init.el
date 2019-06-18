@@ -576,6 +576,12 @@
   (define-key git-gutter-map (kbd "C-a") 'git-gutter:stage-hunk))
 (el-get-bundle! git-gutter-fringe)
 
+;;;; flymake
+(el-get-bundle! meqif/flymake-diagnostic-at-point
+  :features (flymake-diagnostic-at-point)
+  :depends (popup)
+  (add-hook 'flymake-mode-hook 'flymake-diagnostic-at-point-mode))
+
 ;;;; open-junk-file
 (el-get-bundle open-junk-file
   (setq open-junk-file-format "~/.memo/junk/%Y-%m-%d-%H%M%S."))
