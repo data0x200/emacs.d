@@ -268,6 +268,9 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
+;;;; config.d
+(add-to-list 'load-path (locate-user-emacs-file "config.d"))
+
 ;;;; exec-path-from-shell
 (el-get-bundle! exec-path-from-shell
   (when (memq window-system '(mac ns x))
@@ -859,25 +862,17 @@
 ;; 調整用
 ;; | 数字 | アルファベット | 日本語     |
 ;; | 0123 | abcdefghijklmn | こんにちは |
+(setq-default line-spacing 1)
 (cond ((mac-os-p)
-       (set-face-attribute 'default nil
+       (set-face-attribute 'default
+                           nil
                            :family "Noto Sans Mono CJK JP"
                            :height 140)
        (setq face-font-rescale-alist
-             '(("Noto Sans Japanese" . 1.0)))
-       (set-fontset-font nil
+             '(("Noto Sans Mono CJK JP" . 1.0)))
+       (set-fontset-font t
                          'japanese-jisx0208
-                         (font-spec :family "Noto Sans Mono CJK JP" :size 14)))
-      ((windows-p)
-       (set-face-attribute 'default nil
-                           :family "Inconsolata"
-                           :height 120)
-       (set-fontset-font nil
-                         'japanese-jisx0208
-                         (font-spec :family "M+2VM+IPAG circle"))
-       (setq face-font-rescale-alist
-             '((".*Inconsolata.*" . 1.0)
-               (".*M+1VM+IPAG circle.*" . 1.0))))
+                         (font-spec :family "Noto Sans Mono CJK JP")))
       ((linux-p)
        (set-face-attribute 'default nil
                            :family "Noto Sans Mono CJK JP"
@@ -887,6 +882,8 @@
        (set-fontset-font nil
                          'japanese-jisx0208
                          (font-spec :family "Noto Sans Mono CJK JP" :size 16))))
+(when (require 'fira-code-mode nil 'noerror)
+  (add-hook 'prog-mode-hook 'fira-code-mode))
 
 ;;========================================
 ;; Key Config
