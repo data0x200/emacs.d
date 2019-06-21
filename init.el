@@ -199,6 +199,7 @@
                            tabs
                            tab-mark
                            trailing
+                           empty
                            ;; lines-tail
                            space-before-tab
                            space-after-tab))
