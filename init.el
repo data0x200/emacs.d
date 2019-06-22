@@ -883,8 +883,9 @@
        (set-fontset-font nil
                          'japanese-jisx0208
                          (font-spec :family "Noto Sans Mono CJK JP" :size 16))))
-(when (require 'fira-code-mode nil 'noerror)
-  (add-hook 'prog-mode-hook 'fira-code-mode))
+(when (mac-os-p)
+  (when (require 'fira-code-mode nil 'noerror)
+    (add-hook 'prog-mode-hook 'fira-code-mode)))
 
 ;;========================================
 ;; Key Config
