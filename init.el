@@ -757,11 +757,6 @@
     (setq scss-compile-at-save nil))
   (add-hook 'scss-mode-hook 'scss-hook))
 
-(el-get-bundle flymake-eslint
-  (with-eval-after-load 'web-mode
-    (add-hook 'web-mode-hook
-              (lambda ()
-                (flymake-eslint-enable)))))
 (el-get-bundle web-mode
   (add-to-list 'auto-mode-alist '("\\.erb$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.es6$" . web-mode))
@@ -959,7 +954,6 @@
  '(helm-projectile-sources-list
    (quote
     (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
- '(package-selected-packages (quote (flymake-eslint))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
