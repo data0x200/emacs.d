@@ -1,4 +1,3 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -797,7 +796,7 @@
     (when (file-exists-p gocode-emacs-company)
       (add-to-list 'load-path gocode-emacs-company)
       (when (require 'company-go nil t)
-        (add-hook 'go-mode-hook (lambda()
+        (add-hook 'go-mode-hook (lambda ()
                                   (set (make-local-variable 'company-backends) '(company-go))
                                   (company-mode)))))))
 (el-get-bundle! go-eldoc
@@ -914,7 +913,7 @@
 ;; 移動をhjklで
 (define-key ctrl-q-map (kbd "C-v") 'view-mode)
 (add-hook 'view-mode-hook
-          (lambda()
+          (lambda ()
             (progn
               ;; C-b, ←
               (define-key view-mode-map "h" 'backward-char)
@@ -930,7 +929,7 @@
 ;; doc-view-mode
 ;; ========================================
 (add-hook 'doc-view-mode-hook
-          (lambda()
+          (lambda ()
             (progn
               (define-key doc-view-mode-map "k" 'doc-view-previous-page)
               (define-key doc-view-mode-map "j" 'doc-view-next-page))))
