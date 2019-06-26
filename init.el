@@ -269,9 +269,6 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
-;;;; config.d
-(add-to-list 'load-path (locate-user-emacs-file "config.d"))
-
 ;;;; exec-path-from-shell
 (el-get-bundle! exec-path-from-shell
   (when (memq window-system '(mac ns x))
@@ -878,9 +875,6 @@
        (set-fontset-font nil
                          'japanese-jisx0208
                          (font-spec :family "Noto Sans Mono CJK JP" :size 16))))
-(when (mac-os-p)
-  (when (require 'fira-code-mode nil 'noerror)
-    (add-hook 'prog-mode-hook 'fira-code-mode)))
 
 ;;========================================
 ;; Key Config
