@@ -287,7 +287,8 @@
   (when window-system
     (load-theme 'molokai t t)
     (enable-theme 'molokai)
-    (set-face-background 'default "black")))
+    (set-face-background 'default "black")
+    (set-face-foreground 'font-lock-doc-face "gray35")))
 
 (el-get-bundle! highlight-parentheses
   (setq hl-paren-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
@@ -471,9 +472,7 @@
               (interactive)
               (if current-input-method
                   (progn
-                    (deactivate-input-method)))))
-  (eval-after-load 'company-mode
-    (define-key evil-insert-state-map (kbd "C-i") 'company-complete)))
+                    (deactivate-input-method))))))
 (el-get-bundle! evil-leader
   (evil-leader/set-leader (kbd "\\"))
   (evil-leader/set-key
