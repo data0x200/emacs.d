@@ -288,7 +288,7 @@
     (load-theme 'molokai t t)
     (enable-theme 'molokai)
     (set-face-background 'default "black")
-    (set-face-foreground 'font-lock-doc-face "gray35")))
+    (set-face-foreground 'font-lock-doc-face "darkgray")))
 
 (el-get-bundle! highlight-parentheses
   (setq hl-paren-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
