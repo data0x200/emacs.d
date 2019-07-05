@@ -364,6 +364,7 @@
   (push '(" *auto-async-byte-compile*") popwin:special-display-config)
   (push '("*git now*") popwin:special-display-config)
   (push '("*git-gutter+-diff*") popwin:special-display-config)
+  (push '("\\`\\*eshell" :regexp t :dedicated t :position bottom :height 0.3) popwin:special-display-config)
   ;; (push '("^\*helm .+\*$" :regexp t :position :right) popwin:special-display-config)
   ;; Sly
   (push 'mrepl-mode popwin:special-display-config)
@@ -447,10 +448,10 @@
   (define-key evil-normal-state-map (kbd "SPC") ctrl-q-map)
   (eval-after-load 'helm
     '(progn
+       (define-key ctrl-q-map (kbd "h h") 'helm-imenu)
        (define-key evil-normal-state-map "\C-a\C-x" 'helm-M-x)
        (define-key evil-normal-state-map "\C-a\C-a" 'helm-for-files)
        (define-key evil-normal-state-map "\C-a\C-b" 'helm-buffers-list)
-       (define-key evil-normal-state-map "\C-a\C-o" 'helm-imenu)
        (define-key evil-normal-state-map "\C-a\C-g" 'helm-ls-git-ls)))
 
   ;; insert map
@@ -472,7 +473,9 @@
               (interactive)
               (if current-input-method
                   (progn
-                    (deactivate-input-method))))))
+                    (deactivate-input-method)))))
+  (evil-set-initial-state 'org-mode 'emacs)
+  (evil-set-initial-state 'xref-mode 'emacs))
 (el-get-bundle! evil-leader
   (evil-leader/set-leader (kbd "\\"))
   (evil-leader/set-key
@@ -550,8 +553,8 @@
 (el-get-bundle helm-projectile
   :depends (helm projectile)
   (define-key ctrl-q-map (kbd "C-g") 'helm-projectile)
-  (define-key ctrl-q-map (kbd "h g") 'helm-projectile)
-  (define-key ctrl-q-map (kbd "h t") 'helm-projectile)
+  (define-key ctrl-q-map (kbd "h g") 'helm-projectile-switch-project)
+  (define-key ctrl-q-map (kbd "h t") 'helm-projectile-switch-to-eshell)
   (define-key ctrl-q-map (kbd "g r") 'helm-projectile)
 
   (eval-after-load 'helm
