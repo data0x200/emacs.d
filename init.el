@@ -379,7 +379,13 @@
 
 ;;;; quicrun
 (el-get-bundle quickrun
-  (define-key ctrl-q-map (kbd "C-q") 'quickrun))
+  (define-key ctrl-q-map (kbd "C-q") 'quickrun)
+  (quickrun-add-command
+    "rust/evalrs"
+    '((:command . "evalrs")
+      (:exec . ("cat %s | %c %a")))
+    :default "evalrs")
+  )
 
 ;;;; elscreen
 (el-get-bundle! elscreen
