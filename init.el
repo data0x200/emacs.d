@@ -685,7 +685,9 @@
   (add-to-list 'auto-mode-alist '("\\.lua" . lua-mode)))
 
 ;;;; Markdown
-(el-get-bundle markdown-mode
+(el-get-bundle! markdown-mode
+  (set-face-attribute 'markdown-code-face nil :inherit 'default :weight 'bold)
+  (set-face-foreground 'markdown-code-face "lightsteelblue3")
   (add-to-list 'auto-mode-alist '("\\.markdown$" . gfm-mode))
   (add-to-list 'auto-mode-alist '("\\.mkd$" . gfm-mode))
   (add-to-list 'auto-mode-alist '("\\.md$" . gfm-mode)))
@@ -698,7 +700,6 @@
 
 ;; Ruby
 (el-get-bundle! ruby-mode
-
   (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
   (add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
@@ -775,6 +776,11 @@
                              (setq web-mode-markup-indent-offset 2)
                              (setq web-mode-code-indent-offset 2)
                              (setq web-mode-css-indent-offset 2))))
+(el-get-bundle emmet-mode
+  (add-hook 'web-mode-hook 'emmet-mode)
+  (setq emmet-move-cursor-between-quotes t)
+  (setq emmet-expand-jsx-className? nil)
+  (define-key evil-insert-state-map (kbd "C-c C-,") 'emmet-expand-line))
 
 ;;;; YAML
 (el-get-bundle yaml-mode
