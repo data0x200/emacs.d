@@ -960,7 +960,7 @@
  '(google-translate-default-target-language "ja")
  '(helm-projectile-sources-list
    (quote
-    (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
+    (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
