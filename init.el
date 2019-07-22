@@ -697,6 +697,7 @@
 (el-get-bundle rust-mode
   (setq rust-format-on-save t))
 (el-get-bundle toml-mode)
+(el-get-bundle flycheck-rust)
 
 ;; Ruby
 (el-get-bundle! ruby-mode
