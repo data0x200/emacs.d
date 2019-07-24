@@ -459,6 +459,7 @@
        (define-key evil-normal-state-map "\C-a\C-a" 'helm-for-files)
        (define-key evil-normal-state-map "\C-a\C-b" 'helm-buffers-list)
        (define-key evil-normal-state-map "\C-a\C-g" 'helm-ls-git-ls)))
+  (define-key evil-normal-state-map (kbd "C-e C-e") 'eshell)
 
   ;; insert map
   (define-key evil-insert-state-map (kbd "C-d") nil)
@@ -575,6 +576,7 @@
                                     helm-source-projectile-files-list))))
 
 ;;;; git
+(el-get-bundle magit)
 (el-get-bundle git-gutter
   (global-git-gutter-mode t)
   (defvar git-gutter-map (make-keymap))
