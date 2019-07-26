@@ -720,19 +720,25 @@
     (setq ruby-insert-encoding-magic-comment (if ruby-insert-encoding-magic-comment nil t)))
   (define-key ruby-mode-map "\C-ce" 'toggle-ruby-mode-set-encoding)
   (setq ruby-insert-encoding-magic-comment nil)
-
-  ;;========================================
-  ;; Hooks
-  ;;========================================
+  ;; hooks
   (add-hook 'ruby-mode-hook
             (lambda ()
               (progn
                 (lsp)
+                (setq flycheck-checker 'ruby-rubocop)
+                (flycheck-mode t)
                 (setq ruby-deep-indent-paren nil)
                 (setq ruby-deep-indent-paren-style t)
                 (setq ruby-insert-encoding-magic-comment nil)))))
+
 (el-get-bundle! rubocop
   (define-key ruby-mode-map (kbd "C-c C-e") 'rubocop-autocorrect-current-file))
+;;;; flycheck ruby
+;; https://github.com/flycheck/flycheck/issues/1223#issuecomment-283021487
+;; .dir-locals.el
+;; ((ruby-mode . ((eval . (setq flycheck-command-wrapper-function
+;;                            (lambda (command)
+;;                              (append '("bundle" "exec") command)))))))
 (el-get-bundle! emacsmirror/ruby-block
   (ruby-block-mode t))
 (el-get-bundle! ruby-electric
