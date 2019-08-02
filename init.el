@@ -725,8 +725,6 @@
             (lambda ()
               (progn
                 (lsp)
-                (setq flycheck-checker 'ruby-rubocop)
-                (flycheck-mode t)
                 (setq ruby-deep-indent-paren nil)
                 (setq ruby-deep-indent-paren-style t)
                 (setq ruby-insert-encoding-magic-comment nil)))))
@@ -754,6 +752,7 @@
   (define-key ruby-mode-map (kbd "C-c C-.") 'rspec-verify-single)
   (define-key ruby-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target)
   (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
+(el-get-bundle! slim-mode)
 
 ;;;; CSS
 (defun css-indent-hook()
@@ -868,6 +867,9 @@
   (setq sh-basic-offset 2)
   (setq sh-indentation 2))
 (add-hook 'sh-mode-hook 'sh-indent-hook)
+
+;;;; Dockerfile
+(el-get-bundle dockerfile-mode)
 
 
 ;; ========================================
