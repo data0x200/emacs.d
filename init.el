@@ -668,7 +668,6 @@
     (setq common-lisp-hyperspec-symbol-table (expand-file-name "~/.emacs.d/docs/HyperSpec/Data/Map_Sym.txt"))))
 
 ;;;; JavaScript
-
 (el-get-bundle prettier-js
   (setq prettier-js-args '("--prose-wrap" "never"
                            "--jsx-bracket-same-line" "false"))
@@ -682,7 +681,6 @@
                                '("\\.jsx?\\'" . prettier-js-mode)))))
 
 ;;;; Lua
-
 (el-get-bundle lua-mode
   (add-to-list 'auto-mode-alist '("\\.lua" . lua-mode)))
 
@@ -695,7 +693,6 @@
   (add-to-list 'auto-mode-alist '("\\.md$" . gfm-mode)))
 
 ;;;; Rust
-
 (el-get-bundle rust-mode
   (setq rust-format-on-save t))
 (el-get-bundle toml-mode)
