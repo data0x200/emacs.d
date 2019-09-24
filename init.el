@@ -725,6 +725,8 @@
             (lambda ()
               (progn
                 (lsp)
+                (evil-matchit-mode)
+                (flycheck-mode)
                 (setq ruby-deep-indent-paren nil)
                 (setq ruby-deep-indent-paren-style t)
                 (setq ruby-insert-encoding-magic-comment nil)))))
@@ -777,7 +779,7 @@
   (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.js[x]?$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tag$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
+  (add-to-list 'auto-mode-alist '("\\.json$" . web-mode))
   (add-hook 'web-mode-hook (lambda ()
                              (setq web-mode-enable-auto-quoting nil)
                              (setq web-mode-auto-close-style 1)
@@ -970,8 +972,14 @@
  '(google-translate-default-source-language "en")
  '(google-translate-default-target-language "ja")
  '(helm-projectile-sources-list
-   (quote
-    (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))))
+   '(helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))
+ '(safe-local-variable-values
+   '((eval setq flycheck-command-wrapper-function
+           (lambda
+             (command)
+             (append
+              '("bundle" "exec")
+              command))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
