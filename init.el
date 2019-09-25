@@ -576,7 +576,6 @@
                                     helm-source-projectile-files-list))))
 
 ;;;; git
-(el-get-bundle magit)
 (el-get-bundle git-gutter
   (global-git-gutter-mode t)
   (defvar git-gutter-map (make-keymap))
