@@ -891,12 +891,12 @@
       ((linux-p)
        (set-face-attribute 'default nil
                            :family "Noto Sans Mono CJK JP"
-                           :height 120)
+                           :height 140)
        (setq face-font-rescale-alist
              '(("Noto Sans Mono CJK JP" . 1.0)))
        (set-fontset-font nil
                          'japanese-jisx0208
-                         (font-spec :family "Noto Sans Mono CJK JP" :size 16))))
+                         (font-spec :family "Noto Sans Mono CJK JP" :size 20))))
 
 ;;========================================
 ;; Key Config
@@ -965,17 +965,26 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(column-number-mode t)
+ '(cua-mode t nil (cua-base))
+ '(display-time-mode t)
  '(google-translate-default-source-language "en")
  '(google-translate-default-target-language "ja")
  '(helm-projectile-sources-list
-   '(helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))
+   (quote
+    (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
  '(safe-local-variable-values
-   '((eval setq flycheck-command-wrapper-function
+   (quote
+    ((eval setq flycheck-command-wrapper-function
            (lambda
              (command)
              (append
-              '("bundle" "exec")
+              (quote
+               ("bundle" "exec"))
               command))))))
+ '(show-paren-mode t)
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
