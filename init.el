@@ -274,11 +274,11 @@
     (exec-path-from-shell-initialize)))
 
 ;;;; input method
-(when (linux-p)
-  (when (require 'mozc nil t)
-    (setq default-input-method "japanese-mozc")
-    (setq mozc-candidate-style 'overlay))
-  (global-set-key (kbd "C-'") 'toggle-input-method))
+(el-get-bundle ddskk
+  (setq skk-use-act t)
+  (setq default-input-method "japanese-skk")
+  (require 'skk-study))
+(global-set-key (kbd "C-'") 'skk-auto-fill-mode)
 
 ;;;; theme
 (el-get-bundle hbin/molokai-theme
@@ -984,6 +984,31 @@
                ("bundle" "exec"))
               command))))))
  '(show-paren-mode t)
+ '(skk-auto-insert-paren nil)
+ '(skk-auto-okuri-process nil)
+ '(skk-auto-start-henkan t)
+ '(skk-check-okurigana-on-touroku nil)
+ '(skk-delete-implies-kakutei nil)
+ '(skk-egg-like-newline t)
+ '(skk-henkan-okuri-strictly nil)
+ '(skk-henkan-strict-okuri-precedence nil)
+ '(skk-j-mode-function-key-usage nil)
+ '(skk-japanese-message-and-error nil)
+ '(skk-kakutei-early nil)
+ '(skk-preload nil)
+ '(skk-share-private-jisyo nil)
+ '(skk-show-annotation nil)
+ '(skk-show-candidates-always-pop-to-buffer nil)
+ '(skk-show-icon nil)
+ '(skk-show-inline nil)
+ '(skk-show-japanese-menu t)
+ '(skk-show-tooltip nil)
+ '(skk-use-color-cursor t)
+ '(skk-use-face t)
+ '(skk-use-jisx0201-input-method nil)
+ '(skk-use-look nil)
+ '(skk-use-numeric-conversion t)
+ '(skk-verbose nil)
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
