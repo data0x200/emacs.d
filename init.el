@@ -257,7 +257,6 @@
 ;;========================================
 ;; el-get(packages)
 ;;========================================
-
 ;; General
 ;;;; el-get
 (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
@@ -720,9 +719,10 @@
   (add-hook 'ruby-mode-hook
             (lambda ()
               (progn
+                (flycheck-mode)
                 (lsp)
                 (evil-matchit-mode)
-                (flycheck-mode)
+                (setq flycheck-checker 'ruby-rubocop)
                 (setq ruby-deep-indent-paren nil)
                 (setq ruby-deep-indent-paren-style t)
                 (setq ruby-insert-encoding-magic-comment nil)))))
