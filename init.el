@@ -329,14 +329,6 @@
    '(google-translate-default-target-language "ja"))
   (define-key ctrl-q-map (kbd "t") 'google-translate-at-point))
 
-;;;; Highlight Indent Guides
-(el-get-bundle! highlight-indent-guides in highlight-indentation-guides
-  (setq highlight-indent-guides-auto-enabled t)
-  (setq highlight-indent-guides-responsive t)
-  (setq highlight-indent-guides-method 'character)
-  (setq highlight-indent-guides-character ?\|)
-  (add-hook 'yaml-mode-hook 'highlight-indent-guides-mode))
-
 ;;;; beacon
 (el-get-bundle! beacon
   (setq beacon-color "yellow")
@@ -719,10 +711,8 @@
   (add-hook 'ruby-mode-hook
             (lambda ()
               (progn
-                (flycheck-mode)
                 (lsp)
                 (evil-matchit-mode)
-                (setq flycheck-checker 'ruby-rubocop)
                 (setq ruby-deep-indent-paren nil)
                 (setq ruby-deep-indent-paren-style t)
                 (setq ruby-insert-encoding-magic-comment nil)))))
