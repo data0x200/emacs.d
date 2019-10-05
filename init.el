@@ -334,8 +334,8 @@
   (setq beacon-color "yellow")
   (beacon-mode t))
 
-;;;; twittering-mode
-(el-get-bundle twittering-mode)
+;;;; golden-ratio
+(el-get-bundle! golden-ratio)
 
 ;; ========================================
 ;; popwin
@@ -389,7 +389,7 @@
 ;;========================================
 ;; evil
 ;;========================================
-(el-get-bundle evil
+(el-get-bundle! evil
   :before (setq evil-want-C-u-scroll t
                 evil-want-C-i-jump t
                 evil-search-module 'evil-search
@@ -501,7 +501,6 @@
   :url "https://raw.githubusercontent.com/tarao/evil-plugins/master/evil-mode-line.el"
   :depends mode-line-color)
 
-;;;; helm
 ;;========================================
 ;; Helm
 ;;========================================
@@ -576,20 +575,15 @@
   (define-key git-gutter-map (kbd "C-a") 'git-gutter:stage-hunk))
 (el-get-bundle! git-gutter-fringe)
 
-;;;; flymake
-(el-get-bundle! meqif/flymake-diagnostic-at-point
-  :features (flymake-diagnostic-at-point)
-  :depends (popup)
-  (add-hook 'flymake-mode-hook 'flymake-diagnostic-at-point-mode))
-
 ;;;; open-junk-file
 (el-get-bundle open-junk-file
   (setq open-junk-file-format "~/.memo/junk/%Y-%m-%d-%H%M%S."))
 
 ;;;; Company mode
 (el-get-bundle company-mode/company-mode
+  :branch "0.9.10"
   (global-company-mode t)
-  (setq company-auto-expand t)
+  (setq company-auto-expand nil)
   (setq company-tooltip-limit 10)
   (setq company-idle-delay .3)
   (setq company-echo-delay 0)
@@ -625,14 +619,19 @@
    '(company-tooltip-common-selection
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
-(el-get-bundle lsp-mode :branch "6.0")
-(el-get-bundle lsp-ui :branch "6.0"
-  (add-hook 'rust-mode-hook 'lsp)
-  (add-hook 'php-mode-hook 'lsp)
+(el-get-bundle lsp-mode
+  :branch "6.1"
+  (add-hook 'rust-mode-hook 'lsp))
+(el-get-bundle lsp-ui
+  :branch "6.0"
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-(el-get-bundle tigersoldier/company-lsp :branch "2.1.0"
+(el-get-bundle tigersoldier/company-lsp
+  :branch "2.1.0"
   :depends (company-mode lsp-mode s)
   (push 'company-lsp company-backends))
+
+;; Flycheck
+(el-get-bundle! flycheck)
 
 ;; Programming Language
 
@@ -686,7 +685,11 @@
 (el-get-bundle rust-mode
   (setq rust-format-on-save t))
 (el-get-bundle toml-mode)
-(el-get-bundle flycheck-rust)
+(el-get-bundle! flycheck-rust
+  (add-hook 'rust-mode-hook (lambda ()
+                              (progn
+                                (flycheck-mode)
+                                ))))
 
 ;; Ruby
 (el-get-bundle! ruby-mode
@@ -711,6 +714,7 @@
   (add-hook 'ruby-mode-hook
             (lambda ()
               (progn
+                (flycheck-mode)
                 (lsp)
                 (evil-matchit-mode)
                 (setq ruby-deep-indent-paren nil)
@@ -780,8 +784,7 @@
 
 ;;;; YAML
 (el-get-bundle yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)
-  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)))
+  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
 ;;;; Yasnippet
 (el-get-bundle! yasnippet
@@ -912,13 +915,8 @@
 (show-paren-mode t)
 
 ;;;; linum
-(when (require 'linum nil t)
-  (setq linum-format " %5d"))
-(global-linum-mode)
-;; @see: http://d.hatena.ne.jp/daimatz/20120215/1329248780
-(setq linum-delay t)
-(defadvice linum-schedule (around my-linum-schedule () activate)
-  (run-with-idle-timer 0.2 nil #'linum-update-current))
+(if (version<= "26.0.50" emacs-version)
+    (add-hook 'prog-mode-hook #'display-line-numbers-mode))
 
 ;; ========================================
 ;; view-mode
@@ -962,17 +960,18 @@
  '(google-translate-default-source-language "en")
  '(google-translate-default-target-language "ja")
  '(helm-projectile-sources-list
-   (quote
-    (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
+   '(helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))
+ '(lsp-ui-doc-enable nil)
+ '(lsp-ui-imenu-enable nil)
+ '(lsp-ui-peek-enable t)
+ '(lsp-ui-sideline-enable t)
  '(safe-local-variable-values
-   (quote
-    ((eval setq flycheck-command-wrapper-function
+   '((eval setq flycheck-command-wrapper-function
            (lambda
              (command)
              (append
-              (quote
-               ("bundle" "exec"))
-              command))))))
+              '("bundle" "exec")
+              command)))))
  '(show-paren-mode t)
  '(skk-auto-insert-paren nil)
  '(skk-auto-okuri-process nil)
