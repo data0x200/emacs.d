@@ -297,14 +297,6 @@
   (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
   (set-face-attribute 'hl-paren-face nil :weight 'bold))
 
-(el-get-bundle fill-column-indicator
-  (setq-default fci-rule-column 120)
-  (add-hook 'emacs-lisp-mode-hook 'fci-mode)
-  (add-hook 'common-lisp-mode-hook 'fci-mode)
-  (add-hook 'lisp-mode-hook 'fci-mode)
-  (add-hook 'ruby-mode-hook 'fci-mode)
-  (add-hook 'c-mode-hook 'fci-mode))
-
 ;; Utility
 ;;; Org mode
 (define-key ctrl-q-map (kbd "C-m") 'org-capture)
