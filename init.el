@@ -410,6 +410,7 @@
   (define-key key-translation-map (kbd "C-[") 'evil-escape-or-quit)
   (define-key evil-operator-state-map (kbd "C-[") 'evil-escape-or-quit)
   (define-key evil-normal-state-map [escape] 'keyboard-quit)
+  (define-key evil-normal-state-map (kbd "C-x C-g") 'evil-escape-or-quit)
   (define-key evil-insert-state-map (kbd "C-[") [escape])
 
   (define-key minibuffer-local-map (kbd "C-[") 'keyboard-quit)
@@ -425,6 +426,7 @@
   (define-key minibuffer-local-isearch-map [escape] 'keyboard-quit)
 
   (define-key isearch-mode-map (kbd "C-w") 'backward-kill-word)
+  (define-key minibuffer-local-isearch-map (kbd "C-w") 'backward-kill-word)
 
   ;; key mappings
   ;; normal map
