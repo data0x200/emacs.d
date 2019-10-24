@@ -277,7 +277,7 @@
   (setq skk-use-act t)
   (setq default-input-method "japanese-skk")
   (require 'skk-study))
-(global-set-key (kbd "C-'") 'skk-auto-fill-mode)
+(global-set-key (kbd "C-'") 'skk-mode)
 
 ;;;; theme
 (el-get-bundle hbin/molokai-theme
@@ -954,25 +954,28 @@
  '(google-translate-default-source-language "en")
  '(google-translate-default-target-language "ja")
  '(helm-projectile-sources-list
-   '(helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))
+   (quote
+    (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
  '(lsp-ui-doc-enable nil)
  '(lsp-ui-imenu-enable nil)
  '(lsp-ui-peek-enable t)
  '(lsp-ui-sideline-enable t)
  '(safe-local-variable-values
-   '((eval setq flycheck-command-wrapper-function
+   (quote
+    ((eval setq flycheck-command-wrapper-function
            (lambda
              (command)
              (append
-              '("bundle" "exec")
-              command)))))
+              (quote
+               ("bundle" "exec"))
+              command))))))
  '(show-paren-mode t)
  '(skk-auto-insert-paren nil)
  '(skk-auto-okuri-process nil)
  '(skk-auto-start-henkan t)
  '(skk-check-okurigana-on-touroku nil)
  '(skk-delete-implies-kakutei nil)
- '(skk-egg-like-newline t)
+ '(skk-egg-like-newline nil)
  '(skk-henkan-okuri-strictly nil)
  '(skk-henkan-strict-okuri-precedence nil)
  '(skk-j-mode-function-key-usage nil)
