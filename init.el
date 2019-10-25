@@ -568,6 +568,7 @@
   (define-key git-gutter-map (kbd "C-p") 'git-gutter:previous-hunk)
   (define-key git-gutter-map (kbd "C-a") 'git-gutter:stage-hunk))
 (el-get-bundle! git-gutter-fringe)
+(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
 
 ;;;; open-junk-file
 (el-get-bundle open-junk-file
