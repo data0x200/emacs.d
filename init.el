@@ -632,18 +632,20 @@
 
 ;;;; Common Lisp
 (when (linux-p)
-  (el-get-bundle slime/slime
-    (load (expand-file-name "~/.roswell/helper.el"))
-    (defun slime-qlot-exec (directory)
-      (interactive (list (read-directory-name "Project directory: ")))
-      (slime-start :program "qlot"
-                   :program-args '("exec" "ros" "-S" "." "run")
-                   :directory directory
-                   :name 'qlot
-                   :env (list (concat "PATH="
-                                      (mapconcat 'identity exec-path ":"))
-                              (concat "QUICKLISP_HOME="
-                                      (file-name-as-directory directory) "quicklisp/")))))
+  (let ((roswell-helper (expand-file-name "~/.roswell/helper.el")))
+    (when (file-exists-p roswell-helper)
+      (el-get-bundle slime/slime
+        (load roswell-helper)
+        (defun slime-qlot-exec (directory)
+          (interactive (list (read-directory-name "Project directory: ")))
+          (slime-start :program "qlot"
+                       :program-args '("exec" "ros" "-S" "." "run")
+                       :directory directory
+                       :name 'qlot
+                       :env (list (concat "PATH="
+                                          (mapconcat 'identity exec-path ":"))
+                                  (concat "QUICKLISP_HOME="
+                                          (file-name-as-directory directory) "quicklisp/")))))))
 
   (el-get-bundle! hyperspec
     :type http
