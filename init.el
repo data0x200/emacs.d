@@ -615,13 +615,10 @@
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle lsp-mode
-  :branch "6.1"
   (add-hook 'rust-mode-hook 'lsp))
 (el-get-bundle lsp-ui
-  :branch "6.0"
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 (el-get-bundle tigersoldier/company-lsp
-  :branch "2.1.0"
   :depends (company-mode lsp-mode s)
   (push 'company-lsp company-backends))
 
