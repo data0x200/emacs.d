@@ -96,11 +96,6 @@
               (cons '(:eval my/current-cleanup-state)
                     mode-line-format))
 
-;; daily-memo
-(defun my/memo ()
-  (interactive)
-  (find-file-other-window (expand-file-name "~/.memo/memo.org")))
-
 ;;========================================
 ;; General Config
 ;;========================================
@@ -274,6 +269,7 @@
 
 ;;;; input method
 (el-get-bundle ddskk
+  :branch "ddskk-16.2_Warabitai"
   (setq skk-use-act t)
   (setq default-input-method "japanese-skk")
   (require 'skk-study))
@@ -296,23 +292,6 @@
   (add-hook 'racket-mode-hook 'highlight-parentheses-mode)
   (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
   (set-face-attribute 'hl-paren-face nil :weight 'bold))
-
-;; Utility
-;;; Org mode
-(define-key ctrl-q-map (kbd "C-m") 'org-capture)
-(setq org-capture-templates
-      '(("m"
-         "✍ Memo"
-         entry
-         (file+headline "~/.memo/memo.org" "Memo")
-         "* %U\n%a\n%i\n%?")
-        ("t"
-         "TODO"
-         entry
-         (file+headline "~/.memo/memo.org" "TODOs")
-         "* TODO %?")))
-(setq org-agenda-files '("~/.memo/memo.org"))
-(define-key ctrl-q-map (kbd "a") 'org-agenda)
 
 ;;;; google translate
 (el-get-bundle! google-translate
@@ -857,6 +836,8 @@
 ;;;; Dockerfile
 (el-get-bundle dockerfile-mode)
 
+;;;; CSV
+(el-get-bundle csv-mode)
 
 ;; ========================================
 ;; Font Settings
@@ -879,12 +860,12 @@
       ((linux-p)
        (set-face-attribute 'default nil
                            :family "Noto Sans Mono CJK JP"
-                           :height 140)
+                           :height 120)
        (setq face-font-rescale-alist
              '(("Noto Sans Mono CJK JP" . 1.0)))
        (set-fontset-font nil
                          'japanese-jisx0208
-                         (font-spec :family "Noto Sans Mono CJK JP" :size 20))))
+                         (font-spec :family "Noto Sans Mono CJK JP" :size 16))))
 
 ;;========================================
 ;; Key Config
@@ -903,9 +884,6 @@
 
 ;;;; C-x C-oでウィンドウを切り替える
 (global-set-key (kbd "C-o") 'other-window)
-
-;;;; my work memo
-(define-key ctrl-q-map (kbd "C-w") 'my/memo)
 
 (show-paren-mode t)
 
@@ -955,21 +933,19 @@
  '(google-translate-default-source-language "en")
  '(google-translate-default-target-language "ja")
  '(helm-projectile-sources-list
-   (quote
-    (helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list)))
+   '(helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))
  '(lsp-ui-doc-enable nil)
  '(lsp-ui-imenu-enable nil)
  '(lsp-ui-peek-enable t)
  '(lsp-ui-sideline-enable t)
+ '(package-selected-packages '(csv-mode))
  '(safe-local-variable-values
-   (quote
-    ((eval setq flycheck-command-wrapper-function
+   '((eval setq flycheck-command-wrapper-function
            (lambda
              (command)
              (append
-              (quote
-               ("bundle" "exec"))
-              command))))))
+              '("bundle" "exec")
+              command)))))
  '(show-paren-mode t)
  '(skk-auto-insert-paren nil)
  '(skk-auto-okuri-process nil)
