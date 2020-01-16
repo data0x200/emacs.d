@@ -770,8 +770,8 @@
   (setenv "GOPATH" (expand-file-name "~/"))
   (add-to-list 'auto-mode-alist '("\\.go" . go-mode))
   (add-hook 'before-save-hook 'gofmt-before-save)
-  (evil-define-key 'normal go-mode-map (kbd "C-]")
-    'godef-jump)
+  ;; (evil-define-key 'normal 'go-mode-map (kbd "C-]")
+  ;;   'godef-jump)
   (font-lock-add-keywords
    'go-mode
    '(("\\b\\(err\\)\\b" 1 '((:foreground "yellow") (:weight bold)) t)))
@@ -833,8 +833,8 @@
   (setq sh-indentation 2))
 (add-hook 'sh-mode-hook 'sh-indent-hook)
 
-;;;; Dockerfile
-(el-get-bundle dockerfile-mode)
+;;;; Docker
+(el-get-bundle docker)
 
 ;;;; CSV
 (el-get-bundle csv-mode)
@@ -863,7 +863,8 @@
                            :height 120)
        (setq face-font-rescale-alist
              '(("Noto Sans Mono CJK JP" . 1.0)))
-       (set-fontset-font nil
+       ;; (set-fontset-font nil '(#x1F000 . #x1FAFF) (font-spec :family "Noto Color Emoji" :size 14))))
+       (set-fontset-font t
                          'japanese-jisx0208
                          (font-spec :family "Noto Sans Mono CJK JP" :size 16))))
 
