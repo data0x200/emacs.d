@@ -557,7 +557,7 @@
 (el-get-bundle company-mode/company-mode
   :branch "0.9.10"
   (global-company-mode t)
-  (setq company-auto-expand nil)
+  (setq company-auto-expand t)
   (setq company-tooltip-limit 10)
   (setq company-idle-delay .3)
   (setq company-echo-delay 0)
