@@ -488,7 +488,7 @@
   ;; チカチカしないようにする
   (setq helm-quick-update nil)
 
-  (setq helm-split-window-default-side 'right)
+  (setq helm-split-window-default-side 'bottom-and-right)
 
   ;; key mapping
   (eval-after-load 'helm
