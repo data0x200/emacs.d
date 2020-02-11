@@ -673,6 +673,7 @@
   (add-to-list 'auto-mode-alist '("Berksfile" . ruby-mode))
   (add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
   (add-to-list 'auto-mode-alist '("config.ru" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.ruby$" . ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.gemspec" . ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.json.jbuilder" . ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.json.ruby" . ruby-mode))
@@ -718,6 +719,11 @@
   (define-key ruby-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target)
   (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
 (el-get-bundle! slim-mode)
+(el-get-bundle! rufo
+  :type github
+  :pkgname "danielma/rufo.el"
+  (setq rufo-minor-mode-use-bundler t)
+  (add-hook 'ruby-mode-hook 'rufo-minor-mode))
 
 ;;;; CSS
 (defun css-indent-hook()
