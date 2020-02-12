@@ -750,6 +750,7 @@
   (add-to-list 'auto-mode-alist '("\\.tag$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.json$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.ctp$" . web-mode))
   (add-hook 'web-mode-hook (lambda ()
                              (setq web-mode-enable-auto-quoting nil)
                              (setq web-mode-auto-close-style 1)
