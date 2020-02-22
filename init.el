@@ -524,7 +524,6 @@
   :depends (helm projectile)
   (define-key ctrl-q-map (kbd "C-g") 'helm-projectile)
   (define-key ctrl-q-map (kbd "h g") 'helm-projectile-switch-project)
-  (define-key ctrl-q-map (kbd "h t") 'helm-projectile-switch-to-eshell)
   (define-key ctrl-q-map (kbd "g r") 'helm-projectile)
 
   (eval-after-load 'helm
