@@ -593,7 +593,8 @@
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle lsp-mode
-  (add-hook 'rust-mode-hook 'lsp))
+  (add-hook 'rust-mode-hook 'lsp)
+  (custom-set-variables '(lsp-rust-clippy-preference "on")))
 (el-get-bundle lsp-ui
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 (el-get-bundle tigersoldier/company-lsp
@@ -865,14 +866,11 @@
                          (font-spec :family "Noto Sans Mono CJK JP")))
       ((linux-p)
        (set-face-attribute 'default nil
-                           :family "Noto Sans Mono CJK JP"
-                           :height 120)
-       (setq face-font-rescale-alist
-             '(("Noto Sans Mono CJK JP" . 1.0)))
-       ;; (set-fontset-font nil '(#x1F000 . #x1FAFF) (font-spec :family "Noto Color Emoji" :size 14))))
+                           :family "HackGen"
+                           :height 130)
        (set-fontset-font t
                          'japanese-jisx0208
-                         (font-spec :family "Noto Sans Mono CJK JP" :size 16))))
+                         (font-spec :family "HackGen" :size 17))))
 
 ;;========================================
 ;; Key Config
