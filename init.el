@@ -641,6 +641,8 @@
   (add-hook 'web-mode-hook '(lambda ()
                               (enable-minor-mode
                                '("\\.jsx?\\'" . prettier-js-mode)))))
+(el-get-bundle typescript-mode
+ (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode)))
 
 ;;;; Lua
 (el-get-bundle lua-mode
@@ -750,6 +752,7 @@
   (add-to-list 'auto-mode-alist '("\\.tag$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.json$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.vue$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.ctp$" . web-mode))
   (add-hook 'web-mode-hook (lambda ()
                              (setq web-mode-enable-auto-quoting nil)
@@ -757,6 +760,38 @@
                              (setq web-mode-markup-indent-offset 2)
                              (setq web-mode-code-indent-offset 2)
                              (setq web-mode-css-indent-offset 2))))
+(el-get-bundle! mmm-mode
+  (setq mmm-global-mode 'maybe)
+  (setq mmm-submode-decoration-level 0)
+
+  (mmm-add-classes
+   '((vue-embeded-slim-mode
+      :submode slim-mode
+      :front "^<template.*lang=\"pug\">\n"
+      :back "^</template>")
+     (vue-embeded-web-mode
+      :submode web-mode
+      :front "^<template>\n"
+      :back "^</template>\n")
+     (vue-embeded-ts-mode
+      :submode web-mode
+      :front "^<script.*lang=\"ts\">\n"
+      :back "^</script>")
+     (vue-embeded-js-mode
+      :submode web-mode
+      :front "^<script>\n"
+      :back "^</script>")
+     (vue-embeded-scss-mode
+      :submode scss-mode
+      :front "^<style.*lang=\"scss\">\n"
+      :back "^</style>")))
+
+  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-slim-mode)
+  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-web-mode)
+  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-ts-mode)
+  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-js-mode)
+  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-scss-mode))
+
 (el-get-bundle emmet-mode
   (add-hook 'web-mode-hook 'emmet-mode)
   (setq emmet-move-cursor-between-quotes t)
