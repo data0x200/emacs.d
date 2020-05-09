@@ -808,10 +808,13 @@
   (yas-global-mode t))
 
 ;;;; Go
+(defun lsp-go-install-save-hooks()
+  (add-hook 'before-save-hook 'lsp-format-buffer t t)
+  (add-hook 'before-save-hook 'lsp-organize-imports t t))
 (el-get-bundle go-mode
   (setenv "GOPATH" (expand-file-name "~/"))
   (add-to-list 'auto-mode-alist '("\\.go" . go-mode))
-  (add-hook 'before-save-hook 'gofmt-before-save)
+  (add-hook 'go-mode-hook 'lsp-go-install-save-hooks)
   ;; (evil-define-key 'normal 'go-mode-map (kbd "C-]")
   ;;   'godef-jump)
   (font-lock-add-keywords
@@ -820,14 +823,7 @@
   (let ((golint-emacs (concat (getenv "GOPATH") "src/github.com/golang/lint/misc/emacs")))
     (when (file-exists-p golint-emacs)
       (add-to-list 'load-path golint-emacs)
-      (require 'golint)))
-  (let ((gocode-emacs-company (concat (getenv "GOPATH") "src/github.com/nsf/gocode/emacs-company")))
-    (when (file-exists-p gocode-emacs-company)
-      (add-to-list 'load-path gocode-emacs-company)
-      (when (require 'company-go nil t)
-        (add-hook 'go-mode-hook (lambda ()
-                                  (set (make-local-variable 'company-backends) '(company-go))
-                                  (company-mode)))))))
+      (require 'golint))))
 (el-get-bundle! go-eldoc
   (add-hook 'go-mode-hook 'go-eldoc-setup)
   (set-face-attribute 'eldoc-highlight-function-argument nil
