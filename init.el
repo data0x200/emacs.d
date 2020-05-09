@@ -640,9 +640,25 @@
             (funcall (cdr my-pair)))))
   (add-hook 'web-mode-hook '(lambda ()
                               (enable-minor-mode
-                               '("\\.jsx?\\'" . prettier-js-mode)))))
+                               '("\\.jsx?$" . prettier-js-mode)))))
 (el-get-bundle typescript-mode
- (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode)))
+  (add-hook 'typescript-mode-hook 'prettier-js-mode)
+  (add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode)))
+
+(el-get-bundle tide
+  :depends (flycheck company-mode)
+
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode +1)
+    (setq flycheck-check-syntax-automatically '(save mode-enabled))
+    (eldoc-mode +1)
+    (tide-hl-identifier-mode +1)
+    (company-mode +1))
+  (setq company-tooltip-align-annotations t)
+  (add-hook 'before-save-hook 'tide-format-before-save)
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
 
 ;;;; Lua
 (el-get-bundle lua-mode
