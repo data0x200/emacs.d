@@ -912,12 +912,22 @@
                          'japanese-jisx0208
                          (font-spec :family "Noto Sans Mono CJK JP")))
       ((linux-p)
-       (set-face-attribute 'default nil
-                           :family "HackGen"
-                           :height 130)
-       (set-fontset-font t
-                         'japanese-jisx0208
-                         (font-spec :family "HackGen" :size 17))))
+
+       (cond ((< 1920 (apply 'max (cdr (assoc 'geometry (car (display-monitor-attributes-list))))))
+              (set-face-attribute 'default nil
+                                  :family "HackGen"
+                                  :height 150)
+
+              (set-fontset-font t
+                                'japanese-jisx0208
+                                (font-spec :family "HackGen" :size 21)))
+             (t
+              (set-face-attribute 'default nil
+                                  :family "HackGen"
+                                  :height 130)
+              (set-fontset-font t
+                                'japanese-jisx0208
+                                (font-spec :family "HackGen" :size 17))))))
 
 ;;========================================
 ;; Key Config
