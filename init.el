@@ -597,9 +597,6 @@
   (custom-set-variables '(lsp-rust-clippy-preference "on")))
 (el-get-bundle lsp-ui
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-(el-get-bundle tigersoldier/company-lsp
-  :depends (company-mode lsp-mode s)
-  (push 'company-lsp company-backends))
 
 ;; Flycheck
 (el-get-bundle! flycheck)
