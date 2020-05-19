@@ -269,8 +269,9 @@
 
 ;;;; input method
 (el-get-bundle ddskk
+  ;; 最新だと skk-use-act が機能しない
   :branch "ddskk-16.2_Warabitai"
-  (setq skk-use-act t)
+  (custom-set-variables '(skk-use-act t))
   (setq default-input-method "japanese-skk")
   (require 'skk-study))
 (global-set-key (kbd "C-'") 'skk-mode)
@@ -289,7 +290,6 @@
   (setq hl-paren-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
   (add-hook 'common-lisp-mode-hook 'highlight-parentheses-mode)
   (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
-  (add-hook 'racket-mode-hook 'highlight-parentheses-mode)
   (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
   (set-face-attribute 'hl-paren-face nil :weight 'bold))
 
@@ -320,7 +320,6 @@
 
   (global-set-key (kbd "C-c") popwin:keymap)
 
-  (setq helm-samewindow nil)
   (push '("*quickrun*" :position :right) popwin:special-display-config)
   (push '("*compilation*" :position :right) popwin:special-display-config)
   (push '(" *auto-async-byte-compile*") popwin:special-display-config)
@@ -360,7 +359,7 @@
 ;;========================================
 ;; evil
 ;;========================================
-(el-get-bundle! evil
+(el-get-bundle! emacs-evil/evil
   :before (setq evil-want-C-u-scroll t
                 evil-want-C-i-jump t
                 evil-search-module 'evil-search
@@ -473,31 +472,26 @@
   :type http
   :url "https://raw.githubusercontent.com/tarao/evil-plugins/master/evil-mode-line.el"
   :depends mode-line-color)
+(el-get-bundle tarao/with-eval-after-load-feature-el)
 
 ;;========================================
 ;; Helm
 ;;========================================
 (el-get-bundle helm
-  ;; 候補を表示するまでの時間
-  ;; default 0.5
-  (setq helm-idle-delay 0.1)
-  ;; 候補の最大表示数
-  ;; default 50
-  (setq helm-candidate-number-limit 100)
-  ;; 候補が多いときの体感速度を早める
-  ;; チカチカしないようにする
-  (setq helm-quick-update nil)
+  (with-eval-after-load-feature 'helm
+    ;; 候補の最大表示数
+    ;; default 50
+    (setq helm-candidate-number-limit 100)
 
-  (setq helm-split-window-default-side 'bottom-and-right)
+    (setq helm-split-window-default-side 'bottom-and-right)
 
-  ;; key mapping
-  (eval-after-load 'helm
-    '(progn
-       (define-key helm-map (kbd "C-h") 'delete-backward-char)
-       (define-key helm-map (kbd "C-w") 'backward-kill-word)
-       (define-key helm-map (kbd "C-v") 'helm-next-source)
-       (define-key helm-map (kbd "M-v") 'helm-previous-source)))
-  (eval-after-load 'helm-files
+    ;; key mapping
+    (define-key helm-map (kbd "C-h") 'delete-backward-char)
+    (define-key helm-map (kbd "C-w") 'backward-kill-word)
+    (define-key helm-map (kbd "C-v") 'helm-next-source)
+    (define-key helm-map (kbd "M-v") 'helm-previous-source))
+
+  (with-eval-after-load-feature 'helm-files
     '(progn
        (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
        (define-key helm-find-files-map (kbd "C-w") 'helm-find-files-up-one-level)
@@ -553,12 +547,11 @@
   (setq open-junk-file-format "~/.memo/junk/%Y-%m-%d-%H%M%S."))
 
 ;;;; Company mode
-(el-get-bundle company-mode/company-mode
-  :branch "0.9.10"
+(el-get-bundle! company-mode/company-mode
   (global-company-mode t)
   (setq company-auto-expand t)
   (setq company-tooltip-limit 10)
-  (setq company-idle-delay .3)
+  (setq company-idle-delay .1)
   (setq company-echo-delay 0)
   (setq company-begin-commands '(self-insert-command))
   (setq company-selection-wrap-around t)
@@ -594,6 +587,7 @@
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle lsp-mode
   (add-hook 'rust-mode-hook 'lsp)
+  (custom-set-variables '(lsp-rust-server 'rust-analyzer))
   (custom-set-variables '(lsp-rust-clippy-preference "on")))
 (el-get-bundle lsp-ui
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
@@ -603,33 +597,11 @@
 
 ;; Programming Language
 
-;;;; Common Lisp
-(when (linux-p)
-  (let ((roswell-helper (expand-file-name "~/.roswell/helper.el")))
-    (when (file-exists-p roswell-helper)
-      (el-get-bundle slime/slime
-        (load roswell-helper)
-        (defun slime-qlot-exec (directory)
-          (interactive (list (read-directory-name "Project directory: ")))
-          (slime-start :program "qlot"
-                       :program-args '("exec" "ros" "-S" "." "run")
-                       :directory directory
-                       :name 'qlot
-                       :env (list (concat "PATH="
-                                          (mapconcat 'identity exec-path ":"))
-                                  (concat "QUICKLISP_HOME="
-                                          (file-name-as-directory directory) "quicklisp/")))))))
-
-  (el-get-bundle! hyperspec
-    :type http
-    :url "http://www.naggum.no/emacs/hyperspec.el"
-    (setq common-lisp-hyperspec-root (concat "file://" (expand-file-name "~/.emacs.d/docs/HyperSpec/")))
-    (setq common-lisp-hyperspec-symbol-table (expand-file-name "~/.emacs.d/docs/HyperSpec/Data/Map_Sym.txt"))))
-
 ;;;; JavaScript
 (el-get-bundle prettier-js
-  (setq prettier-js-args '("--prose-wrap" "never"
-                           "--jsx-bracket-same-line" "false"))
+  (with-eval-after-load-feature 'prettier-js
+    (setq prettier-js-args '("--prose-wrap" "never"
+                             "--jsx-bracket-same-line" "false")))
   (defun enable-minor-mode (my-pair)
     "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
     (if (buffer-file-name)
@@ -653,7 +625,6 @@
     (eldoc-mode +1)
     (tide-hl-identifier-mode +1)
     (company-mode +1))
-  (setq company-tooltip-align-annotations t)
   (add-hook 'before-save-hook 'tide-format-before-save)
   (add-hook 'typescript-mode-hook #'setup-tide-mode))
 
@@ -671,7 +642,8 @@
 
 ;;;; Rust
 (el-get-bundle rust-mode
-  (setq rust-format-on-save t))
+  (with-eval-after-load-feature 'rust-mode
+    (setq rust-format-on-save t)))
 (el-get-bundle toml-mode)
 (el-get-bundle! flycheck-rust
   (add-hook 'rust-mode-hook (lambda ()
@@ -742,18 +714,15 @@
 
 ;;;; CSS
 (defun css-indent-hook()
-  (setq indent-tabs-mode nil)
-  (setq css-basic-offset 2)
-  (setq css-indent-offset 2))
+  (setq indent-tabs-mode nil))
 (add-hook 'css-mode-hook 'css-indent-hook)
 
 (el-get-bundle scss-mode
   (add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
   (defun scss-hook ()
-    (setq indent-tabs-mode nil)
-    (setq css-basic-offset 2)
-    (setq css-indent-offset 2)
-    (setq scss-compile-at-save nil))
+    (with-eval-after-load-feature 'scss-mode
+      (setq indent-tabs-mode nil)
+      (setq scss-compile-at-save nil)))
   (add-hook 'scss-mode-hook 'scss-hook))
 
 (el-get-bundle web-mode
@@ -768,11 +737,12 @@
   (add-to-list 'auto-mode-alist '("\\.vue$" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.ctp$" . web-mode))
   (add-hook 'web-mode-hook (lambda ()
-                             (setq web-mode-enable-auto-quoting nil)
-                             (setq web-mode-auto-close-style 1)
-                             (setq web-mode-markup-indent-offset 2)
-                             (setq web-mode-code-indent-offset 2)
-                             (setq web-mode-css-indent-offset 2))))
+                             (with-eval-after-load-feature 'web-mode
+                               (setq web-mode-enable-auto-quoting nil)
+                               (setq web-mode-auto-close-style 1)
+                               (setq web-mode-markup-indent-offset 2)
+                               (setq web-mode-code-indent-offset 2)
+                               (setq web-mode-css-indent-offset 2)))))
 (el-get-bundle! mmm-mode
   (setq mmm-global-mode 'maybe)
   (setq mmm-submode-decoration-level 0)
@@ -807,8 +777,9 @@
 
 (el-get-bundle emmet-mode
   (add-hook 'web-mode-hook 'emmet-mode)
-  (setq emmet-move-cursor-between-quotes t)
-  (setq emmet-expand-jsx-className? nil)
+  (with-eval-after-load-feature 'emmet-mode
+    (setq emmet-move-cursor-between-quotes t)
+    (setq emmet-expand-jsx-className? nil))
   (define-key evil-insert-state-map (kbd "C-c C-,") 'emmet-expand-line))
 
 ;;;; YAML
@@ -842,12 +813,6 @@
   (set-face-attribute 'eldoc-highlight-function-argument nil
                       :underline t :foreground "green"
                       :weight 'bold))
-
-;;;; Racket
-(el-get-bundle! racket-mode
-  (add-hook 'racket-mode-hook
-            (lambda ()
-              (define-key racket-mode-map (kbd "C-c r") 'racket-run))))
 
 ;;;; PHP
 (el-get-bundle php-mode)
