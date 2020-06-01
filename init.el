@@ -334,9 +334,7 @@
   ;; Rubocop
   (push '("^\*RuboCop.*$" :dedicated t :regexp t :position :bottom :height 0.2) popwin:special-display-config)
   ;; Google Translate
-  (push '("*Google Translate" :position :right) popwin:special-display-config)
-  ;; Rust
-  (push '("*rustfmt*" :position :right) popwin:special-display-config))
+  (push '("*Google Translate" :position :right) popwin:special-display-config))
 
 ;;;; quicrun
 (el-get-bundle quickrun
