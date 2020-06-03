@@ -545,9 +545,9 @@
   (setq open-junk-file-format "~/.memo/junk/%Y-%m-%d-%H%M%S."))
 
 ;;;; Company mode
-(el-get-bundle! company-mode/company-mode
+(el-get-bundle company-mode/company-mode
+  :features company
   (global-company-mode t)
-  (setq company-auto-expand t)
   (setq company-tooltip-limit 10)
   (setq company-idle-delay .1)
   (setq company-echo-delay 0)
@@ -622,7 +622,8 @@
     (setq flycheck-check-syntax-automatically '(save mode-enabled))
     (eldoc-mode +1)
     (tide-hl-identifier-mode +1)
-    (company-mode +1))
+    (with-eval-after-load-feature 'company
+      (company-mode +1)))
   (add-hook 'before-save-hook 'tide-format-before-save)
   (add-hook 'typescript-mode-hook #'setup-tide-mode))
 
