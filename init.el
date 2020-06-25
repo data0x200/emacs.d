@@ -851,6 +851,9 @@
 ;;;; Docker
 (el-get-bundle docker)
 
+;;;; Terraform
+(el-get-bundle terraform-mode)
+
 ;;;; CSV
 (el-get-bundle csv-mode)
 
