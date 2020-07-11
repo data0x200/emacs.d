@@ -293,13 +293,6 @@
   (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
   (set-face-attribute 'hl-paren-face nil :weight 'bold))
 
-;;;; google translate
-(el-get-bundle! google-translate
-  (custom-set-variables
-   '(google-translate-default-source-language "en")
-   '(google-translate-default-target-language "ja"))
-  (define-key ctrl-q-map (kbd "t") 'google-translate-at-point))
-
 ;;;; beacon
 (el-get-bundle! beacon
   (setq beacon-color "yellow")
@@ -589,6 +582,17 @@
   (custom-set-variables '(lsp-rust-clippy-preference "on")))
 (el-get-bundle lsp-ui
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+(el-get-bundle emacs-lsp/dap-mode)
+(el-get-bundle Alexander-Miller/pfuture)
+(el-get-bundle Alexander-Miller/treemacs
+  :load-path "src/elisp"
+  :depends (ace-window pfuture ht hydra))
+(el-get-bundle emacs-lsp/lsp-treemacs
+  :depends (treemacs))
+(el-get-bundle bui in alezost/bui.el)
+(el-get-bundle emacs-lsp/lsp-dart
+  :depends (dap-mode posframe lsp-treemacs)
+  (add-hook 'dart-mode-hook 'lsp))
 
 ;; Flycheck
 (el-get-bundle! flycheck)
@@ -856,6 +860,18 @@
 
 ;;;; CSV
 (el-get-bundle csv-mode)
+
+;;;; Flutter
+(el-get-bundle bradyt/dart-mode)
+(el-get-bundle bradyt/dart-server
+  (add-to-list 'auto-mode-alist '("\\.dart$" . dart-server))
+  (custom-set-variables '(dart-server-format-on-save t)))
+(el-get-bundle flutter in amake/flutter.el
+  :depends (dart-mode)
+  (setq flutter-sdk-path "/opt/flutter")
+  (with-eval-after-load-feature 'dart-mode
+    (define-key dart-mode-map (kbd "C-q C-r") 'flutter-run-or-hot-reload)))
+(el-get-bundle hover in ericdallo/hover.el)
 
 ;; ========================================
 ;; Font Settings
