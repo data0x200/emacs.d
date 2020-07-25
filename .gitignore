@@ -5,3 +5,4 @@
 /config.d/*.elc
 !/Cask
 !/snippets
+.yas-compiled-snippets.el

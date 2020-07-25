@@ -578,10 +578,13 @@
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle lsp-mode
   (add-hook 'rust-mode-hook 'lsp)
+  (add-hook 'dart-mode-hook 'lsp)
   (custom-set-variables '(lsp-rust-server 'rust-analyzer))
-  (custom-set-variables '(lsp-rust-clippy-preference "on")))
+  (custom-set-variables '(lsp-rust-clippy-preference "on"))
+  (custom-set-variables '(lsp-dart-flutter-widget-guides nil)))
 (el-get-bundle lsp-ui
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+;; lsp-dart
 (el-get-bundle emacs-lsp/dap-mode)
 (el-get-bundle Alexander-Miller/pfuture)
 (el-get-bundle Alexander-Miller/treemacs
@@ -591,8 +594,7 @@
   :depends (treemacs))
 (el-get-bundle bui in alezost/bui.el)
 (el-get-bundle emacs-lsp/lsp-dart
-  :depends (dap-mode posframe lsp-treemacs)
-  (add-hook 'dart-mode-hook 'lsp))
+  :depends (dap-mode posframe lsp-treemacs))
 
 ;; Flycheck
 (el-get-bundle! flycheck)
@@ -793,6 +795,7 @@
 (el-get-bundle! yasnippet
   (push (locate-user-emacs-file "snippets") yas-snippet-dirs)
   (yas-global-mode t))
+(el-get-bundle! AndreaCrotti/yasnippet-snippets)
 
 ;;;; Go
 (defun lsp-go-install-save-hooks()
@@ -868,6 +871,7 @@
   (custom-set-variables '(dart-server-format-on-save t)))
 (el-get-bundle flutter in amake/flutter.el
   :depends (dart-mode)
+  (add-to-list 'auto-mode-alist '("\\.dart$" . dart-mode))
   (setq flutter-sdk-path "/opt/flutter")
   (with-eval-after-load-feature 'dart-mode
     (define-key dart-mode-map (kbd "C-q C-r") 'flutter-run-or-hot-reload)))
