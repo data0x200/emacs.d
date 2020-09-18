@@ -985,13 +985,6 @@
  '(lsp-ui-peek-enable t)
  '(lsp-ui-sideline-enable t)
  '(package-selected-packages '(csv-mode))
- '(safe-local-variable-values
-   '((eval setq flycheck-command-wrapper-function
-           (lambda
-             (command)
-             (append
-              '("bundle" "exec")
-              command)))))
  '(show-paren-mode t)
  '(skk-auto-insert-paren nil)
  '(skk-auto-okuri-process nil)
