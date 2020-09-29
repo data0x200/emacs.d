@@ -577,8 +577,10 @@
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle lsp-mode
+  :checkout "7.0.1"
   (add-hook 'rust-mode-hook 'lsp)
   (add-hook 'dart-mode-hook 'lsp)
+  (add-hook 'ruby-mode-hook 'lsp)
   (custom-set-variables '(lsp-rust-server 'rust-analyzer))
   (custom-set-variables '(lsp-rust-clippy-preference "on"))
   (custom-set-variables '(lsp-dart-flutter-widget-guides nil)))
@@ -681,7 +683,6 @@
             (lambda ()
               (progn
                 (flycheck-mode)
-                (lsp)
                 (evil-matchit-mode)
                 (setq ruby-deep-indent-paren nil)
                 (setq ruby-deep-indent-paren-style t)
@@ -975,11 +976,15 @@
  '(blink-cursor-mode nil)
  '(column-number-mode t)
  '(cua-mode t nil (cua-base))
+ '(dart-server-format-on-save t)
  '(display-time-mode t)
  '(google-translate-default-source-language "en")
  '(google-translate-default-target-language "ja")
  '(helm-projectile-sources-list
    '(helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))
+ '(lsp-dart-flutter-widget-guides nil)
+ '(lsp-rust-clippy-preference "on")
+ '(lsp-rust-server 'rust-analyzer)
  '(lsp-ui-doc-enable nil)
  '(lsp-ui-imenu-enable nil)
  '(lsp-ui-peek-enable t)
@@ -1005,6 +1010,7 @@
  '(skk-show-inline nil)
  '(skk-show-japanese-menu t)
  '(skk-show-tooltip nil)
+ '(skk-use-act t)
  '(skk-use-color-cursor t)
  '(skk-use-face t)
  '(skk-use-jisx0201-input-method nil)
