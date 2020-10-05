@@ -655,8 +655,7 @@
 (el-get-bundle! flycheck-rust
   (add-hook 'rust-mode-hook (lambda ()
                               (progn
-                                (flycheck-mode)
-                                ))))
+                                (flycheck-mode)))))
 
 ;; Ruby
 (el-get-bundle! ruby-mode
@@ -689,6 +688,7 @@
                 (setq ruby-insert-encoding-magic-comment nil)))))
 
 (el-get-bundle! rubocop
+  (setq rubocop-autocorrect-command "rubocop -A --format emacs")
   (define-key ruby-mode-map (kbd "C-c C-e") 'rubocop-autocorrect-current-file))
 ;;;; flycheck ruby
 ;; https://github.com/flycheck/flycheck/issues/1223#issuecomment-283021487
