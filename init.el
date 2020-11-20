@@ -287,7 +287,7 @@
     (set-face-foreground 'font-lock-doc-face "darkgray")))
 
 (el-get-bundle! highlight-parentheses
-  (setq highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
+  (custom-set-variables '(highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan")))
   (add-hook 'common-lisp-mode-hook 'highlight-parentheses-mode)
   (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
   (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
