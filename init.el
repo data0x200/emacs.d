@@ -107,7 +107,6 @@
 
 ;; Set language to Japanese
 (set-language-environment 'Japanese)
-
 ;; Use UTF-8
 (prefer-coding-system 'utf-8)
 
@@ -651,6 +650,7 @@
 (el-get-bundle rust-mode
   (with-eval-after-load-feature 'rust-mode
     (setq rust-format-on-save t)))
+(el-get-bundle cargo)
 (el-get-bundle toml-mode)
 (el-get-bundle! flycheck-rust
   (add-hook 'rust-mode-hook (lambda ()
@@ -900,19 +900,19 @@
 
        (cond ((< 1920 (apply 'max (cdr (assoc 'geometry (car (display-monitor-attributes-list))))))
               (set-face-attribute 'default nil
-                                  :family "HackGen"
+                                  :family "HackGenNerd"
                                   :height 150)
 
               (set-fontset-font t
                                 'japanese-jisx0208
-                                (font-spec :family "HackGen" :size 21)))
+                                (font-spec :family "HackGenNerd" :size 21)))
              (t
               (set-face-attribute 'default nil
                                   :family "HackGen"
                                   :height 130)
               (set-fontset-font t
                                 'japanese-jisx0208
-                                (font-spec :family "HackGen" :size 17))))))
+                                (font-spec :family "HackGenNerd" :size 17))))))
 
 ;;========================================
 ;; Key Config
