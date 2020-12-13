@@ -576,10 +576,8 @@
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle lsp-mode
-  :checkout "7.0.1"
   (add-hook 'rust-mode-hook 'lsp)
   (add-hook 'dart-mode-hook 'lsp)
-  (add-hook 'ruby-mode-hook 'lsp)
   (custom-set-variables '(lsp-rust-server 'rust-analyzer))
   (custom-set-variables '(lsp-rust-clippy-preference "on"))
   (custom-set-variables '(lsp-dart-flutter-widget-guides nil)))
@@ -681,6 +679,7 @@
   (add-hook 'ruby-mode-hook
             (lambda ()
               (progn
+                (lsp)
                 (flycheck-mode)
                 (evil-matchit-mode)
                 (setq ruby-deep-indent-paren nil)
