@@ -266,15 +266,6 @@
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
-;;;; input method
-(el-get-bundle ddskk
-  ;; 最新だと skk-use-act が機能しない
-  :branch "ddskk-16.2_Warabitai"
-  (custom-set-variables '(skk-use-act t))
-  (setq default-input-method "japanese-skk")
-  (require 'skk-study))
-(global-set-key (kbd "C-'") 'skk-mode)
-
 ;;;; theme
 (el-get-bundle hbin/molokai-theme
   :description "Yet another molokai theme for Emacs 24."
@@ -888,13 +879,13 @@
 (cond ((mac-os-p)
        (set-face-attribute 'default
                            nil
-                           :family "Noto Sans Mono CJK JP"
+                           :family "HackGenNerd"
                            :height 140)
        (setq face-font-rescale-alist
              '(("Noto Sans Mono CJK JP" . 1.0)))
        (set-fontset-font t
                          'japanese-jisx0208
-                         (font-spec :family "Noto Sans Mono CJK JP")))
+                         (font-spec :family "HackGenNerd")))
       ((linux-p)
 
        (cond ((< 1920 (apply 'max (cdr (assoc 'geometry (car (display-monitor-attributes-list))))))
@@ -981,6 +972,7 @@
  '(google-translate-default-target-language "ja")
  '(helm-projectile-sources-list
    '(helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))
+ '(highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
  '(lsp-dart-flutter-widget-guides nil)
  '(lsp-rust-clippy-preference "on")
  '(lsp-rust-server 'rust-analyzer)
