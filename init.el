@@ -567,6 +567,7 @@
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
 (el-get-bundle lsp-mode
+  :load-path ("." "clients")
   (add-hook 'rust-mode-hook 'lsp)
   (add-hook 'dart-mode-hook 'lsp)
   (custom-set-variables '(lsp-rust-server 'rust-analyzer))
