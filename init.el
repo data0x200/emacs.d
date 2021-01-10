@@ -645,6 +645,7 @@
 (el-get-bundle! flycheck-rust
   (add-hook 'rust-mode-hook (lambda ()
                               (progn
+                                (lsp)
                                 (flycheck-mode)))))
 
 ;; Ruby
