@@ -350,6 +350,8 @@
                 evil-ex-complete-emacs-commands t)
 
   (evil-mode 1)
+  (global-undo-tree-mode)
+  (evil-set-undo-system 'undo-tree)
   (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 
@@ -851,6 +853,7 @@
 
 ;;;; Docker
 (el-get-bundle docker)
+(el-get-bundle dockerfile-mode)
 
 ;;;; Terraform
 (el-get-bundle terraform-mode)
