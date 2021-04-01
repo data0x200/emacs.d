@@ -605,7 +605,7 @@
     (if (buffer-file-name)
         (if (string-match (car my-pair) buffer-file-name)
             (funcall (cdr my-pair)))))
-  (add-hook 'web-mode-hook '(lambda ()
+  (add-hook 'web-mode-hook (lambda ()
                               (enable-minor-mode
                                '("\\.jsx?$" . prettier-js-mode)))))
 (el-get-bundle typescript-mode
