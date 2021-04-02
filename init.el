@@ -372,7 +372,7 @@
   (define-key evil-operator-state-map (kbd "C-[") 'evil-escape-or-quit)
   (define-key evil-normal-state-map [escape] 'keyboard-quit)
   (define-key evil-normal-state-map (kbd "C-x C-g") 'evil-escape-or-quit)
-  (define-key evil-normal-state-map (kbd "C-r") 'undo-redo)
+  (define-key evil-normal-state-map (kbd "C-r") 'evil-redo)
   (define-key evil-insert-state-map (kbd "C-[") [escape])
 
   (define-key minibuffer-local-map (kbd "C-[") 'keyboard-quit)
