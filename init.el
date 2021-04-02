@@ -676,8 +676,8 @@
             (lambda ()
               (progn
                 (lsp)
-                (flycheck-mode nil)
-                (flymake-mode t)
+                (flycheck-mode 1)
+                (flymake-mode nil)
                 (evil-matchit-mode)
                 (setq ruby-deep-indent-paren nil)
                 (setq ruby-deep-indent-paren-style t)
@@ -708,6 +708,7 @@
   (define-key ruby-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target)
   (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
 (el-get-bundle! slim-mode)
+(el-get-bundle! haml-mode)
 (el-get-bundle! rufo
   :type github
   :pkgname "danielma/rufo.el"
