@@ -337,6 +337,13 @@
   (set-face-background 'elscreen-tab-other-screen-face "gray40")
   (elscreen-start))
 
+;;;; undo-tree
+(el-get-bundle! undo-tree
+  :type git
+  :url "https://gitlab.com/tsc25/undo-tree.git"
+  (setq undo-tree-auto-save-history nil)
+  (global-undo-tree-mode))
+
 ;;========================================
 ;; evil
 ;;========================================
@@ -350,7 +357,6 @@
                 evil-ex-complete-emacs-commands t)
 
   (evil-mode 1)
-  (global-undo-tree-mode)
   (evil-set-undo-system 'undo-tree)
   (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
@@ -825,18 +831,18 @@
 (el-get-bundle swift-mode)
 
 ;;;; C
-(el-get-bundle! clang-format
-  (defun my/clang-format ()
-    (interactive)
-    (when (eq major-mode 'c-mode)
-      (clang-format-buffer)))
-  (defun toggle-clang-format-hook ()
-    (interactive)
-    (cond ((memq 'my/clang-format before-save-hook)
-           (remove-hook 'before-save-hook 'my/clang-format))
-          (t
-           (add-hook 'before-save-hook 'my/clang-format))))
-  (add-hook 'before-save-hook 'my/clang-format))
+;(el-get-bundle! clang-format
+;  (defun my/clang-format ()
+;    (interactive)
+;    (when (eq major-mode 'c-mode)
+;      (clang-format-buffer)))
+;  (defun toggle-clang-format-hook ()
+;    (interactive)
+;    (cond ((memq 'my/clang-format before-save-hook)
+;           (remove-hook 'before-save-hook 'my/clang-format))
+;          (t
+;           (add-hook 'before-save-hook 'my/clang-format))))
+;  (add-hook 'before-save-hook 'my/clang-format))
 
 ;;;; Java
 (defun java-indent-hook()

@@ -2,4 +2,4 @@
 # name: FactoryGirl.create
 # key: factc
 # --
-FactoryBot.create(:$0)
+create(:$0)

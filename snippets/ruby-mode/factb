@@ -3,4 +3,4 @@
 # key: factb
 # binding: direct-keybinding
 # --
-FactoryBot.build(:$0)
+build(:$0)

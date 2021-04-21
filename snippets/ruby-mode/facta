@@ -3,4 +3,4 @@
 # key: facta
 # binding: direct-keybinding
 # --
-FactoryBot.attributes_for(:$1)
+attributes_for(:$1)
