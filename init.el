@@ -248,6 +248,8 @@
 
 (setq switch-to-buffer-preserve-window-point nil)
 
+(tab-bar-mode t)
+
 ;;========================================
 ;; el-get(packages)
 ;;========================================
@@ -291,9 +293,7 @@
 ;;;; golden-ratio
 (el-get-bundle! golden-ratio)
 
-;; ========================================
-;; popwin
-;; ========================================
+;;;; popwin
 (el-get-bundle! popwin
   (popwin-mode t)
   (setq popwin:popup-window-height 30)
@@ -326,16 +326,7 @@
     "rust/evalrs"
     '((:command . "evalrs")
       (:exec . ("cat %s | %c %a")))
-    :default "evalrs")
-  )
-
-;;;; elscreen
-(el-get-bundle! elscreen
-  (setq elscreen-tab-display-control nil)
-  (setq elscreen-tab-display-kill-screen nil)
-  (set-face-background 'elscreen-tab-current-screen-face "gray85")
-  (set-face-background 'elscreen-tab-other-screen-face "gray40")
-  (elscreen-start))
+    :default "evalrs"))
 
 ;;;; undo-tree
 (el-get-bundle! undo-tree
@@ -343,6 +334,19 @@
   :url "https://gitlab.com/tsc25/undo-tree.git"
   (setq undo-tree-auto-save-history nil)
   (global-undo-tree-mode))
+
+;;; flycheck
+(el-get-bundle! flycheck)
+
+;;; flymake-diagnostic-at-point
+(el-get-bundle popup in auto-complete/popup-el)
+(el-get-bundle! meqif/flymake-diagnostic-at-point
+  (eval-after-load 'flymake
+    (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode)))
+
+;;;; powerline
+(el-get-bundle powerline
+  (powerline-center-evil-theme))
 
 ;;========================================
 ;; evil
@@ -435,7 +439,12 @@
                   (progn
                     (deactivate-input-method)))))
   (evil-set-initial-state 'org-mode 'emacs)
-  (evil-set-initial-state 'xref-mode 'emacs))
+  (evil-set-initial-state 'xref-mode 'emacs)
+  ;; ex-command
+  (evil-ex-define-cmd "q[uit]" 'tab-bar-close-tab)
+  (evil-ex-define-cmd "tabe[dit]" 'tab-bar-new-tab))
+
+
 (el-get-bundle! evil-leader
   (evil-leader/set-leader (kbd "\\"))
   (evil-leader/set-key
@@ -443,16 +452,6 @@
     "o" 'find-file-at-point))
 (el-get-bundle! evil-numbers)
 (el-get-bundle! evil-surround)
-(el-get-bundle! emacsmirror/evil-elscreen
-  :depends (evil elscreen)
-  (defun close-window-or-tab ()
-    (interactive)
-    (if (one-window-p)
-        (evil-elscreen/tab-close)
-      (delete-window)))
-  (define-key evil-normal-state-map (kbd "gt") 'elscreen-next)
-  (define-key evil-normal-state-map (kbd "gT") 'elscreen-previous)
-  (evil-ex-define-cmd "q" 'close-window-or-tab))
 (el-get-bundle! evil-matchit
   (global-evil-matchit-mode t))
 (el-get-bundle! mode-line-color
@@ -584,20 +583,6 @@
   (custom-set-variables '(lsp-dart-flutter-widget-guides nil)))
 (el-get-bundle lsp-ui
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-;; lsp-dart
-(el-get-bundle emacs-lsp/dap-mode)
-(el-get-bundle Alexander-Miller/pfuture)
-(el-get-bundle Alexander-Miller/treemacs
-  :load-path "src/elisp"
-  :depends (ace-window pfuture ht hydra))
-(el-get-bundle emacs-lsp/lsp-treemacs
-  :depends (treemacs))
-(el-get-bundle bui in alezost/bui.el)
-(el-get-bundle emacs-lsp/lsp-dart
-  :depends (dap-mode posframe lsp-treemacs))
-
-;; Flycheck
-(el-get-bundle! flycheck)
 
 ;; Programming Language
 
