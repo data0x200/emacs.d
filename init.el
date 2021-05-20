@@ -249,6 +249,7 @@
 (setq switch-to-buffer-preserve-window-point nil)
 
 (tab-bar-mode t)
+(custom-set-variables '(tab-bar-new-tab-choice "*scratch*"))
 
 ;;========================================
 ;; el-get(packages)
@@ -347,6 +348,12 @@
 ;;;; powerline
 (el-get-bundle powerline
   (powerline-center-evil-theme))
+
+;;;; RFC
+(el-get-bundle! rfc-mode
+  :type github
+  :pkgname "galdor/rfc-mode"
+  (setq rfc-mode-directory (expand-file-name "~/.emacs.d/rfc")))
 
 ;;========================================
 ;; evil
@@ -574,13 +581,27 @@
    '(company-tooltip-common-selection
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection))))))
-(el-get-bundle lsp-mode
+
+;; which-keyboard
+(el-get-bundle! which-key
+  (which-key-mode)
+  (with-eval-after-load-feature 'lsp-mode
+    (add-hook 'lsp-mode-hook  'lsp-enable-which-key-integration)))
+
+;; LSP
+(el-get-bundle! lsp-mode
   :load-path ("." "clients")
-  (add-hook 'rust-mode-hook 'lsp)
-  (add-hook 'dart-mode-hook 'lsp)
+  (dolist (any-mode-hook '(rust-mode-hook
+                           scss-mode-hook
+                           dart-mode-hook
+                           c-mode-hook
+                           ruby-mode-hook))
+    (add-hook any-mode-hook 'lsp))
   (custom-set-variables '(lsp-rust-server 'rust-analyzer))
   (custom-set-variables '(lsp-rust-clippy-preference "on"))
-  (custom-set-variables '(lsp-dart-flutter-widget-guides nil)))
+  (custom-set-variables '(lsp-dart-flutter-widget-guides nil))
+  (with-eval-after-load-feature 'lsp-mode
+    (define-key lsp-mode-map (kbd "M-l") lsp-command-map)))
 (el-get-bundle lsp-ui
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
@@ -610,7 +631,6 @@
     (interactive)
     (tide-setup)
     (flycheck-mode +1)
-    (setq flycheck-check-syntax-automatically '(save mode-enabled))
     (eldoc-mode +1)
     (tide-hl-identifier-mode +1)
     (with-eval-after-load-feature 'company
@@ -666,7 +686,6 @@
   (add-hook 'ruby-mode-hook
             (lambda ()
               (progn
-                (lsp)
                 (flycheck-mode 1)
                 (flymake-mode nil)
                 (evil-matchit-mode)
@@ -714,7 +733,9 @@
 (el-get-bundle scss-mode
   (add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
   (defun scss-hook ()
+    (flycheck-mode +1)
     (with-eval-after-load-feature 'scss-mode
+      (setq css-indent-offset 2)
       (setq indent-tabs-mode nil)
       (setq scss-compile-at-save nil)))
   (add-hook 'scss-mode-hook 'scss-hook))
