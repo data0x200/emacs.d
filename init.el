@@ -249,7 +249,6 @@
 (setq switch-to-buffer-preserve-window-point nil)
 
 (tab-bar-mode t)
-(custom-set-variables '(tab-bar-new-tab-choice "*scratch*"))
 
 ;;========================================
 ;; el-get(packages)
@@ -331,6 +330,7 @@
 
 ;;;; undo-tree
 (el-get-bundle! undo-tree
+  :depends (queue)
   :type git
   :url "https://gitlab.com/tsc25/undo-tree.git"
   (setq undo-tree-auto-save-history nil)
@@ -1000,7 +1000,7 @@
  '(lsp-ui-imenu-enable nil)
  '(lsp-ui-peek-enable t)
  '(lsp-ui-sideline-enable t)
- '(package-selected-packages '(csv-mode))
+ '(package-selected-packages '(queue csv-mode))
  '(safe-local-variable-values
    '((eval setq flycheck-command-wrapper-function
            (lambda
@@ -1035,7 +1035,9 @@
  '(skk-use-look nil)
  '(skk-use-numeric-conversion t)
  '(skk-verbose nil)
+ '(tab-bar-new-tab-choice "*scratch*")
  '(tool-bar-mode nil))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
