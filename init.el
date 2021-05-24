@@ -509,7 +509,11 @@
 
 (el-get-bundle helm-git-grep)
 (el-get-bundle helm-ghq)
-(el-get-bundle projectile)
+(el-get-bundle projectile
+  (eval-after-load 'projectile
+    '(progn
+       (add-to-list 'projectile-project-root-files-bottom-up "pubspec.yaml")
+       (add-to-list 'projectile-project-root-files-bottom-up "BUILD"))))
 (el-get-bundle helm-projectile
   :depends (helm projectile)
   (define-key ctrl-q-map (kbd "C-g") 'helm-projectile)
@@ -593,17 +597,23 @@
   :load-path ("." "clients")
   (dolist (any-mode-hook '(rust-mode-hook
                            scss-mode-hook
-                           dart-mode-hook
                            c-mode-hook
+                           dart-mode-hook
                            ruby-mode-hook))
     (add-hook any-mode-hook 'lsp))
   (custom-set-variables '(lsp-rust-server 'rust-analyzer))
   (custom-set-variables '(lsp-rust-clippy-preference "on"))
-  (custom-set-variables '(lsp-dart-flutter-widget-guides nil))
   (with-eval-after-load-feature 'lsp-mode
     (define-key lsp-mode-map (kbd "M-l") lsp-command-map)))
 (el-get-bundle lsp-ui
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+(el-get-bundle tree-mode
+  :type http
+  :url "https://www.emacswiki.org/emacs/download/tree-mode.el")
+(el-get-bundle emacs-lsp/lsp-dart
+  :depends (lsp-mode dap-mode)
+  (with-eval-after-load-feature 'lsp-mode
+    (custom-set-variables '(lsp-dart-flutter-widget-guides nil))))
 
 ;; Programming Language
 
