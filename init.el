@@ -249,6 +249,7 @@
 (setq switch-to-buffer-preserve-window-point nil)
 
 (tab-bar-mode t)
+(customize-set-variable 'tab-bar-new-tab-choice "*scratch*")
 
 ;;========================================
 ;; el-get(packages)
@@ -279,7 +280,7 @@
     (set-face-foreground 'font-lock-doc-face "darkgray")))
 
 (el-get-bundle! highlight-parentheses
-  (custom-set-variables '(highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan")))
+  (customize-set-variable 'highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
   (add-hook 'common-lisp-mode-hook 'highlight-parentheses-mode)
   (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
   (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
@@ -510,7 +511,7 @@
 (el-get-bundle helm-git-grep)
 (el-get-bundle helm-ghq)
 (el-get-bundle projectile
-  (eval-after-load 'projectile
+  (with-eval-after-load-feature 'projectile
     '(progn
        (add-to-list 'projectile-project-root-files-bottom-up "pubspec.yaml")
        (add-to-list 'projectile-project-root-files-bottom-up "BUILD"))))
@@ -520,16 +521,16 @@
   (define-key ctrl-q-map (kbd "h g") 'helm-projectile-switch-project)
   (define-key ctrl-q-map (kbd "g r") 'helm-projectile)
 
-  (eval-after-load 'helm
+  (with-eval-after-load-feature 'helm
     '(progn
        (require 'helm-locate)
        (define-key helm-generic-files-map (kbd "C-w") 'backward-kill-word)))
   (projectile-mode)
 
-  (custom-set-variables
-   '(helm-projectile-sources-list '(helm-source-projectile-buffers-list
-                                    helm-source-projectile-recentf-list
-                                    helm-source-projectile-files-list))))
+  (customize-set-variable
+   'helm-projectile-sources-list '(helm-source-projectile-buffers-list
+                                   helm-source-projectile-recentf-list
+                                   helm-source-projectile-files-list)))
 
 ;;;; git
 (el-get-bundle git-gutter
@@ -593,7 +594,7 @@
     (add-hook 'lsp-mode-hook  'lsp-enable-which-key-integration)))
 
 ;; LSP
-(el-get-bundle! lsp-mode
+(el-get-bundle lsp-mode
   :load-path ("." "clients")
   (dolist (any-mode-hook '(rust-mode-hook
                            scss-mode-hook
@@ -601,8 +602,8 @@
                            dart-mode-hook
                            ruby-mode-hook))
     (add-hook any-mode-hook 'lsp))
-  (custom-set-variables '(lsp-rust-server 'rust-analyzer))
-  (custom-set-variables '(lsp-rust-clippy-preference "on"))
+  (customize-set-variable 'lsp-rust-server 'rust-analyzer)
+  (customize-set-variable 'lsp-rust-clippy-preference "on")
   (with-eval-after-load-feature 'lsp-mode
     (define-key lsp-mode-map (kbd "M-l") lsp-command-map)))
 (el-get-bundle lsp-ui
@@ -611,9 +612,8 @@
   :type http
   :url "https://www.emacswiki.org/emacs/download/tree-mode.el")
 (el-get-bundle emacs-lsp/lsp-dart
-  :depends (lsp-mode dap-mode)
-  (with-eval-after-load-feature 'lsp-mode
-    (custom-set-variables '(lsp-dart-flutter-widget-guides nil))))
+  :depends (dap-mode)
+  :branch "1.18.3")
 
 ;; Programming Language
 
@@ -889,7 +889,7 @@
 (el-get-bundle bradyt/dart-mode)
 (el-get-bundle bradyt/dart-server
   (add-to-list 'auto-mode-alist '("\\.dart$" . dart-server))
-  (custom-set-variables '(dart-server-format-on-save t)))
+  (customize-set-variable 'dart-server-format-on-save t))
 (el-get-bundle flutter in amake/flutter.el
   :depends (dart-mode)
   (add-to-list 'auto-mode-alist '("\\.dart$" . dart-mode))
@@ -984,70 +984,6 @@
             (progn
               (define-key doc-view-mode-map "k" 'doc-view-previous-page)
               (define-key doc-view-mode-map "j" 'doc-view-next-page))))
-
-;; ========================================
-;; Custom Variables (Auto Edit)
-;; ========================================
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(blink-cursor-mode nil)
- '(column-number-mode t)
- '(cua-mode t nil (cua-base))
- '(dart-server-format-on-save t)
- '(display-time-mode t)
- '(google-translate-default-source-language "en")
- '(google-translate-default-target-language "ja")
- '(helm-projectile-sources-list
-   '(helm-source-projectile-buffers-list helm-source-projectile-recentf-list helm-source-projectile-files-list))
- '(highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
- '(lsp-dart-flutter-widget-guides nil)
- '(lsp-rust-clippy-preference "on")
- '(lsp-rust-server 'rust-analyzer)
- '(lsp-ui-doc-enable nil)
- '(lsp-ui-imenu-enable nil)
- '(lsp-ui-peek-enable t)
- '(lsp-ui-sideline-enable t)
- '(package-selected-packages '(queue csv-mode))
- '(safe-local-variable-values
-   '((eval setq flycheck-command-wrapper-function
-           (lambda
-             (command)
-             (append
-              '("bundle" "exec")
-              command)))))
- '(show-paren-mode t)
- '(skk-auto-insert-paren nil)
- '(skk-auto-okuri-process nil)
- '(skk-auto-start-henkan t)
- '(skk-check-okurigana-on-touroku nil)
- '(skk-delete-implies-kakutei nil)
- '(skk-egg-like-newline nil)
- '(skk-henkan-okuri-strictly nil)
- '(skk-henkan-strict-okuri-precedence nil)
- '(skk-j-mode-function-key-usage nil)
- '(skk-japanese-message-and-error nil)
- '(skk-kakutei-early nil)
- '(skk-preload nil)
- '(skk-share-private-jisyo nil)
- '(skk-show-annotation nil)
- '(skk-show-candidates-always-pop-to-buffer nil)
- '(skk-show-icon nil)
- '(skk-show-inline nil)
- '(skk-show-japanese-menu t)
- '(skk-show-tooltip nil)
- '(skk-use-act t)
- '(skk-use-color-cursor t)
- '(skk-use-face t)
- '(skk-use-jisx0201-input-method nil)
- '(skk-use-look nil)
- '(skk-use-numeric-conversion t)
- '(skk-verbose nil)
- '(tab-bar-new-tab-choice "*scratch*")
- '(tool-bar-mode nil))
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
