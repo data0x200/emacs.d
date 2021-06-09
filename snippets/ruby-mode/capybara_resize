@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: capybara window resize
+# key: capybarasize
+# --
+page.driver.browser.manage.window.resize_to($1,$2)

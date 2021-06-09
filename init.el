@@ -613,7 +613,8 @@
   :url "https://www.emacswiki.org/emacs/download/tree-mode.el")
 (el-get-bundle emacs-lsp/lsp-dart
   :depends (dap-mode)
-  :branch "1.18.3")
+  :branch "1.18.3"
+  (customize-set-variable 'lsp-dart-flutter-widget-guides nil))
 
 ;; Programming Language
 
@@ -815,7 +816,9 @@
 (el-get-bundle! yasnippet
   (push (locate-user-emacs-file "snippets") yas-snippet-dirs)
   (yas-global-mode t))
-(el-get-bundle! AndreaCrotti/yasnippet-snippets)
+(el-get-bundle! AndreaCrotti/yasnippet-snippets
+  :depends (yasnippet)
+  (push (locate-user-emacs-file "el-get/yasnippet-snippets/snippets") yas-snippet-dirs))
 
 ;;;; Go
 (defun lsp-go-install-save-hooks()
