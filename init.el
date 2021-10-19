@@ -356,6 +356,10 @@
   :pkgname "galdor/rfc-mode"
   (setq rfc-mode-directory (expand-file-name "~/.emacs.d/rfc")))
 
+;;;; editor-config
+(el-get-bundle! editorconfig
+  (editorconfig-mode t))
+
 ;;========================================
 ;; evil
 ;;========================================
@@ -889,7 +893,8 @@
 (el-get-bundle csv-mode)
 
 ;;;; Flutter
-(el-get-bundle bradyt/dart-mode)
+(el-get-bundle bradyt/dart-mode
+  (add-hook 'before-save-hook 'lsp-format-buffer t t))
 (el-get-bundle bradyt/dart-server
   (add-to-list 'auto-mode-alist '("\\.dart$" . dart-server))
   (customize-set-variable 'dart-server-format-on-save t))
