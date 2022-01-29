@@ -607,9 +607,9 @@
                            ruby-mode-hook))
     (add-hook any-mode-hook 'lsp))
   (customize-set-variable 'lsp-rust-server 'rust-analyzer)
-  (customize-set-variable 'lsp-rust-clippy-preference "on")
-  (with-eval-after-load-feature 'lsp-mode
-    (define-key lsp-mode-map (kbd "M-l") lsp-command-map)))
+  (customize-set-variable 'lsp-rust-clippy-preference "on"))
+(with-eval-after-load-feature 'lsp-mode
+  (define-key lsp-mode-map (kbd "M-l") lsp-command-map))
 (el-get-bundle lsp-ui
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 (el-get-bundle tree-mode
@@ -808,13 +808,14 @@
 (el-get-bundle emmet-mode
   (add-hook 'web-mode-hook 'emmet-mode)
   (with-eval-after-load-feature 'emmet-mode
-    (setq emmet-move-cursor-between-quotes t)
-    (setq emmet-expand-jsx-className? nil))
+    (setq emmet-move-cursor-between-quotes t))
   (define-key evil-insert-state-map (kbd "C-c C-,") 'emmet-expand-line))
 
 ;;;; YAML
 (el-get-bundle yaml-mode
   (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
+(el-get-bundle indent-guide
+  (indent-guide-global-mode))
 
 ;;;; Yasnippet
 (el-get-bundle! yasnippet
@@ -887,7 +888,8 @@
 (el-get-bundle dockerfile-mode)
 
 ;;;; Terraform
-(el-get-bundle terraform-mode)
+(el-get-bundle terraform-mode
+  (add-hook 'terraform-mode-hook 'terraform-format-on-save-mode))
 
 ;;;; CSV
 (el-get-bundle csv-mode)
