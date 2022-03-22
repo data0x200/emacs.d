@@ -263,6 +263,7 @@
        "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
     (goto-char (point-max))
     (eval-print-last-sexp)))
+(remove-hook 'el-get-post-install-hooks 'el-get-post-install-notification)
 
 ;;;; exec-path-from-shell
 (el-get-bundle! exec-path-from-shell
@@ -318,9 +319,11 @@
   ;; Rubocop
   (push '("^\*RuboCop.*$" :dedicated t :regexp t :position :bottom :height 0.2) popwin:special-display-config)
   ;; Google Translate
-  (push '("*Google Translate" :position :right) popwin:special-display-config))
+  (push '("*Google Translate" :position :right) popwin:special-display-config)
+  ;; xref
+  (push '("*xref*" :dedicated t :position :bottom) popwin:special-display-config))
 
-;;;; quicrun
+;;;; quickrun
 (el-get-bundle quickrun
   (define-key ctrl-q-map (kbd "C-q") 'quickrun)
   (quickrun-add-command
@@ -360,6 +363,14 @@
 (el-get-bundle! editorconfig
   (editorconfig-mode t))
 
+(el-get-bundle! request)
+
+(el-get-bundle tarao/with-eval-after-load-feature-el)
+
+(el-get-bundle abrochard/mermaid-mode)
+
+(el-get-bundle shibayu36/emacs-open-github-from-here
+  :features open-github-from-here)
 ;;========================================
 ;; evil
 ;;========================================
@@ -455,8 +466,6 @@
   ;; ex-command
   (evil-ex-define-cmd "q[uit]" 'tab-bar-close-tab)
   (evil-ex-define-cmd "tabe[dit]" 'tab-bar-new-tab))
-
-
 (el-get-bundle! evil-leader
   (evil-leader/set-leader (kbd "\\"))
   (evil-leader/set-key
@@ -473,7 +482,6 @@
   :type http
   :url "https://raw.githubusercontent.com/tarao/evil-plugins/master/evil-mode-line.el"
   :depends mode-line-color)
-(el-get-bundle tarao/with-eval-after-load-feature-el)
 
 ;;========================================
 ;; Helm
@@ -601,6 +609,7 @@
 (el-get-bundle lsp-mode
   :load-path ("." "clients")
   (dolist (any-mode-hook '(rust-mode-hook
+                           web-mode-hook
                            scss-mode-hook
                            c-mode-hook
                            dart-mode-hook
@@ -624,9 +633,7 @@
 
 ;;;; JavaScript
 (el-get-bundle prettier-js
-  (with-eval-after-load-feature 'prettier-js
-    (setq prettier-js-args '("--prose-wrap" "never"
-                             "--jsx-bracket-same-line" "false")))
+  (with-eval-after-load-feature 'prettier-js)
   (defun enable-minor-mode (my-pair)
     "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
     (if (buffer-file-name)
@@ -907,6 +914,9 @@
   (with-eval-after-load-feature 'dart-mode
     (define-key dart-mode-map (kbd "C-q C-r") 'flutter-run-or-hot-reload)))
 (el-get-bundle hover in ericdallo/hover.el)
+
+;;;; Kotlin
+(el-get-bundle kotlin-mode)
 
 ;; ========================================
 ;; Font Settings
