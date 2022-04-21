@@ -1,13 +1,18 @@
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
+(setq package-archives
+      '(("gnu"   . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")
+        ("org"   . "http://orgmode.org/elpa/")))
 (package-initialize)
 
-(require 'cl-lib nil t)
+(when (not (package-installed-p 'use-package))
+   (package-refresh-contents)
+   (package-install 'use-package))
+(setq use-package-enable-imenu-support t)
+(setq use-package-always-ensure t)
+(require 'use-package)
 
 ;;========================================
-;; Functions
+;; FUNCTIONS
 ;;========================================
 (defun mac-os-p ()
   (member window-system '(mac ns)))
@@ -251,10 +256,6 @@
 (tab-bar-mode t)
 (customize-set-variable 'tab-bar-new-tab-choice "*scratch*")
 
-;;========================================
-;; el-get(packages)
-;;========================================
-;; General
 ;;;; el-get
 (add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
 (unless (require 'el-get nil 'noerror)
@@ -266,43 +267,44 @@
 (remove-hook 'el-get-post-install-hooks 'el-get-post-install-notification)
 
 ;;;; exec-path-from-shell
-(el-get-bundle! exec-path-from-shell
+(use-package exec-path-from-shell
+  :init
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
 ;;;; theme
-(el-get-bundle hbin/molokai-theme
-  :description "Yet another molokai theme for Emacs 24."
-  :post-init (add-to-list 'custom-theme-load-path default-directory)
+(use-package molokai-theme
+  :config
   (when window-system
     (load-theme 'molokai t t)
     (enable-theme 'molokai)
     (set-face-background 'default "black")
     (set-face-foreground 'font-lock-doc-face "darkgray")))
 
-(el-get-bundle! highlight-parentheses
-  (customize-set-variable 'highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
-  (add-hook 'common-lisp-mode-hook 'highlight-parentheses-mode)
-  (add-hook 'lisp-mode-hook 'highlight-parentheses-mode)
-  (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
-  (set-face-attribute 'hl-paren-face nil :weight 'bold))
+(use-package highlight-parentheses
+  :ensure t
+  :custom (highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
+  :hook ((common-lisp-mode-hook . highlight-parentheses-mode)
+         (lisp-mode-hook . highlight-parentheses-mode)
+         (emacs-lisp-mode-hook . highlight-parentheses-mode)))
 
 ;;;; beacon
-(el-get-bundle! beacon
-  (setq beacon-color "yellow")
-  (beacon-mode t))
+(use-package beacon
+  :custom (beacon-color "yellow")
+  :init (beacon-mode t))
 
 ;;;; golden-ratio
-(el-get-bundle! golden-ratio)
+(use-package golden-ratio)
 
 ;;;; popwin
-(el-get-bundle! popwin
+(use-package popwin
+  :custom
+  ((popwin:popup-window-height 30)
+  (popwin:popup-window-width 100)
+  (popwin:popup-window-position 'bottom)
+  (popwin:close-popup-window-timer-interval 1.0))
+  :init
   (popwin-mode t)
-  (setq popwin:popup-window-height 30)
-  (setq popwin:popup-window-width 100)
-  (setq popwin:popup-window-position 'bottom)
-  (setq popwin:close-popup-window-timer-interval 1.0)
-
   (global-set-key (kbd "C-c") popwin:keymap)
 
   (push '("*quickrun*" :position :right) popwin:special-display-config)
@@ -324,8 +326,9 @@
   (push '("*xref*" :dedicated t :position :bottom) popwin:special-display-config))
 
 ;;;; quickrun
-(el-get-bundle quickrun
-  (define-key ctrl-q-map (kbd "C-q") 'quickrun)
+(use-package quickrun
+  :bind (:map ctrl-q-map ("C-q" . quickrun))
+  :config
   (quickrun-add-command
     "rust/evalrs"
     '((:command . "evalrs")
@@ -333,63 +336,60 @@
     :default "evalrs"))
 
 ;;;; undo-tree
-(el-get-bundle! undo-tree
-  :depends (queue)
-  :type git
-  :url "https://gitlab.com/tsc25/undo-tree.git"
-  (setq undo-tree-auto-save-history nil)
-  (global-undo-tree-mode))
+(use-package undo-tree
+  :custom  (undo-tree-auto-save-history nil)
+  :init (global-undo-tree-mode))
 
 ;;; flycheck
-(el-get-bundle! flycheck)
+(use-package flycheck)
 
 ;;; flymake-diagnostic-at-point
-(el-get-bundle popup in auto-complete/popup-el)
-(el-get-bundle! meqif/flymake-diagnostic-at-point
-  (eval-after-load 'flymake
-    (add-hook 'flymake-mode-hook #'flymake-diagnostic-at-point-mode)))
+(use-package flymake-diagnostic-at-point
+   :after flymake
+   :hook (flymake-mode. flymake-diagnostic-at-point-mode))
 
 ;;;; powerline
-(el-get-bundle powerline
+(use-package powerline
+  :config
   (powerline-center-evil-theme))
 
 ;;;; RFC
-(el-get-bundle! rfc-mode
-  :type github
-  :pkgname "galdor/rfc-mode"
-  (setq rfc-mode-directory (expand-file-name "~/.emacs.d/rfc")))
+(use-package rfc-mode
+  :custom
+  (rfc-mode-directory (expand-file-name "~/.emacs.d/rfc")))
 
 ;;;; editor-config
-(el-get-bundle! editorconfig
+(use-package editorconfig
+  :init
   (editorconfig-mode t))
 
-(el-get-bundle! request)
+(use-package request)
 
 (el-get-bundle tarao/with-eval-after-load-feature-el)
 
-(el-get-bundle abrochard/mermaid-mode)
+(use-package mermaid-mode)
 
 (el-get-bundle shibayu36/emacs-open-github-from-here
   :features open-github-from-here)
+
 ;;========================================
 ;; evil
 ;;========================================
-(el-get-bundle! emacs-evil/evil
-  :before (setq evil-want-C-u-scroll t
-                evil-want-C-i-jump t
-                evil-search-module 'evil-search
-                evil-ex-search-vim-style-regexp t
-                evil-esc-delay 0
-                evil-bigword "^ \_\t\r\n"
-                evil-ex-complete-emacs-commands t)
-
+(use-package evil
+  :custom
+  ((evil-want-C-u-scroll t)
+   (evil-want-C-i-jump t)
+   (evil-search-module 'evil-search)
+   (evil-ex-search-vim-style-regexp t)
+   (evil-esc-delay 0)
+   (evil-bigword "^ \_\t\r\n")
+   (evil-ex-complete-emacs-commands t)
+   (evil-shift-width 2))
+  :config
   (evil-mode 1)
   (evil-set-undo-system 'undo-tree)
   (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
   (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
-
-  ;; global-config
-  (setq-default evil-shift-width 2)
 
   ;; esc quits
   (defun evil-escape-or-quit (&optional prompt)
@@ -432,13 +432,10 @@
   (define-key evil-normal-state-map (kbd "C-h") 'help)
   (define-key evil-normal-state-map (kbd "C-q C-t") 'toggle-cleanup-spaces)
   (define-key evil-normal-state-map (kbd "SPC") ctrl-q-map)
-  (eval-after-load 'helm
+  (eval-after-load 'consult
     '(progn
-       (define-key ctrl-q-map (kbd "h h") 'helm-imenu)
-       (define-key evil-normal-state-map "\C-a\C-x" 'helm-M-x)
-       (define-key evil-normal-state-map "\C-a\C-a" 'helm-for-files)
-       (define-key evil-normal-state-map "\C-a\C-b" 'helm-buffers-list)
-       (define-key evil-normal-state-map "\C-a\C-g" 'helm-ls-git-ls)))
+       (define-key evil-normal-state-map "\C-a\C-a" 'consult-recent-file)
+       (define-key evil-normal-state-map "\C-a\C-b" 'consult-buffer)))
   (define-key evil-normal-state-map (kbd "C-e C-e") 'eshell)
 
   ;; insert map
@@ -466,14 +463,20 @@
   ;; ex-command
   (evil-ex-define-cmd "q[uit]" 'tab-bar-close-tab)
   (evil-ex-define-cmd "tabe[dit]" 'tab-bar-new-tab))
-(el-get-bundle! evil-leader
+(use-package evil-leader
+  :after (evil)
+  :config
   (evil-leader/set-leader (kbd "\\"))
   (evil-leader/set-key
     "r" 'quickrun
     "o" 'find-file-at-point))
-(el-get-bundle! evil-numbers)
-(el-get-bundle! evil-surround)
-(el-get-bundle! evil-matchit
+(use-package evil-numbers)
+(use-package evil-surround
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+(use-package evil-matchit
+  :config
   (global-evil-matchit-mode t))
 (el-get-bundle! mode-line-color
   :type http
@@ -483,114 +486,128 @@
   :url "https://raw.githubusercontent.com/tarao/evil-plugins/master/evil-mode-line.el"
   :depends mode-line-color)
 
-
 ;;========================================
 ;; vertico
 ;;========================================
-(el-get-bundle! vertico
+(use-package vertico
+  :init
   (vertico-mode)
-  (savehist-mode))
-(el-get-bundle! consult)
-(el-get-bundle! consult-projectile)
-(el-get-bundle consult-ghq)
-(el-get-bundle consult-lsp)
-(el-get-bundle! marginalia
+  (savehist-mode)
+  :custom
+  (vertico-count 20))
+(use-package consult
+  :config
+  (recentf-mode)
+  :bind (:map ctrl-q-map
+              ("h a" . consult-recent-file)))
+(use-package consult-projectile)
+(use-package consult-ghq
+  :bind (:map ctrl-q-map
+              ("g r" . consult-ghq-find)
+              ("g g" . consult-ghq-grep)))
+(use-package consult-lsp)
+(use-package marginalia
+  :init
   (marginalia-mode))
-(el-get-bundle! orderless
-  (setq completion-styles '(orderless basic)
-        completion-category-overrides '((file (styles basic partial-completion)))))
-(el-get-bundle! embark)
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+(use-package embark)
 
 ;;;; git
-(el-get-bundle git-gutter
+(use-package git-gutter
+  :init
   (global-git-gutter-mode t)
   (defvar git-gutter-map (make-keymap))
   (define-key global-map (kbd "C-c C-g") git-gutter-map)
-  (define-key git-gutter-map (kbd "C-n") 'git-gutter:next-hunk)
-  (define-key git-gutter-map (kbd "C-p") 'git-gutter:previous-hunk)
-  (define-key git-gutter-map (kbd "C-a") 'git-gutter:stage-hunk))
-(el-get-bundle! git-gutter-fringe)
+  :bind (:map git-gutter-map
+              ("C-n" . git-gutter:next-hunk)
+              ("C-p" . git-gutter:previous-hunk)
+              ("C-a" . git-gutter:stage-hunk)))
+(use-package git-gutter-fringe)
 (add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
 
 ;;;; open-junk-file
-(el-get-bundle open-junk-file
-  (setq open-junk-file-format "~/.memo/junk/%Y-%m-%d-%H%M%S."))
+(use-package open-junk-file
+  :custom
+  (open-junk-file-format "~/.memo/junk/%Y-%m-%d-%H%M%S."))
 
 ;;;; Company mode
-(el-get-bundle company-mode/company-mode
-  :features company
+(use-package company
+  :init
   (global-company-mode t)
-  (setq company-tooltip-limit 10)
-  (setq company-idle-delay .1)
-  (setq company-echo-delay 0)
-  (setq company-begin-commands '(self-insert-command))
-  (setq company-selection-wrap-around t)
-  (setq company-minimum-prefix-length 2)
-
-  ;; C-n, C-pで補完候補を次/前の候補を選択
-  (define-key company-active-map (kbd "C-n") 'company-select-next)
-  (define-key company-active-map (kbd "C-p") 'company-select-previous)
-  (define-key company-search-map (kbd "C-n") 'company-select-next)
-  (define-key company-search-map (kbd "C-p") 'company-select-previous)
-  ;; C-sで絞り込む
-  (define-key company-active-map (kbd "C-s") 'company-filter-candidates)
-  ;; TABで候補を設定
-  (define-key company-active-map (kbd "C-i") 'company-complete-selection)
-  (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
-  (define-key company-active-map (kbd "C-h") nil)
-  (define-key company-active-map (kbd "C-w") nil)
-
-  (custom-set-faces
-   '(company-preview
+  :custom
+  (company-tooltip-limit 10)
+  (company-idle-delay .1)
+  (company-echo-delay 0)
+  (company-begin-commands '(self-insert-command))
+  (company-selection-wrap-around t)
+  (company-minimum-prefix-length 2)
+  :bind (:map company-active-map
+              ;; C-n, C-pで補完候補を次/前の候補を選択
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)
+              ;; C-sで絞り込む
+              ("C-s" . company-filter-candidates)
+              ;; TABで候補を設定
+              ("C-i" . company-complete-selection)
+              ("<tab>" . company-complete-selection)
+              ("C-h". nil)
+              ("C-w". nil))
+  :custom-face
+   (company-preview
      ((t (:foreground "darkgray" :underline t))))
-   '(company-preview-common
+   (company-preview-common
      ((t (:inherit company-preview))))
-   '(company-tooltip
+   (company-tooltip
      ((t (:background "lightgray" :foreground "black"))))
-   '(company-tooltip-selection
+   (company-tooltip-selection
      ((t (:background "steelblue" :foreground "white"))))
-   '(company-tooltip-common
+   (company-tooltip-common
      ((((type x)) (:inherit company-tooltip :weight bold))
       (t (:inherit company-tooltip))))
-   '(company-tooltip-common-selection
+   (company-tooltip-common-selection
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
-      (t (:inherit company-tooltip-selection))))))
+      (t (:inherit company-tooltip-selection)))))
 
 ;; which-keyboard
-(el-get-bundle! which-key
+(use-package which-key
+  :init
   (which-key-mode)
-  (with-eval-after-load-feature 'lsp-mode
-    (add-hook 'lsp-mode-hook  'lsp-enable-which-key-integration)))
+  :hook
+  (lsp-mode-hook . lsp-enable-which-key-integration))
 
 ;; LSP
-(el-get-bundle lsp-mode
-  :load-path ("." "clients")
-  (dolist (any-mode-hook '(rust-mode-hook
-                           web-mode-hook
-                           scss-mode-hook
-                           c-mode-hook
-                           dart-mode-hook
-                           ruby-mode-hook))
-    (add-hook any-mode-hook 'lsp))
-  (customize-set-variable 'lsp-rust-server 'rust-analyzer)
-  (customize-set-variable 'lsp-rust-clippy-preference "on"))
-(with-eval-after-load-feature 'lsp-mode
-  (define-key lsp-mode-map (kbd "M-l") lsp-command-map))
-(el-get-bundle lsp-ui
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
-(el-get-bundle tree-mode
-  :type http
-  :url "https://www.emacswiki.org/emacs/download/tree-mode.el")
-(el-get-bundle emacs-lsp/lsp-dart
-  :depends (dap-mode)
-  :branch "1.18.3"
-  (customize-set-variable 'lsp-dart-flutter-widget-guides nil))
+(use-package lsp-mode
+  :hook
+  (rust-mode-hook . lsp)
+  (web-mode-hook . lsp)
+  (scss-mode-hook . lsp)
+  (c-mode-hook . lsp)
+  (dart-mode-hook . lsp)
+  (ruby-mode-hook . lsp)
+  :custom
+  (lsp-rust-server 'rust-analyzer)
+  (lsp-rust-clippy-preference "on")
+  :bind (:map lsp-mode-map
+              ("M-l" . lsp-command-map)))
+(use-package lsp-ui
+  :after (lsp)
+  :hook
+  (lsp-mode-hook . lsp-ui-mode))
+
+(use-package lsp-dart
+  :custom
+  (lsp-dart-flutter-widget-guides nil))
 
 ;; Programming Language
 
 ;;;; JavaScript
-(el-get-bundle prettier-js
-  (with-eval-after-load-feature 'prettier-js)
+(use-package prettier-js
+  :config
   (defun enable-minor-mode (my-pair)
     "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
     (if (buffer-file-name)
@@ -599,80 +616,78 @@
   (add-hook 'web-mode-hook (lambda ()
                               (enable-minor-mode
                                '("\\.jsx?$" . prettier-js-mode)))))
-(el-get-bundle typescript-mode
-  (add-hook 'typescript-mode-hook 'prettier-js-mode)
-  (add-to-list 'auto-mode-alist '("\\.ts$" . typescript-mode)))
+(use-package typescript-mode
+  :hook (typescript-mode-hook . prettier-js-mode)
+  :mode (("\\.ts$" . typescript-mode)))
 
-(el-get-bundle tide
-  :depends (flycheck company-mode)
-
-  (defun setup-tide-mode ()
-    (interactive)
-    (tide-setup)
-    (flycheck-mode +1)
-    (eldoc-mode +1)
-    (tide-hl-identifier-mode +1)
-    (with-eval-after-load-feature 'company
-      (company-mode +1)))
-  (add-hook 'before-save-hook 'tide-format-before-save)
-  (add-hook 'typescript-mode-hook #'setup-tide-mode))
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :config
+  :hook
+  (before-save-hook . tide-format-before-save)
+  (typescript-mode-hook . (lambda ()
+                            (interactive)
+                            (tide-setup)
+                            (flycheck-mode +1)
+                            (eldoc-mode +1)
+                            (tide-hl-identifier-mode +1)
+                            (company-mode +1))))
 
 ;;;; Lua
-(el-get-bundle lua-mode
-  (add-to-list 'auto-mode-alist '("\\.lua" . lua-mode)))
+(use-package lua-mode)
 
 ;;;; Markdown
-(el-get-bundle! markdown-mode
+(use-package markdown-mode
+  :mode
+  (("\\.markdown$" . gfm-mode)
+   ("\\.mkd$" . gfm-mode)
+   ("\\.md$" . gfm-mode))
+  :config
   (set-face-attribute 'markdown-code-face nil :inherit 'default :weight 'bold)
-  (set-face-foreground 'markdown-code-face "lightsteelblue3")
-  (add-to-list 'auto-mode-alist '("\\.markdown$" . gfm-mode))
-  (add-to-list 'auto-mode-alist '("\\.mkd$" . gfm-mode))
-  (add-to-list 'auto-mode-alist '("\\.md$" . gfm-mode)))
+  (set-face-foreground 'markdown-code-face "lightsteelblue3"))
 
 ;;;; Rust
-(el-get-bundle rust-mode
-  (with-eval-after-load-feature 'rust-mode
-    (setq rust-format-on-save t)))
-(el-get-bundle cargo)
-(el-get-bundle toml-mode)
-(el-get-bundle! flycheck-rust
+(use-package rust-mode
+  :custom (rust-format-on-save t))
+(use-package cargo)
+(use-package toml-mode)
+(use-package flycheck-rust
+  :config
   (add-hook 'rust-mode-hook (lambda ()
                               (progn
                                 (lsp)
                                 (flycheck-mode)))))
 
 ;; Ruby
-(el-get-bundle! ruby-mode
-  (add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("Berksfile" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("config.ru" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("\\.ruby$" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("\\.gemspec" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("\\.json.jbuilder" . ruby-mode))
-  (add-to-list 'auto-mode-alist '("\\.json.ruby" . ruby-mode))
-  (add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode))
-  (defun toggle-ruby-mode-set-encoding ()
-    "set-encoding ruby-mode"
-    (interactive)
-    (setq ruby-insert-encoding-magic-comment (if ruby-insert-encoding-magic-comment nil t)))
-  (define-key ruby-mode-map "\C-ce" 'toggle-ruby-mode-set-encoding)
-  (setq ruby-insert-encoding-magic-comment nil)
-  ;; hooks
-  (add-hook 'ruby-mode-hook
-            (lambda ()
-              (progn
-                (flycheck-mode 1)
-                (flymake-mode nil)
-                (evil-matchit-mode)
-                (setq ruby-deep-indent-paren nil)
-                (setq ruby-deep-indent-paren-style t)
-                (setq ruby-insert-encoding-magic-comment nil)))))
+(use-package ruby-mode
+  :mode (("\\.rb$" . ruby-mode)
+         ("\\.rake$" . ruby-mode)
+         ("Rakefile" . ruby-mode)
+         ("Gemfile" . ruby-mode)
+         ("Berksfile" . ruby-mode)
+         ("Guardfile" . ruby-mode)
+         ("config.ru" . ruby-mode)
+         ("\\.ruby$" . ruby-mode)
+         ("\\.gemspec" . ruby-mode)
+         ("\\.json.jbuilder" . ruby-mode)
+         ("\\.json.ruby" . ruby-mode))
+  :interpreter (("ruby" . ruby-mode))
+  :custom
+  (ruby-insert-encoding-magic-comment nil)
+  :hook
+  (ruby-mode-hook . (lambda ()
+                      (progn
+                        (flycheck-mode 1)
+                        (flymake-mode nil)
+                        (evil-matchit-mode)
+                        (setq ruby-deep-indent-paren nil)
+                        (setq ruby-deep-indent-paren-style t)
+                        (setq ruby-insert-encoding-magic-comment nil)))))
 
-(el-get-bundle! rubocop
+(use-package rubocop
+  :after (ruby-mode)
+  :config
   (setq rubocop-autocorrect-command "rubocop -A --format emacs")
   (define-key ruby-mode-map (kbd "C-c C-e") 'rubocop-autocorrect-current-file))
 ;;;; flycheck ruby
@@ -683,7 +698,8 @@
 ;;                              (append '("bundle" "exec") command)))))))
 (el-get-bundle! emacsmirror/ruby-block
   (ruby-block-mode t))
-(el-get-bundle! ruby-electric
+(use-package ruby-electric
+  :config
   (setq ruby-electric-expand-delimiters-list nil)
   (add-hook 'ruby-mode-hook
             (lambda ()
@@ -691,56 +707,62 @@
   (add-hook 'rspec-mode-hook
             (lambda ()
               ruby-electric-mode t)))
-(el-get-bundle! rspec-mode
-  (define-key ruby-mode-map (kbd "C-c C-,") 'rspec-verify)
-  (define-key ruby-mode-map (kbd "C-c C-.") 'rspec-verify-single)
-  (define-key ruby-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target)
-  (define-key rspec-mode-map (kbd "C-c , t") 'rspec-toggle-spec-and-target))
-(el-get-bundle! slim-mode)
-(el-get-bundle! haml-mode)
-(el-get-bundle! rufo
-  :type github
-  :pkgname "danielma/rufo.el"
-  (setq rufo-minor-mode-use-bundler t)
-  (add-hook 'ruby-mode-hook 'rufo-minor-mode))
+(use-package rspec-mode
+  :bind (:map ruby-mode-map
+         ("C-c C-," . rspec-verify)
+         ("C-c C-." . rspec-verify-single)
+         ("C-c , t" . rspec-toggle-spec-and-target)
+         :map rspec-mode-map
+         ("C-c , t" . rspec-toggle-spec-and-target)))
+(use-package slim-mode)
+(use-package haml-mode)
+(use-package rufo
+  :custom
+  (rufo-minor-mode-use-bundler t)
+  :hook
+  (ruby-mode-hook . rufo-minor-mode))
 
 ;;;; CSS
 (defun css-indent-hook()
   (setq indent-tabs-mode nil))
 (add-hook 'css-mode-hook 'css-indent-hook)
 
-(el-get-bundle scss-mode
-  (add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
-  (defun scss-hook ()
-    (flycheck-mode +1)
-    (with-eval-after-load-feature 'scss-mode
-      (setq css-indent-offset 2)
-      (setq indent-tabs-mode nil)
-      (setq scss-compile-at-save nil)))
-  (add-hook 'scss-mode-hook 'scss-hook))
+(use-package scss-mode
+  :mode
+  (("\\.scss$" . scss-mode))
+  :hook
+  (scss-mode-hook . (lambda()
+                      (flycheck-mode +1)
+                      (with-eval-after-load-feature 'scss-mode
+                        (setq css-indent-offset 2)
+                        (setq indent-tabs-mode nil)
+                        (setq scss-compile-at-save nil)))))
 
-(el-get-bundle web-mode
-  (add-to-list 'auto-mode-alist '("\\.erb$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.es6$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.hbs$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.js[x]?$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tag$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.json$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.tsx$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.vue$" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.ctp$" . web-mode))
-  (add-hook 'web-mode-hook (lambda ()
-                             (with-eval-after-load-feature 'web-mode
-                               (setq web-mode-enable-auto-quoting nil)
-                               (setq web-mode-auto-close-style 1)
-                               (setq web-mode-markup-indent-offset 2)
-                               (setq web-mode-code-indent-offset 2)
-                               (setq web-mode-css-indent-offset 2)))))
-(el-get-bundle! mmm-mode
-  (setq mmm-global-mode 'maybe)
-  (setq mmm-submode-decoration-level 0)
-
+(use-package web-mode
+  :mode
+  (("\\.erb$" . web-mode)
+   ("\\.es6$" . web-mode)
+   ("\\.hbs$" . web-mode)
+   ("\\.html$" . web-mode)
+   ("\\.js[x]?$" . web-mode)
+   ("\\.tag$" . web-mode)
+   ("\\.json$" . web-mode)
+   ("\\.tsx$" . web-mode)
+   ("\\.vue$" . web-mode)
+   ("\\.ctp$" . web-mode))
+  :hook
+  (web-mode-hook . (lambda ()
+                     (with-eval-after-load-feature 'web-mode
+                       (setq web-mode-enable-auto-quoting nil)
+                       (setq web-mode-auto-close-style 1)
+                       (setq web-mode-markup-indent-offset 2)
+                       (setq web-mode-code-indent-offset 2)
+                       (setq web-mode-css-indent-offset 2)))))
+(use-package mmm-mode
+  :custom
+  (mmm-global-mode 'maybe)
+  (mmm-submode-decoration-level 0)
+  :config
   (mmm-add-classes
    '((vue-embeded-slim-mode
       :submode slim-mode
@@ -769,36 +791,41 @@
   (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-js-mode)
   (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-scss-mode))
 
-(el-get-bundle emmet-mode
-  (add-hook 'web-mode-hook 'emmet-mode)
-  (with-eval-after-load-feature 'emmet-mode
-    (setq emmet-move-cursor-between-quotes t))
-  (define-key evil-insert-state-map (kbd "C-c C-,") 'emmet-expand-line))
+(use-package emmet-mode
+  :after (evil)
+  :custom
+  (emmet-move-cursor-between-quotes t)
+  :hook
+  (web-mode-hook . emmet-mode)
+  :bind (:map evil-insert-state-map
+              ("C-c C-," . emmet-expand-line)))
 
 ;;;; YAML
-(el-get-bundle yaml-mode
-  (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
-(el-get-bundle indent-guide
+(use-package yaml-mode
+  :mode
+  (("\\.yml$" . yaml-mode)))
+(use-package indent-guide
+  :config
   (indent-guide-global-mode))
 
 ;;;; Yasnippet
-(el-get-bundle! yasnippet
-  (push (locate-user-emacs-file "snippets") yas-snippet-dirs)
+(use-package yasnippet
+  :init
   (yas-global-mode t))
-(el-get-bundle! AndreaCrotti/yasnippet-snippets
-  :depends (yasnippet)
-  (push (locate-user-emacs-file "el-get/yasnippet-snippets/snippets") yas-snippet-dirs))
+(use-package yasnippet-snippets
+  :after (yasnippet))
 
 ;;;; Go
-(defun lsp-go-install-save-hooks()
-  (add-hook 'before-save-hook 'lsp-format-buffer t t)
-  (add-hook 'before-save-hook 'lsp-organize-imports t t))
-(el-get-bundle go-mode
+(use-package go-mode
+  :init
   (setenv "GOPATH" (expand-file-name "~/"))
-  (add-to-list 'auto-mode-alist '("\\.go" . go-mode))
-  (add-hook 'go-mode-hook 'lsp-go-install-save-hooks)
-  ;; (evil-define-key 'normal 'go-mode-map (kbd "C-]")
-  ;;   'godef-jump)
+  :mode
+  (("\\.go" . go-mode))
+  :hook
+  (go-mode-hook . (lambda ()
+                    (add-hook 'before-save-hook 'lsp-format-buffer t t)
+                    (add-hook 'before-save-hook 'lsp-organize-imports t t)))
+  :config
   (font-lock-add-keywords
    'go-mode
    '(("\\b\\(err\\)\\b" 1 '((:foreground "yellow") (:weight bold)) t)))
@@ -806,20 +833,17 @@
     (when (file-exists-p golint-emacs)
       (add-to-list 'load-path golint-emacs)
       (require 'golint))))
-(el-get-bundle! go-eldoc
-  (add-hook 'go-mode-hook 'go-eldoc-setup)
+(use-package go-eldoc
+  :hook
+  (go-mode-hook . go-eldoc-setup)
+  :config
   (set-face-attribute 'eldoc-highlight-function-argument nil
                       :underline t :foreground "green"
                       :weight 'bold))
 
-;;;; PHP
-(el-get-bundle php-mode)
-
-;;;; Swift
-(el-get-bundle swift-mode)
-
 ;;;; C
-;(el-get-bundle! clang-format
+;(use-package clang-format
+;  :config
 ;  (defun my/clang-format ()
 ;    (interactive)
 ;    (when (eq major-mode 'c-mode)
@@ -848,32 +872,36 @@
 (add-hook 'sh-mode-hook 'sh-indent-hook)
 
 ;;;; Docker
-(el-get-bundle docker)
-(el-get-bundle dockerfile-mode)
+(use-package docker)
+(use-package dockerfile-mode)
 
 ;;;; Terraform
-(el-get-bundle terraform-mode
-  (add-hook 'terraform-mode-hook 'terraform-format-on-save-mode))
+(use-package terraform-mode
+  :hook
+  (terraform-mode-hook . terraform-format-on-save-mode))
 
 ;;;; CSV
-(el-get-bundle csv-mode)
+(use-package csv-mode)
 
 ;;;; Flutter
-(el-get-bundle bradyt/dart-mode
+(use-package dart-mode
+  :config
   (add-hook 'before-save-hook 'lsp-format-buffer t t))
-(el-get-bundle bradyt/dart-server
+(use-package dart-server
+  :config
   (add-to-list 'auto-mode-alist '("\\.dart$" . dart-server))
   (customize-set-variable 'dart-server-format-on-save t))
-(el-get-bundle flutter in amake/flutter.el
-  :depends (dart-mode)
+(use-package flutter
+  :after
+  (dart-mode)
+  :config
   (add-to-list 'auto-mode-alist '("\\.dart$" . dart-mode))
   (setq flutter-sdk-path "/opt/flutter")
   (with-eval-after-load-feature 'dart-mode
     (define-key dart-mode-map (kbd "C-q C-r") 'flutter-run-or-hot-reload)))
-(el-get-bundle hover in ericdallo/hover.el)
 
 ;;;; Kotlin
-(el-get-bundle kotlin-mode)
+(use-package kotlin-mode)
 
 ;; ========================================
 ;; Font Settings
@@ -978,6 +1006,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" default))
  '(package-selected-packages
-   '(consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
+   '(kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
  '(tab-bar-new-tab-choice "*scratch*"))
