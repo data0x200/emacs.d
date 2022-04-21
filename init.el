@@ -574,18 +574,20 @@
 ;; LSP
 (use-package lsp-mode
   :init
-  (setq lsp-keymap-prefix (kbd "M-l"))
   :hook (((rust-mode
            web-mode
            scss-mode
            c-mode
            dart-mode
            ruby-mode) . lsp-mode)
-         (lsp-mode . lsp-enable-which-key-integration))
+         (lsp-mode . (lambda () (let ((lsp-keymap-prefix "M-l"))
+                                  lsp-enable-which-key-integration))))
   :custom
   (lsp-rust-server 'rust-analyzer)
   (lsp-rust-clippy-preference "on")
-  :commands lsp)
+  :commands lsp
+  :config
+  (define-key lsp-mode-map (kbd "M-l") lsp-command-map))
 (use-package lsp-ui
   :after (lsp)
   :hook
@@ -597,9 +599,7 @@
 ;; which-keyboard
 (use-package which-key
   :init
-  (which-key-mode)
-  :hook
-  (lsp-mode . lsp-enable-which-key-integration))
+  (which-key-mode))
 
 ;; Programming Language
 
