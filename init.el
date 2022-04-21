@@ -284,9 +284,7 @@
 (use-package highlight-parentheses
   :ensure t
   :custom (highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
-  :hook ((common-lisp-mode-hook . highlight-parentheses-mode)
-         (lisp-mode-hook . highlight-parentheses-mode)
-         (emacs-lisp-mode-hook . highlight-parentheses-mode)))
+  :hook ((common-lisp-mode lisp-mode-hook emacs-lisp-mode-hook) . highlight-parentheses-mode))
 
 ;;;; beacon
 (use-package beacon
@@ -346,7 +344,7 @@
 ;;; flymake-diagnostic-at-point
 (use-package flymake-diagnostic-at-point
    :after flymake
-   :hook (flymake-mode. flymake-diagnostic-at-point-mode))
+   :hook (flymake-mode . flymake-diagnostic-at-point-mode))
 
 ;;;; powerline
 (use-package powerline
@@ -577,12 +575,12 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix (kbd "M-l"))
-  :hook ((rust-mode-hook . lsp)
-         (web-mode-hook . lsp)
-         (scss-mode-hook . lsp)
-         (c-mode-hook . lsp)
-         (dart-mode-hook . lsp)
-         (ruby-mode-hook . lsp)
+  :hook (((rust-mode
+           web-mode
+           scss-mode
+           c-mode
+           dart-mode
+           ruby-mode) . lsp-mode)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
   (lsp-rust-server 'rust-analyzer)
@@ -591,7 +589,7 @@
 (use-package lsp-ui
   :after (lsp)
   :hook
-  (lsp-mode-hook . lsp-ui-mode))
+  (lsp-mode . lsp-ui-mode))
 (use-package lsp-dart
   :custom
   (lsp-dart-flutter-widget-guides nil))
@@ -601,7 +599,7 @@
   :init
   (which-key-mode)
   :hook
-  (lsp-mode-hook . lsp-enable-which-key-integration))
+  (lsp-mode . lsp-enable-which-key-integration))
 
 ;; Programming Language
 
@@ -617,7 +615,7 @@
                               (enable-minor-mode
                                '("\\.jsx?$" . prettier-js-mode)))))
 (use-package typescript-mode
-  :hook (typescript-mode-hook . prettier-js-mode)
+  :hook (typescript-mode . prettier-js-mode)
   :mode (("\\.ts$" . typescript-mode)))
 
 (use-package tide
@@ -625,8 +623,8 @@
   :after (typescript-mode company flycheck)
   :config
   :hook
-  (before-save-hook . tide-format-before-save)
-  (typescript-mode-hook . (lambda ()
+  (before-save . tide-format-before-save)
+  (typescript-mode . (lambda ()
                             (interactive)
                             (tide-setup)
                             (flycheck-mode +1)
@@ -653,8 +651,8 @@
 (use-package cargo)
 (use-package toml-mode)
 (use-package flycheck-rust
-  :config
-  (add-hook 'rust-mode-hook (lambda () (flycheck-mode))))
+  :hook
+  (rust-mode . flycheck-rust-setup))
 
 ;; Ruby
 (use-package ruby-mode
@@ -673,14 +671,14 @@
   :custom
   (ruby-insert-encoding-magic-comment nil)
   :hook
-  (ruby-mode-hook . (lambda ()
-                      (progn
-                        (flycheck-mode 1)
-                        (flymake-mode nil)
-                        (evil-matchit-mode)
-                        (setq ruby-deep-indent-paren nil)
-                        (setq ruby-deep-indent-paren-style t)
-                        (setq ruby-insert-encoding-magic-comment nil)))))
+  (ruby-mode . (lambda ()
+                 (progn
+                   (flycheck-mode 1)
+                   (flymake-mode nil)
+                   (evil-matchit-mode)
+                   (setq ruby-deep-indent-paren nil)
+                   (setq ruby-deep-indent-paren-style t)
+                   (setq ruby-insert-encoding-magic-comment nil)))))
 
 (use-package rubocop
   :after (ruby-mode)
@@ -698,12 +696,9 @@
 (use-package ruby-electric
   :config
   (setq ruby-electric-expand-delimiters-list nil)
-  (add-hook 'ruby-mode-hook
-            (lambda ()
-              ruby-electric-mode t))
-  (add-hook 'rspec-mode-hook
-            (lambda ()
-              ruby-electric-mode t)))
+  :hook
+  (ruby-mode . (lambda () ruby-electric-mode t))
+  (rspec-mode . (lambda () ruby-electric-mode t)))
 (use-package rspec-mode
   :bind (:map ruby-mode-map
          ("C-c C-," . rspec-verify)
@@ -717,7 +712,7 @@
   :custom
   (rufo-minor-mode-use-bundler t)
   :hook
-  (ruby-mode-hook . rufo-minor-mode))
+  (ruby-mode . rufo-minor-mode))
 
 ;;;; CSS
 (defun css-indent-hook()
@@ -728,7 +723,7 @@
   :mode
   (("\\.scss$" . scss-mode))
   :hook
-  (scss-mode-hook . (lambda()
+  (scss-mode . (lambda()
                       (flycheck-mode +1)
                       (with-eval-after-load-feature 'scss-mode
                         (setq css-indent-offset 2)
@@ -748,13 +743,13 @@
    ("\\.vue$" . web-mode)
    ("\\.ctp$" . web-mode))
   :hook
-  (web-mode-hook . (lambda ()
-                     (with-eval-after-load-feature 'web-mode
-                       (setq web-mode-enable-auto-quoting nil)
-                       (setq web-mode-auto-close-style 1)
-                       (setq web-mode-markup-indent-offset 2)
-                       (setq web-mode-code-indent-offset 2)
-                       (setq web-mode-css-indent-offset 2)))))
+  (web-mode . (lambda ()
+                (with-eval-after-load-feature 'web-mode
+                  (setq web-mode-enable-auto-quoting nil)
+                  (setq web-mode-auto-close-style 1)
+                  (setq web-mode-markup-indent-offset 2)
+                  (setq web-mode-code-indent-offset 2)
+                  (setq web-mode-css-indent-offset 2)))))
 (use-package mmm-mode
   :custom
   (mmm-global-mode 'maybe)
@@ -793,7 +788,7 @@
   :custom
   (emmet-move-cursor-between-quotes t)
   :hook
-  (web-mode-hook . emmet-mode)
+  (web-mode . emmet-mode)
   :bind (:map evil-insert-state-map
               ("C-c C-," . emmet-expand-line)))
 
@@ -819,7 +814,7 @@
   :mode
   (("\\.go" . go-mode))
   :hook
-  (go-mode-hook . (lambda ()
+  (go-mode . (lambda ()
                     (add-hook 'before-save-hook 'lsp-format-buffer t t)
                     (add-hook 'before-save-hook 'lsp-organize-imports t t)))
   :config
@@ -832,7 +827,7 @@
       (require 'golint))))
 (use-package go-eldoc
   :hook
-  (go-mode-hook . go-eldoc-setup)
+  (go-mode . go-eldoc-setup)
   :config
   (set-face-attribute 'eldoc-highlight-function-argument nil
                       :underline t :foreground "green"
@@ -875,7 +870,7 @@
 ;;;; Terraform
 (use-package terraform-mode
   :hook
-  (terraform-mode-hook . terraform-format-on-save-mode))
+  (terraform-mode . terraform-format-on-save-mode))
 
 ;;;; CSV
 (use-package csv-mode)
