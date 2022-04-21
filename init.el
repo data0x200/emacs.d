@@ -483,6 +483,24 @@
   :url "https://raw.githubusercontent.com/tarao/evil-plugins/master/evil-mode-line.el"
   :depends mode-line-color)
 
+
+;;========================================
+;; vertico
+;;========================================
+(el-get-bundle! vertico
+  (vertico-mode)
+  (savehist-mode))
+(el-get-bundle! consult)
+(el-get-bundle! consult-projectile)
+(el-get-bundle consult-ghq)
+(el-get-bundle consult-lsp)
+(el-get-bundle! marginalia
+  (marginalia-mode))
+(el-get-bundle! orderless
+  (setq completion-styles '(orderless basic)
+        completion-category-overrides '((file (styles basic partial-completion)))))
+(el-get-bundle! embark)
+
 ;;;; git
 (el-get-bundle git-gutter
   (global-git-gutter-mode t)
@@ -960,5 +978,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(csv-mode queue))
+ '(package-selected-packages
+   '(consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
  '(tab-bar-new-tab-choice "*scratch*"))
