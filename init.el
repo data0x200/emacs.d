@@ -573,35 +573,35 @@
      ((((type x)) (:inherit company-tooltip-selection :weight bold))
       (t (:inherit company-tooltip-selection)))))
 
+;; LSP
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix (kbd "M-l"))
+  :hook ((rust-mode-hook . lsp)
+         (web-mode-hook . lsp)
+         (scss-mode-hook . lsp)
+         (c-mode-hook . lsp)
+         (dart-mode-hook . lsp)
+         (ruby-mode-hook . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :custom
+  (lsp-rust-server 'rust-analyzer)
+  (lsp-rust-clippy-preference "on")
+  :commands lsp)
+(use-package lsp-ui
+  :after (lsp)
+  :hook
+  (lsp-mode-hook . lsp-ui-mode))
+(use-package lsp-dart
+  :custom
+  (lsp-dart-flutter-widget-guides nil))
+
 ;; which-keyboard
 (use-package which-key
   :init
   (which-key-mode)
   :hook
   (lsp-mode-hook . lsp-enable-which-key-integration))
-
-;; LSP
-(use-package lsp-mode
-  :hook
-  (rust-mode-hook . lsp)
-  (web-mode-hook . lsp)
-  (scss-mode-hook . lsp)
-  (c-mode-hook . lsp)
-  (dart-mode-hook . lsp)
-  (ruby-mode-hook . lsp)
-  :custom
-  (lsp-rust-server 'rust-analyzer)
-  (lsp-rust-clippy-preference "on")
-  :bind (:map lsp-mode-map
-              ("M-l" . lsp-command-map)))
-(use-package lsp-ui
-  :after (lsp)
-  :hook
-  (lsp-mode-hook . lsp-ui-mode))
-
-(use-package lsp-dart
-  :custom
-  (lsp-dart-flutter-widget-guides nil))
 
 ;; Programming Language
 
@@ -654,10 +654,7 @@
 (use-package toml-mode)
 (use-package flycheck-rust
   :config
-  (add-hook 'rust-mode-hook (lambda ()
-                              (progn
-                                (lsp)
-                                (flycheck-mode)))))
+  (add-hook 'rust-mode-hook (lambda () (flycheck-mode))))
 
 ;; Ruby
 (use-package ruby-mode
@@ -885,20 +882,18 @@
 
 ;;;; Flutter
 (use-package dart-mode
-  :config
-  (add-hook 'before-save-hook 'lsp-format-buffer t t))
+  :custom
+  (dart-format-on-save t))
 (use-package dart-server
   :config
-  (add-to-list 'auto-mode-alist '("\\.dart$" . dart-server))
   (customize-set-variable 'dart-server-format-on-save t))
 (use-package flutter
   :after
   (dart-mode)
-  :config
-  (add-to-list 'auto-mode-alist '("\\.dart$" . dart-mode))
-  (setq flutter-sdk-path "/opt/flutter")
-  (with-eval-after-load-feature 'dart-mode
-    (define-key dart-mode-map (kbd "C-q C-r") 'flutter-run-or-hot-reload)))
+  :custom
+  (flutter-sdk-path "/opt/flutter")
+  :bind (:map dart-mode-map
+              ("C-q C-r" . 'flutter-run-or-hot-reload)))
 
 ;;;; Kotlin
 (use-package kotlin-mode)
