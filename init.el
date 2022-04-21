@@ -483,67 +483,6 @@
   :url "https://raw.githubusercontent.com/tarao/evil-plugins/master/evil-mode-line.el"
   :depends mode-line-color)
 
-;;========================================
-;; Helm
-;;========================================
-(el-get-bundle helm
-  (with-eval-after-load-feature 'helm
-    ;; 候補の最大表示数
-    ;; default 50
-    (setq helm-candidate-number-limit 100)
-
-    (setq helm-split-window-default-side 'bottom-and-right)
-
-    ;; key mapping
-    (define-key helm-map (kbd "C-h") 'delete-backward-char)
-    (define-key helm-map (kbd "C-w") 'backward-kill-word)
-    (define-key helm-map (kbd "C-v") 'helm-next-source)
-    (define-key helm-map (kbd "M-v") 'helm-previous-source))
-
-  (with-eval-after-load-feature 'helm-files
-    '(progn
-       (define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
-       (define-key helm-find-files-map (kbd "C-w") 'helm-find-files-up-one-level)
-       (define-key helm-find-files-map (kbd "C-l") 'helm-execute-persistent-action)))
-
-  ;; key mapping
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (define-key ctrl-q-map (kbd "C-x") 'helm-M-x)
-  (define-key ctrl-q-map (kbd "hx") 'helm-M-x)
-  (define-key ctrl-q-map (kbd "C-a") 'helm-mini)
-  (define-key ctrl-q-map (kbd "ha") 'helm-mini)
-  (define-key ctrl-q-map (kbd "g g") 'helm-git-grep-at-point)
-  (define-key ctrl-q-map (kbd "g G") 'helm-git-grep)
-  (define-key ctrl-q-map (kbd "C-o") 'helm-semantic-or-imenu)
-  (define-key ctrl-q-map (kbd "ho") 'helm-semantic-or-imenu)
-  (define-key ctrl-q-map (kbd "C-f") 'helm-find-files)
-  (define-key ctrl-q-map (kbd "hf") 'helm-find-files)
-  (define-key ctrl-q-map (kbd "G") 'helm-google-suggest))
-
-(el-get-bundle helm-git-grep)
-(el-get-bundle helm-ghq)
-(el-get-bundle projectile
-  (with-eval-after-load-feature 'projectile
-    '(progn
-       (add-to-list 'projectile-project-root-files-bottom-up "pubspec.yaml")
-       (add-to-list 'projectile-project-root-files-bottom-up "BUILD"))))
-(el-get-bundle helm-projectile
-  :depends (helm projectile)
-  (define-key ctrl-q-map (kbd "C-g") 'helm-projectile)
-  (define-key ctrl-q-map (kbd "h g") 'helm-projectile-switch-project)
-  (define-key ctrl-q-map (kbd "g r") 'helm-projectile)
-
-  (with-eval-after-load-feature 'helm
-    '(progn
-       (require 'helm-locate)
-       (define-key helm-generic-files-map (kbd "C-w") 'backward-kill-word)))
-  (projectile-mode)
-
-  (customize-set-variable
-   'helm-projectile-sources-list '(helm-source-projectile-buffers-list
-                                   helm-source-projectile-recentf-list
-                                   helm-source-projectile-files-list)))
-
 ;;;; git
 (el-get-bundle git-gutter
   (global-git-gutter-mode t)
