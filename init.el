@@ -8,7 +8,6 @@
    (package-refresh-contents)
    (package-install 'use-package))
 (setq use-package-enable-imenu-support t)
-(setq use-package-always-ensure t)
 (require 'use-package)
 
 ;;========================================
@@ -579,7 +578,7 @@
            scss-mode
            c-mode
            dart-mode
-           ruby-mode) . lsp-mode)
+           ruby-mode) . lsp)
          (lsp-mode . (lambda () (let ((lsp-keymap-prefix "M-l"))
                                   lsp-enable-which-key-integration))))
   :custom
