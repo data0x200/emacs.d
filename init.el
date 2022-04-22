@@ -497,12 +497,14 @@
   (vertico-mode)
   (savehist-mode)
   :custom
-  (vertico-count 20))
+  (vertico-count 20)
+  :bind (:map vertico-map ("C-w" . backward-kill-workd)))
 (use-package consult
   :config
   (recentf-mode)
-  :bind (:map ctrl-q-map
-              ("h a" . consult-recent-file)))
+  :bind (("C-s" . consult-line)
+         :map ctrl-q-map
+         ("h a" . consult-recent-file)))
 (use-package consult-projectile)
 (use-package consult-ghq
   :bind (:map ctrl-q-map
