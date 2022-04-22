@@ -8,6 +8,7 @@
    (package-refresh-contents)
    (package-install 'use-package))
 (setq use-package-enable-imenu-support t)
+(setq use-package-always-ensure t)
 (require 'use-package)
 
 ;;========================================
@@ -482,6 +483,11 @@
   :type http
   :url "https://raw.githubusercontent.com/tarao/evil-plugins/master/evil-mode-line.el"
   :depends mode-line-color)
+(use-package treemacs)
+(use-package treemacs-evil
+  :after (treemacs evil))
+(use-package treemacs-projectile
+  :after (treemacs projectile))
 
 ;;========================================
 ;; vertico
@@ -1000,5 +1006,5 @@
  '(custom-safe-themes
    '("b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" default))
  '(package-selected-packages
-   '(kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
+   '(treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
  '(tab-bar-new-tab-choice "*scratch*"))
