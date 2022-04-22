@@ -589,6 +589,8 @@
   (define-key lsp-mode-map (kbd "M-l") lsp-command-map))
 (use-package lsp-ui
   :after (lsp)
+  :custom
+  (lsp-ui-doc-show-with-cursor t)
   :hook
   (lsp-mode . lsp-ui-mode))
 (use-package lsp-dart
