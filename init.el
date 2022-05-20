@@ -363,8 +363,6 @@
 
 (use-package request)
 
-(el-get-bundle tarao/with-eval-after-load-feature-el)
-
 (use-package mermaid-mode)
 
 (el-get-bundle shibayu36/emacs-open-github-from-here
@@ -483,7 +481,8 @@
   :type http
   :url "https://raw.githubusercontent.com/tarao/evil-plugins/master/evil-mode-line.el"
   :depends mode-line-color)
-(use-package treemacs)
+(use-package treemacs
+  :bind ("C-c C-t" . treemacs))
 (use-package treemacs-evil
   :after (treemacs evil))
 (use-package treemacs-projectile
@@ -498,18 +497,18 @@
   (savehist-mode)
   :custom
   (vertico-count 20)
-  :bind (:map vertico-map ("C-w" . backward-kill-workd)))
+  :bind (:map vertico-map ("C-w" . vertico-directory-delete-word)))
 (use-package consult
   :config
   (recentf-mode)
   :bind (("C-s" . consult-line)
          :map ctrl-q-map
-         ("h a" . consult-recent-file)))
+         ("h a" . consult-buffer)))
 (use-package consult-projectile)
 (use-package consult-ghq
   :bind (:map ctrl-q-map
-              ("g r" . consult-ghq-find)
-              ("g g" . consult-ghq-grep)))
+              ("g r" . consult-projectile)
+              ("g g" . consult-git-grep)))
 (use-package consult-lsp)
 (use-package marginalia
   :init
@@ -582,10 +581,10 @@
 (use-package lsp-mode
   :init
   :hook (((rust-mode
-           web-mode
            scss-mode
            c-mode
            dart-mode
+           terraform-mode
            ruby-mode) . lsp)
          (lsp-mode . (lambda () (let ((lsp-keymap-prefix "M-l"))
                                   lsp-enable-which-key-integration))))
@@ -598,9 +597,13 @@
 (use-package lsp-ui
   :after (lsp)
   :custom
-  (lsp-ui-doc-show-with-cursor t)
+  (lsp-ui-doc-show-with-cursor nil)
+  (lsp-ui-doc-show-with-hover nil)
   :hook
-  (lsp-mode . lsp-ui-mode))
+  (lsp-mode . lsp-ui-mode)
+  :config
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
 (use-package lsp-dart
   :custom
   (lsp-dart-flutter-widget-guides nil))
@@ -609,6 +612,9 @@
 (use-package which-key
   :init
   (which-key-mode))
+
+;; magit
+(use-package magit)
 
 ;; Programming Language
 
@@ -640,6 +646,9 @@
                             (eldoc-mode +1)
                             (tide-hl-identifier-mode +1)
                             (company-mode +1))))
+
+;;;; GraphQL
+(use-package graphql-mode)
 
 ;;;; Lua
 (use-package lua-mode)
@@ -731,13 +740,13 @@
 (use-package scss-mode
   :mode
   (("\\.scss$" . scss-mode))
+  :custom
+  (css-indent-offset 2)
+  (indent-tabs-mode nil)
+  (scss-compile-at-save nil)
   :hook
   (scss-mode . (lambda()
-                      (flycheck-mode +1)
-                      (with-eval-after-load-feature 'scss-mode
-                        (setq css-indent-offset 2)
-                        (setq indent-tabs-mode nil)
-                        (setq scss-compile-at-save nil)))))
+                 (flycheck-mode t))))
 
 (use-package web-mode
   :mode
@@ -751,14 +760,12 @@
    ("\\.tsx$" . web-mode)
    ("\\.vue$" . web-mode)
    ("\\.ctp$" . web-mode))
-  :hook
-  (web-mode . (lambda ()
-                (with-eval-after-load-feature 'web-mode
-                  (setq web-mode-enable-auto-quoting nil)
-                  (setq web-mode-auto-close-style 1)
-                  (setq web-mode-markup-indent-offset 2)
-                  (setq web-mode-code-indent-offset 2)
-                  (setq web-mode-css-indent-offset 2)))))
+  :custom
+  (web-mode-enable-auto-quoting nil)
+  (web-mode-auto-close-style 1)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-code-indent-offset 2)
+  (web-mode-css-indent-offset 2))
 (use-package mmm-mode
   :custom
   (mmm-global-mode 'maybe)
@@ -1008,5 +1015,5 @@
  '(custom-safe-themes
    '("b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" default))
  '(package-selected-packages
-   '(treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
+   '(graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
  '(tab-bar-new-tab-choice "*scratch*"))
