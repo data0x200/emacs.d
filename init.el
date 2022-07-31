@@ -132,7 +132,7 @@
 (setq initial-scratch-message "")
 
 ;; Mode line Settings
-(setq-default header-line-format '("%f"))
+(setq-default header-line-format '(" %f"))
 
 ;; font-lock-modeをonにする
 (global-font-lock-mode t)
@@ -402,7 +402,6 @@
   (define-key evil-normal-state-map [escape] 'keyboard-quit)
   (define-key evil-normal-state-map (kbd "C-x C-g") 'evil-escape-or-quit)
   (define-key evil-normal-state-map (kbd "C-r") 'evil-redo)
-  (define-key evil-insert-state-map (kbd "C-[") [escape])
 
   (define-key minibuffer-local-map (kbd "C-[") 'keyboard-quit)
   (define-key minibuffer-local-ns-map (kbd "C-[") 'keyboard-quit)
@@ -435,6 +434,7 @@
   (define-key evil-normal-state-map (kbd "C-e C-e") 'eshell)
 
   ;; insert map
+  (define-key evil-insert-state-map (kbd "C-[") [escape])
   (define-key evil-insert-state-map (kbd "C-d") nil)
   (define-key evil-insert-state-map (kbd "C-p") nil)
   (define-key evil-insert-state-map (kbd "C-n") nil)
@@ -548,7 +548,11 @@
   (company-begin-commands '(self-insert-command))
   (company-selection-wrap-around t)
   (company-minimum-prefix-length 2)
-  :bind (:map company-active-map
+  :bind
+  (:map evil-insert-state-map
+              ("C-c C-e" . company-complete)
+              ([(control return)] . company-complete))
+  (:map company-active-map
               ;; C-n, C-pで補完候補を次/前の候補を選択
               ("C-n" . company-select-next)
               ("C-p" . company-select-previous)
@@ -585,12 +589,14 @@
            c-mode
            dart-mode
            terraform-mode
+           kotlin-mode
            ruby-mode) . lsp)
          (lsp-mode . (lambda () (let ((lsp-keymap-prefix "M-l"))
                                   lsp-enable-which-key-integration))))
   :custom
   (lsp-rust-server 'rust-analyzer)
   (lsp-rust-clippy-preference "on")
+  (lsp-modeline-code-actions-segments '(count icon name))
   :commands lsp
   :config
   (define-key lsp-mode-map (kbd "M-l") lsp-command-map))
@@ -599,11 +605,19 @@
   :custom
   (lsp-ui-doc-show-with-cursor nil)
   (lsp-ui-doc-show-with-hover nil)
+  (lsp-ui-sideline-show-code-actions t)
   :hook
   (lsp-mode . lsp-ui-mode)
+  :bind
+  (("C-c C-l C-z" . lsp-ui-doc-focus-frame))
   :config
   (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  (define-key lsp-ui-mode-map (kbd "C-c C-l C-l") (lambda ()
+                                                    (interactive)
+                                                    (lsp-ui-doc-show)
+                                                    (when (lsp-ui-doc--visible-p)
+                                                      (lsp-ui-doc-focus-frame)))))
 (use-package lsp-dart
   :custom
   (lsp-dart-flutter-widget-guides nil))
@@ -908,6 +922,17 @@
 
 ;;;; Kotlin
 (use-package kotlin-mode)
+  ;;; 現在のファイルをIntelliJで開く
+(defun open-by-idea ()
+  (interactive)
+  (when (linux-p)
+    (shell-command
+     (format "idea --line %d %s >/dev/null 2>&1"
+             (line-number-at-pos)
+             (buffer-file-name)))))
+(use-package flycheck-kotlin
+  :hook
+  (kotlin-mode . flycheck-kotlin-setup))
 
 ;; ========================================
 ;; Font Settings
@@ -1015,5 +1040,5 @@
  '(custom-safe-themes
    '("b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" default))
  '(package-selected-packages
-   '(graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
+   '(flycheck-kotlin consult-ghq graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
  '(tab-bar-new-tab-choice "*scratch*"))

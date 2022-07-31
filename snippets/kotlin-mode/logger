@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: logger
+# key: logger
+# --
+val logger = org.slf4j.LoggerFactory.getLogger(this::class.java)
+logger.info("========================================")
+logger.info($1.toString())
+logger.info("========================================")
