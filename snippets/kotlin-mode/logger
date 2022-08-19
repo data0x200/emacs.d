@@ -2,6 +2,7 @@
 # name: logger
 # key: logger
 # --
+// Debug
 val logger = org.slf4j.LoggerFactory.getLogger(this::class.java)
 logger.info("========================================")
 logger.info($1.toString())
