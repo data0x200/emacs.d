@@ -632,6 +632,14 @@
 
 ;; Programming Language
 
+;;;; tree-sitter
+(use-package tree-sitter
+  :ensure t
+  :after (tree-sitter-langs)
+  :config
+  (global-tree-sitter-mode))
+(use-package tree-sitter-langs)
+
 ;;;; JavaScript
 (use-package prettier-js
   :config
@@ -945,30 +953,30 @@
 (cond ((mac-os-p)
        (set-face-attribute 'default
                            nil
-                           :family "HackGenNerd"
+                           :family "HackGen"
                            :height 140)
        (setq face-font-rescale-alist
              '(("Noto Sans Mono CJK JP" . 1.0)))
        (set-fontset-font t
                          'japanese-jisx0208
-                         (font-spec :family "HackGenNerd")))
+                         (font-spec :family "HackGen")))
       ((linux-p)
 
        (cond ((< 1920 (apply 'max (cdr (assoc 'geometry (car (display-monitor-attributes-list))))))
               (set-face-attribute 'default nil
-                                  :family "HackGenNerd"
+                                  :family "HackGen"
                                   :height 150)
 
               (set-fontset-font t
                                 'japanese-jisx0208
-                                (font-spec :family "HackGenNerd" :size 21)))
+                                (font-spec :family "HackGen" :size 21)))
              (t
               (set-face-attribute 'default nil
                                   :family "HackGen"
                                   :height 130)
               (set-fontset-font t
                                 'japanese-jisx0208
-                                (font-spec :family "HackGenNerd" :size 17))))))
+                                (font-spec :family "HackGen" :size 17))))))
 
 ;;========================================
 ;; Key Config
@@ -1040,5 +1048,5 @@
  '(custom-safe-themes
    '("b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" default))
  '(package-selected-packages
-   '(flycheck-kotlin consult-ghq graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
+   '(tree-sitter-langs tree-sitter flycheck-kotlin consult-ghq graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
  '(tab-bar-new-tab-choice "*scratch*"))
