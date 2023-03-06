@@ -358,7 +358,8 @@
 
 ;;;; editor-config
 (use-package editorconfig
-  :init
+  :ensure t
+  :config
   (editorconfig-mode t))
 
 (use-package request)
@@ -585,14 +586,15 @@
 ;; LSP
 (use-package lsp-mode
   :init
+  (setq lsp-keymap-prefix "M-l")
   :hook (((rust-mode
            scss-mode
            c-mode
            dart-mode
            terraform-mode
-           ruby-mode) . lsp)
-         (lsp-mode . (lambda () (let ((lsp-keymap-prefix "M-l"))
-                                  lsp-enable-which-key-integration))))
+           ruby-mode
+           web-mode) . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
   :custom
   (lsp-rust-server 'rust-analyzer)
   (lsp-rust-clippy-preference "on")
@@ -641,18 +643,20 @@
 (use-package tree-sitter-langs)
 
 ;;;; JavaScript
-(use-package prettier-js
-  :config
-  (defun enable-minor-mode (my-pair)
-    "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
-    (if (buffer-file-name)
-        (if (string-match (car my-pair) buffer-file-name)
-            (funcall (cdr my-pair)))))
-  (add-hook 'web-mode-hook (lambda ()
-                              (enable-minor-mode
-                               '("\\.jsx?$" . prettier-js-mode)))))
+;; (use-package prettier-js
+;;   :config
+;;   (defun enable-minor-mode (my-pair)
+;;     "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+;;     (if (buffer-file-name)
+;;         (if (string-match (car my-pair) buffer-file-name)
+;;             (funcall (cdr my-pair)))))
+;;   (add-hook 'web-mode-hook (lambda ()
+;;                               (enable-minor-mode
+;;                                '("\\.jsx?$" . prettier-js-mode)))))
+(use-package prettier)
+
 (use-package typescript-mode
-  :hook (typescript-mode . prettier-js-mode)
+  :hook (typescript-mode . prettier-mode)
   :mode (("\\.ts$" . typescript-mode)))
 
 (use-package tide
@@ -1048,5 +1052,5 @@
  '(custom-safe-themes
    '("b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" default))
  '(package-selected-packages
-   '(embark-consult tree-sitter-langs tree-sitter flycheck-kotlin consult-ghq graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode prettier-js lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
+   '(prettier embark-consult tree-sitter-langs tree-sitter flycheck-kotlin consult-ghq graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
  '(tab-bar-new-tab-choice "*scratch*"))
