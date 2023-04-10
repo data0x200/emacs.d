@@ -653,7 +653,10 @@
 ;;   (add-hook 'web-mode-hook (lambda ()
 ;;                               (enable-minor-mode
 ;;                                '("\\.jsx?$" . prettier-js-mode)))))
-(use-package prettier)
+;; (use-package prettier)
+(use-package apheleia
+  :custom
+  (apheleia-global-mode +1))
 
 (use-package typescript-mode
   :hook (typescript-mode . prettier-mode)
@@ -774,6 +777,8 @@
   (scss-mode . (lambda()
                  (flycheck-mode t))))
 
+(use-package add-node-modules-path)
+
 (use-package web-mode
   :mode
   (("\\.erb$" . web-mode)
@@ -792,6 +797,7 @@
   (web-mode-markup-indent-offset 2)
   (web-mode-code-indent-offset 2)
   (web-mode-css-indent-offset 2))
+
 (use-package mmm-mode
   :custom
   (mmm-global-mode 'maybe)
@@ -1051,6 +1057,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" default))
+ '(flycheck-checker-error-threshold nil)
  '(package-selected-packages
-   '(prettier embark-consult tree-sitter-langs tree-sitter flycheck-kotlin consult-ghq graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
+   '(apheleia add-node-modules-path prettier embark-consult tree-sitter-langs tree-sitter flycheck-kotlin consult-ghq graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
  '(tab-bar-new-tab-choice "*scratch*"))
