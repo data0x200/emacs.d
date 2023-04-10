@@ -11,6 +11,10 @@
 (setq use-package-always-ensure t)
 (require 'use-package)
 
+(eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
+(setq tram-verbose 6)
+(setq shell-prompt-pattern '"^[^#$%>\n]*~?[#$%>] *")
+
 ;;========================================
 ;; FUNCTIONS
 ;;========================================
@@ -643,25 +647,14 @@
 (use-package tree-sitter-langs)
 
 ;;;; JavaScript
-;; (use-package prettier-js
-;;   :config
-;;   (defun enable-minor-mode (my-pair)
-;;     "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
-;;     (if (buffer-file-name)
-;;         (if (string-match (car my-pair) buffer-file-name)
-;;             (funcall (cdr my-pair)))))
-;;   (add-hook 'web-mode-hook (lambda ()
-;;                               (enable-minor-mode
-;;                                '("\\.jsx?$" . prettier-js-mode)))))
-;; (use-package prettier)
 (use-package apheleia
   :custom
   (apheleia-global-mode +1))
-
+(use-package js2-mode)
 (use-package typescript-mode
   :hook (typescript-mode . prettier-mode)
   :mode (("\\.ts$" . typescript-mode)))
-
+(use-package svelte-mode)
 (use-package tide
   :ensure t
   :after (typescript-mode company flycheck)
@@ -675,6 +668,7 @@
                             (eldoc-mode +1)
                             (tide-hl-identifier-mode +1)
                             (company-mode +1))))
+
 
 ;;;; GraphQL
 (use-package graphql-mode)
@@ -1055,6 +1049,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(css-indent-offset 2 nil nil "Customized with use-package scss-mode")
  '(custom-safe-themes
    '("b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" default))
  '(flycheck-checker-error-threshold nil)
