@@ -494,36 +494,53 @@
   :after (treemacs projectile))
 
 ;;========================================
-;; vertico
+;; Helm
 ;;========================================
-(use-package vertico
+(use-package helm
   :init
-  (vertico-mode)
-  (savehist-mode)
-  :custom
-  (vertico-count 20)
-  :bind (:map vertico-map ("C-w" . vertico-directory-delete-word)))
-(use-package consult
-  :config
-  (recentf-mode)
-  :bind (("C-s" . consult-line)
+  ;; 候補の最大表示数
+  ;; default 50
+  (setq helm-candidate-number-limit 100)
+  (setq helm-split-window-default-side 'bottom-and-right)
+  :bind (("M-x" . helm-M-x)
+         :map helm-map
+         ("C-h" . delete-backward-char)
+         ("C-w" . backward-kill-word)
+         ("C-v" . helm-next-source)
+         ("M-v" . helm-previous-source)
          :map ctrl-q-map
-         ("h a" . consult-buffer)))
-(use-package consult-projectile)
-(use-package consult-ghq
+         ("C-x" . helm-M-x)
+         ("h x" . helm-M-x)
+         ("C-a" . helm-mini)
+         ("h a" . helm-mini)
+         ("C-o" . helm-semantic-or-imenu)
+         ("h o" . helm-semantic-or-imenu)
+         ("C-f" . helm-find-files)
+         ("h f" . helm-find-files)
+         ("G" . helm-google-suggest)))
+(use-package helm-git-grep
   :bind (:map ctrl-q-map
-              ("g r" . consult-projectile)
-              ("g g" . consult-git-grep)))
-(use-package consult-lsp)
-(use-package marginalia
+         ("g g" . helm-git-grep-at-point)
+         ("g G" . helm-git-grep)))
+(use-package helm-ghq)
+(use-package projectile)
+(use-package helm-projectile
+  :after
+  (helm projectile)
   :init
-  (marginalia-mode))
-(use-package orderless
+  (require 'helm-locate)
+  :bind (:map ctrl-q-map
+         ("C-g" . helm-projectile)
+         ("h g" . helm-projectile-switch-project)
+         ("g r" . helm-projectile)
+         :map helm-generic-files-map
+         ("C-w" . backward-kill-word))
+  :config
+  (projectile-mode)
   :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-(use-package embark)
-(use-package embark-consult)
+  (helm-projectile-sources-list '(helm-source-projectile-buffers-list
+                                  helm-source-projectile-recentf-list
+                                  helm-source-projectile-files-list)))
 
 ;;;; git
 (use-package git-gutter
@@ -535,8 +552,8 @@
               ("C-n" . git-gutter:next-hunk)
               ("C-p" . git-gutter:previous-hunk)
               ("C-a" . git-gutter:stage-hunk)))
-(use-package git-gutter-fringe)
-(add-to-list 'auto-mode-alist '("COMMIT_EDITMSG$" . diff-mode))
+(use-package git-gutter-fringe
+  :mode ("COMMIT_EDITMSG$" . diff-mode))
 
 ;;;; open-junk-file
 (use-package open-junk-file
