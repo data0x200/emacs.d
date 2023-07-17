@@ -664,9 +664,7 @@
 (use-package tree-sitter-langs)
 
 ;;;; JavaScript
-(use-package apheleia
-  :custom
-  (apheleia-global-mode +1))
+(use-package apheleia)
 (use-package js2-mode)
 (use-package typescript-mode
   :hook (typescript-mode . prettier-mode)
@@ -808,39 +806,6 @@
   (web-mode-markup-indent-offset 2)
   (web-mode-code-indent-offset 2)
   (web-mode-css-indent-offset 2))
-
-(use-package mmm-mode
-  :custom
-  (mmm-global-mode 'maybe)
-  (mmm-submode-decoration-level 0)
-  :config
-  (mmm-add-classes
-   '((vue-embeded-slim-mode
-      :submode slim-mode
-      :front "^<template.*lang=\"pug\">\n"
-      :back "^</template>")
-     (vue-embeded-web-mode
-      :submode web-mode
-      :front "^<template>\n"
-      :back "^</template>\n")
-     (vue-embeded-ts-mode
-      :submode web-mode
-      :front "^<script.*lang=\"ts\">\n"
-      :back "^</script>")
-     (vue-embeded-js-mode
-      :submode web-mode
-      :front "^<script>\n"
-      :back "^</script>")
-     (vue-embeded-scss-mode
-      :submode scss-mode
-      :front "^<style.*lang=\"scss\">\n"
-      :back "^</style>")))
-
-  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-slim-mode)
-  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-web-mode)
-  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-ts-mode)
-  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-js-mode)
-  (mmm-add-mode-ext-class nil "\\.vue\\'" 'vue-embeded-scss-mode))
 
 (use-package emmet-mode
   :after (evil)
@@ -1072,4 +1037,5 @@
  '(flycheck-checker-error-threshold nil)
  '(package-selected-packages
    '(apheleia add-node-modules-path prettier embark-consult tree-sitter-langs tree-sitter flycheck-kotlin consult-ghq graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
- '(tab-bar-new-tab-choice "*scratch*"))
+ '(tab-bar-new-tab-choice "*scratch*")
+ '(warning-suppress-types '((lsp-mode) (lsp-mode) (lsp-mode))))
