@@ -15,6 +15,10 @@
 (setq tram-verbose 6)
 (setq shell-prompt-pattern '"^[^#$%>\n]*~?[#$%>] *")
 
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
 ;;========================================
 ;; FUNCTIONS
 ;;========================================
@@ -314,7 +318,7 @@
   (push '(" *auto-async-byte-compile*") popwin:special-display-config)
   (push '("*git now*") popwin:special-display-config)
   (push '("*git-gutter+-diff*") popwin:special-display-config)
-  (push '("\\`\\*eshell" :regexp t :dedicated t :position bottom :height 0.3) popwin:special-display-config)
+  (push '("\\`\\*eshell" :regexp t :dedicated t :position :bottom :height 0.3) popwin:special-display-config)
   ;; (push '("^\*helm .+\*$" :regexp t :position :right) popwin:special-display-config)
   ;; Sly
   (push 'mrepl-mode popwin:special-display-config)
@@ -373,6 +377,12 @@
 (el-get-bundle shibayu36/emacs-open-github-from-here
   :features open-github-from-here)
 
+(use-package dumb-jump)
+
+;; depends (dash editorconfig s)
+(el-get-bundle zerolfx/copilot.el)
+  ;; (add-hook 'prog-mode-hook 'copilot-mode))
+
 ;;========================================
 ;; evil
 ;;========================================
@@ -386,6 +396,14 @@
    (evil-bigword "^ \_\t\r\n")
    (evil-ex-complete-emacs-commands t)
    (evil-shift-width 2))
+  :hook
+  ((org-mode
+    xref--xref-buffer-mode) . evil-emacs-state)
+  (evil-insert-state-entry-hook . (lambda ()
+                                    (interactive)
+                                    (if current-input-method
+                                        (progn
+                                          (deactivate-input-method)))))
   :config
   (evil-mode 1)
   (evil-set-undo-system 'undo-tree)
@@ -432,10 +450,6 @@
   (define-key evil-normal-state-map (kbd "C-h") 'help)
   (define-key evil-normal-state-map (kbd "C-q C-t") 'toggle-cleanup-spaces)
   (define-key evil-normal-state-map (kbd "SPC") ctrl-q-map)
-  (eval-after-load 'consult
-    '(progn
-       (define-key evil-normal-state-map "\C-a\C-a" 'consult-recent-file)
-       (define-key evil-normal-state-map "\C-a\C-b" 'consult-buffer)))
   (define-key evil-normal-state-map (kbd "C-e C-e") 'eshell)
 
   ;; insert map
@@ -448,19 +462,16 @@
   (define-key evil-insert-state-map (kbd "C-a") 'beginning-of-line)
   (define-key evil-insert-state-map (kbd "C-x C-s") 'save-buffer)
 
+  (eval-after-load 'copilot-mode
+    (progn
+      (define-key evil-insert-state-map (kbd "C-TAB") 'copilot-accept-completion)
+      (define-key evil-insert-state-map (kbd "C-<tab>") 'copilot-accept-completion)))
+
   ;; visual-map
   (define-key evil-visual-state-map (kbd ";") 'evil-ex)
 
   (define-key minibuffer-local-isearch-map (kbd "C-w") 'backward-kill-word)
 
-  (add-hook 'evil-insert-state-entry-hook
-            (lambda ()
-              (interactive)
-              (if current-input-method
-                  (progn
-                    (deactivate-input-method)))))
-  (evil-set-initial-state 'org-mode 'emacs)
-  (evil-set-initial-state 'xref-mode 'emacs)
   ;; ex-command
   (evil-ex-define-cmd "q[uit]" 'tab-bar-close-tab)
   (evil-ex-define-cmd "tabe[dit]" 'tab-bar-new-tab))
@@ -503,6 +514,7 @@
   (setq helm-candidate-number-limit 100)
   (setq helm-split-window-default-side 'bottom-and-right)
   :bind (("M-x" . helm-M-x)
+         ("C-s" . helm-occur)
          :map helm-map
          ("C-h" . delete-backward-char)
          ("C-w" . backward-kill-word)
@@ -521,7 +533,9 @@
 (use-package helm-git-grep
   :bind (:map ctrl-q-map
          ("g g" . helm-git-grep-at-point)
-         ("g G" . helm-git-grep)))
+         ("g G" . helm-git-grep)
+         :map helm-git-grep-map
+         ("C-w" . backward-kill-word)))
 (use-package helm-ghq)
 (use-package projectile)
 (use-package helm-projectile
@@ -588,23 +602,41 @@
               ("<tab>" . company-complete-selection)
               ("C-h". nil)
               ("C-w". nil))
-  :custom-face
-   (company-preview
-     ((t (:foreground "darkgray" :underline t))))
-   (company-preview-common
-     ((t (:inherit company-preview))))
-   (company-tooltip
-     ((t (:background "lightgray" :foreground "black"))))
-   (company-tooltip-selection
-     ((t (:background "steelblue" :foreground "white"))))
-   (company-tooltip-common
-     ((((type x)) (:inherit company-tooltip :weight bold))
-      (t (:inherit company-tooltip))))
-   (company-tooltip-common-selection
-     ((((type x)) (:inherit company-tooltip-selection :weight bold))
-      (t (:inherit company-tooltip-selection)))))
+  ;; company-box と干渉する
+  ;; :custom-face
+  ;;  (company-preview
+  ;;    ((t (:foreground "darkgray" :underline t))))
+  ;;  (company-preview-common
+  ;;    ((t (:inherit company-preview))))
+  ;;  (company-tooltip
+  ;;    ((t (:background "lightgray" :foreground "black"))))
+  ;;  (company-tooltip-selection
+  ;;    ((t (:background "steelblue" :foreground "white"))))
+  ;;  (company-tooltip-common
+  ;;    ((((type x)) (:inherit company-tooltip :weight bold))
+  ;;     (t (:inherit company-tooltip))))
+  ;;  (company-tooltip-common-selection
+  ;;    ((((type x)) (:inherit company-tooltip-selection :weight bold))
+  ;;     (t (:inherit company-tooltip-selection))))
+  )
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 
 ;; LSP
+;; (use-package eglot
+;;   :config
+;;   (add-to-list 'eglot-server-programs '(web-mode . ("vue-language-server" "--stdio"
+;;                                                     :initializationOptions
+;;                                                     (:typescript (:tsdk "node_modules/typescript/lib")))))
+;;   :hook
+;;   (((rust-mode
+;;      scss-mode
+;;      c-mode
+;;      dart-mode
+;;      terraform-mode
+;;      ruby-mode
+;;      web-mode
+;;      typescript-mode) . eglot-ensure)))
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "M-l")
@@ -614,7 +646,8 @@
            dart-mode
            terraform-mode
            ruby-mode
-           web-mode) . lsp)
+           web-mode
+           typescript-mode) . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
   (lsp-rust-server 'rust-analyzer)
@@ -663,27 +696,29 @@
   (global-tree-sitter-mode))
 (use-package tree-sitter-langs)
 
+;;;; R
+(use-package ess)
+
 ;;;; JavaScript
 (use-package apheleia)
 (use-package js2-mode)
 (use-package typescript-mode
-  :hook (typescript-mode . prettier-mode)
+  :hook
+  (typescript-mode . apheleia-mode)
   :mode (("\\.ts$" . typescript-mode)))
 (use-package svelte-mode)
 (use-package tide
   :ensure t
   :after (typescript-mode company flycheck)
-  :config
   :hook
-  (before-save . tide-format-before-save)
   (typescript-mode . (lambda ()
                             (interactive)
                             (tide-setup)
                             (flycheck-mode +1)
+                            (setq flycheck-check-syntax-automatically '(save mode-enabled))
                             (eldoc-mode +1)
                             (tide-hl-identifier-mode +1)
                             (company-mode +1))))
-
 
 ;;;; GraphQL
 (use-package graphql-mode)
@@ -857,6 +892,9 @@
                       :underline t :foreground "green"
                       :weight 'bold))
 
+;;;; cue
+(use-package cue-mode)
+
 ;;;; C
 ;(use-package clang-format
 ;  :config
@@ -1014,28 +1052,3 @@
             (progn
               (define-key doc-view-mode-map "k" 'doc-view-previous-page)
               (define-key doc-view-mode-map "j" 'doc-view-next-page))))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-preview ((t (:foreground "darkgray" :underline t))))
- '(company-preview-common ((t (:inherit company-preview))))
- '(company-tooltip ((t (:background "lightgray" :foreground "black"))))
- '(company-tooltip-common ((((type x)) (:inherit company-tooltip :weight bold)) (t (:inherit company-tooltip))))
- '(company-tooltip-common-selection ((((type x)) (:inherit company-tooltip-selection :weight bold)) (t (:inherit company-tooltip-selection))))
- '(company-tooltip-selection ((t (:background "steelblue" :foreground "white")))))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(css-indent-offset 2 nil nil "Customized with use-package scss-mode")
- '(custom-safe-themes
-   '("b494aae329f000b68aa16737ca1de482e239d44da9486e8d45800fd6fd636780" default))
- '(flycheck-checker-error-threshold nil)
- '(package-selected-packages
-   '(apheleia add-node-modules-path prettier embark-consult tree-sitter-langs tree-sitter flycheck-kotlin consult-ghq graphql-mode magit treemacs-evil kotlin-mode terraform-mode go-eldoc go-mode yasnippet-snippets yasnippet indent-guide yaml-mode emmet-mode mmm-mode web-mode scss-mode rufo haml-mode slim-mode rspec-mode ruby-block flycheck-rust rust-mode lua-mode tide typescript-mode lsp-dart lsp-ui which-key company company-mode open-junk-file git-gutter consult-lsp embark orderless marginalia consult vertico vertica-snippets queue csv-mode))
- '(tab-bar-new-tab-choice "*scratch*")
- '(warning-suppress-types '((lsp-mode) (lsp-mode) (lsp-mode))))
