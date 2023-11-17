@@ -505,56 +505,44 @@
   :after (treemacs projectile))
 
 ;;========================================
-;; Helm
+;; vertico
 ;;========================================
-(use-package helm
+(use-package vertico
   :init
-  ;; 候補の最大表示数
-  ;; default 50
-  (setq helm-candidate-number-limit 100)
-  (setq helm-split-window-default-side 'bottom-and-right)
-  :bind (("M-x" . helm-M-x)
-         ("C-s" . helm-occur)
-         :map helm-map
-         ("C-h" . delete-backward-char)
-         ("C-w" . backward-kill-word)
-         ("C-v" . helm-next-source)
-         ("M-v" . helm-previous-source)
-         :map ctrl-q-map
-         ("C-x" . helm-M-x)
-         ("h x" . helm-M-x)
-         ("C-a" . helm-mini)
-         ("h a" . helm-mini)
-         ("C-o" . helm-semantic-or-imenu)
-         ("h o" . helm-semantic-or-imenu)
-         ("C-f" . helm-find-files)
-         ("h f" . helm-find-files)
-         ("G" . helm-google-suggest)))
-(use-package helm-git-grep
-  :bind (:map ctrl-q-map
-         ("g g" . helm-git-grep-at-point)
-         ("g G" . helm-git-grep)
-         :map helm-git-grep-map
-         ("C-w" . backward-kill-word)))
-(use-package helm-ghq)
-(use-package projectile)
-(use-package helm-projectile
-  :after
-  (helm projectile)
-  :init
-  (require 'helm-locate)
-  :bind (:map ctrl-q-map
-         ("C-g" . helm-projectile)
-         ("h g" . helm-projectile-switch-project)
-         ("g r" . helm-projectile)
-         :map helm-generic-files-map
-         ("C-w" . backward-kill-word))
-  :config
-  (projectile-mode)
+  (vertico-mode)
+  (savehist-mode)
   :custom
-  (helm-projectile-sources-list '(helm-source-projectile-buffers-list
-                                  helm-source-projectile-recentf-list
-                                  helm-source-projectile-files-list)))
+  (vertico-count 20)
+  :bind (:map vertico-map ("C-w" . vertico-directory-delete-word)))
+(use-package consult
+  :config
+  (recentf-mode)
+  :bind (("C-s" . consult-line)
+         :map ctrl-q-map
+         ("h a" . consult-buffer)))
+(use-package projectile
+  :config
+  (when (executable-find "ghq")
+    (setq projectile-known-projects
+          (mapcar
+           (lambda (x) (abbreviate-file-name x))
+           (split-string (shell-command-to-string "ghq list --full-path"))))))
+(use-package consult-projectile)
+(use-package consult-ghq
+  :bind (:map ctrl-q-map
+              ("g r" . consult-projectile)
+              ("h g" . consult-projectile-switch-project)
+              ("g g" . consult-git-grep)))
+(use-package consult-lsp)
+(use-package marginalia
+  :init
+  (marginalia-mode))
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+(use-package embark)
+(use-package embark-consult)
 
 ;;;; git
 (use-package git-gutter
