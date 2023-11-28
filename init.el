@@ -274,6 +274,38 @@
     (eval-print-last-sexp)))
 (remove-hook 'el-get-post-install-hooks 'el-get-post-install-notification)
 
+;; https://github.com/dimitri/el-get/pull/2895
+(when (version<= "29" emacs-version)
+  (defun el-get-read-status-file-force ()
+    "Forcefully load status file."
+    (let* ((ps
+            (if (file-exists-p el-get-status-file)
+                (car (with-temp-buffer
+                       (insert-file-contents-literally el-get-status-file)
+                       (read-from-string (buffer-string))))
+              ;; If it doesn't exist, make sure the directory is there
+              ;; so we can create it.
+              (make-directory el-get-dir t)))
+           (p-s
+            (cond
+             ((not (consp ps)) ;; nothing installed, we should install el-get
+              (list (list 'el-get 'status "required")))
+             ;; ps is an alist, no conversion needed
+             ((consp (car ps)) ps)
+             ;; looks like we might have an old format status list
+             (t (el-get-convert-from-old-status-format ps)))))
+      ;; double check some status "conditions"
+      ;;
+      ;; a package with status "installed" and a missing directory is
+      ;; automatically reset to "required" so that a proper install happens.
+      (cl-loop for (p . prop) in p-s
+               if (and (string= (plist-get prop 'status) "installed")
+                       (not (file-directory-p (el-get-package-directory p))))
+               collect (cons p (plist-put prop 'status "required"))
+               else
+               collect (cons p prop))))
+  )
+
 ;;;; exec-path-from-shell
 (use-package exec-path-from-shell
   :init
