@@ -559,7 +559,15 @@
           (mapcar
            (lambda (x) (abbreviate-file-name x))
            (split-string (shell-command-to-string "ghq list --full-path"))))))
-(use-package consult-projectile)
+(use-package consult-projectile
+  :config
+  ; rootの末尾にスラッシュが無く、ファイルにジャンプ出来ないので追加されるように file-name-as-directory を追加している
+  ; root-directoryGemfile -> root-directory/Gemfile
+  (defun consult-projectile--choose-file (root)
+    "Create the list of files for the consult chooser based on projectile's notion of files for the project at ROOT."
+    (let* ((inv-root (propertize (file-name-as-directory root) 'invisible t))
+           (files (projectile-project-files (expand-file-name root))))
+      (mapcar (lambda (f) (concat inv-root f)) files))))
 (use-package consult-ghq
   :bind (:map ctrl-q-map
               ("g r" . consult-projectile)
@@ -673,6 +681,7 @@
   (lsp-rust-server 'rust-analyzer)
   (lsp-rust-clippy-preference "on")
   (lsp-modeline-code-actions-segments '(count icon name))
+  (lsp-rubocop-use-bundler t)
   :commands lsp
   :config
   (define-key lsp-mode-map (kbd "M-l") lsp-command-map))
