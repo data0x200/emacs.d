@@ -651,20 +651,6 @@
   :hook (company-mode . company-box-mode))
 
 ;; LSP
-;; (use-package eglot
-;;   :config
-;;   (add-to-list 'eglot-server-programs '(web-mode . ("vue-language-server" "--stdio"
-;;                                                     :initializationOptions
-;;                                                     (:typescript (:tsdk "node_modules/typescript/lib")))))
-;;   :hook
-;;   (((rust-mode
-;;      scss-mode
-;;      c-mode
-;;      dart-mode
-;;      terraform-mode
-;;      ruby-mode
-;;      web-mode
-;;      typescript-mode) . eglot-ensure)))
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "M-l")
@@ -675,16 +661,20 @@
            terraform-mode
            ruby-mode
            web-mode
-           typescript-mode) . lsp)
+           typescript-mode
+           svelte-mode
+           ) . lsp-mode)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
   (lsp-rust-server 'rust-analyzer)
   (lsp-rust-clippy-preference "on")
   (lsp-modeline-code-actions-segments '(count icon name))
+  (lsp-ruby-lsp-use-bundler t)
   (lsp-rubocop-use-bundler t)
   :commands lsp
   :config
   (define-key lsp-mode-map (kbd "M-l") lsp-command-map))
+
 (use-package lsp-ui
   :after (lsp)
   :custom
@@ -799,21 +789,25 @@
   :interpreter (("ruby" . ruby-mode))
   :custom
   (ruby-insert-encoding-magic-comment nil)
+  (ruby-deep-indent-paren nil)
+  (ruby-deep-indent-paren-style t)
   :hook
   (ruby-mode . (lambda ()
                  (progn
+                   (lsp-mode)
                    (flycheck-mode 1)
                    (flymake-mode nil)
-                   (evil-matchit-mode)
-                   (setq ruby-deep-indent-paren nil)
-                   (setq ruby-deep-indent-paren-style t)
-                   (setq ruby-insert-encoding-magic-comment nil)))))
+                   (rubocop-mode t)
+                   (evil-matchit-mode)))))
 
 (use-package rubocop
   :after (ruby-mode)
+  :custom
+  (rubocop-autocorrect-command "rubocop -A --format emacs")
+  (rubocop-autocorrect-on-save t)
   :config
-  (setq rubocop-autocorrect-command "rubocop -A --format emacs")
-  (define-key ruby-mode-map (kbd "C-c C-e") 'rubocop-autocorrect-current-file))
+  :bind (:map rubocop-mode-map
+              ("C-c C-e" . rubocop-autocorrect-current-file)))
 ;;;; flycheck ruby
 ;; https://github.com/flycheck/flycheck/issues/1223#issuecomment-283021487
 ;; .dir-locals.el
