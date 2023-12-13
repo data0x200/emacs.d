@@ -663,7 +663,7 @@
            web-mode
            typescript-mode
            svelte-mode
-           ) . lsp-mode)
+           ) . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
   (lsp-rust-server 'rust-analyzer)
@@ -805,7 +805,6 @@
   :custom
   (rubocop-autocorrect-command "rubocop -A --format emacs")
   (rubocop-autocorrect-on-save t)
-  :config
   :bind (:map rubocop-mode-map
               ("C-c C-e" . rubocop-autocorrect-current-file)))
 ;;;; flycheck ruby
