@@ -663,7 +663,7 @@
            web-mode
            typescript-mode
            svelte-mode
-           ) . lsp)
+           ) . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
   (lsp-rust-server 'rust-analyzer)
@@ -671,7 +671,7 @@
   (lsp-modeline-code-actions-segments '(count icon name))
   (lsp-ruby-lsp-use-bundler t)
   (lsp-rubocop-use-bundler t)
-  :commands lsp
+  :commands (lsp lsp-deferred)
   :config
   (define-key lsp-mode-map (kbd "M-l") lsp-command-map))
 
