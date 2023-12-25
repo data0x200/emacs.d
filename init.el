@@ -707,23 +707,6 @@
 
 ;; Programming Language
 
-;;;; tree-sitter
-(if (version<= "29" emacs-version)
-    (progn
-      (use-package treesit-auto
-        :ensure t
-        :custom
-        (treesit-auto-install t)
-        :config
-        (global-treesit-auto-mode)))
-  (progn
-    (use-package tree-sitter
-      :ensure t
-      :after (tree-sitter-langs)
-      :config
-      (global-tree-sitter-mode))
-    (use-package tree-sitter-langs)))
-
 ;;;; R
 (use-package ess)
 
