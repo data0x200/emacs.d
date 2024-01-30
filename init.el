@@ -552,6 +552,8 @@
   :custom
   (xref-show-xrefs-function 'consult-xref)
   (xref-show-definitions-function 'consult-xref)
+  (consult-preview-key '("M-p"
+                         :debounce 1 any))
   :bind (("C-s" . consult-line)
          :map ctrl-q-map
          ("h a" . consult-buffer)))
