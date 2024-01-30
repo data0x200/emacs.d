@@ -549,6 +549,9 @@
 (use-package consult
   :config
   (recentf-mode)
+  :custom
+  (xref-show-xrefs-function 'consult-xref)
+  (xref-show-definitions-function 'consult-xref)
   :bind (("C-s" . consult-line)
          :map ctrl-q-map
          ("h a" . consult-buffer)))
@@ -663,6 +666,7 @@
            web-mode
            typescript-mode
            svelte-mode
+           go-mode
            ) . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
@@ -898,13 +902,6 @@
     (when (file-exists-p golint-emacs)
       (add-to-list 'load-path golint-emacs)
       (require 'golint))))
-(use-package go-eldoc
-  :hook
-  (go-mode . go-eldoc-setup)
-  :config
-  (set-face-attribute 'eldoc-highlight-function-argument nil
-                      :underline t :foreground "green"
-                      :weight 'bold))
 
 ;;;; cue
 (use-package cue-mode)
