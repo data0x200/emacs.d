@@ -537,7 +537,7 @@
   :after (treemacs projectile))
 
 ;;========================================
-;; vertico
+;; vertico/consult/embark
 ;;========================================
 (use-package vertico
   :init
@@ -588,6 +588,32 @@
   (completion-category-overrides '((file (styles basic partial-completion)))))
 (use-package embark)
 (use-package embark-consult)
+
+;; ========================================
+;; org-mode
+;; ========================================
+(use-package org-roam
+  :init
+  :custom
+  (org-roam-directory (file-truename "~/.memo/org/org-roam"))
+  (find-file-visit-truname t)
+  (org-roam-dailies-capture-templates
+   '(("d" "default" entry "* %<%H:%M>\n\n %?"
+      :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+  :bind
+  (("C-c r f" . 'org-roam-node-find)
+   ("C-c r g" . 'org-roam-graph)
+   ("C-c r l" . 'org-roam-buffer-toggle)
+   ("C-c r i" . 'org-roam-node-insert)
+   ("C-c r c" . 'org-roam-capture)
+   ("C-c r j" . 'org-roam-dailies-capture-today))
+  :bind-keymap
+  ("C-c r d" . org-roam-dailies-map)
+  :config
+  (org-roam-db-autosync-enable))
+(use-package org-web-tools
+  :bind
+  ("C-c i l" . org-web-tools-insert-link-for-url))
 
 ;;;; git
 (use-package git-gutter
