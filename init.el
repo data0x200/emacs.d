@@ -595,7 +595,7 @@
 (use-package org-roam
   :init
   :custom
-  (org-roam-directory (file-truename "~/.memo/org/org-roam"))
+  (org-roam-directory (file-truename "~/org/org-roam"))
   (find-file-visit-truname t)
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %<%H:%M> %?"
