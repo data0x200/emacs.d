@@ -598,7 +598,7 @@
   (org-roam-directory (file-truename "~/.memo/org/org-roam"))
   (find-file-visit-truname t)
   (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %<%H:%M>\n\n %?"
+   '(("d" "default" entry "* %<%H:%M> %?"
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
   :bind
   (("C-c r f" . 'org-roam-node-find)
