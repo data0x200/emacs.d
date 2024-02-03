@@ -556,7 +556,8 @@
                          :debounce 1 any))
   :bind (("C-s" . consult-line)
          :map ctrl-q-map
-         ("h a" . consult-buffer)))
+         ("h a" . consult-buffer)
+         ("r g" . consult-ripgrep)))
 (use-package projectile
   :config
   (when (executable-find "ghq")
