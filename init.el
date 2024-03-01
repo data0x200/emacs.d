@@ -926,11 +926,7 @@
   :config
   (font-lock-add-keywords
    'go-mode
-   '(("\\b\\(err\\)\\b" 1 '((:foreground "yellow") (:weight bold)) t)))
-  (let ((golint-emacs (concat (getenv "GOPATH") "src/github.com/golang/lint/misc/emacs")))
-    (when (file-exists-p golint-emacs)
-      (add-to-list 'load-path golint-emacs)
-      (require 'golint))))
+   '(("\\b\\(err\\)\\b" 1 '((:foreground "yellow") (:weight bold)) t))))
 
 ;;;; cue
 (use-package cue-mode)
