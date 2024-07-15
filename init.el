@@ -22,10 +22,11 @@
 ;;========================================
 ;; FUNCTIONS
 ;;========================================
+(window-system)
 (defun mac-os-p ()
   (member window-system '(mac ns)))
 (defun linux-p ()
-  (eq window-system 'x))
+  (member window-system '(x pgtk)))
 (defun windows-p ()
   (eq window-system 'w32))
 
@@ -345,7 +346,7 @@
   (popwin-mode t)
   (global-set-key (kbd "C-c") popwin:keymap)
 
-  (push '("*quickrun*" :position :right) popwin:special-display-config)
+  (push '("*quickrun*") popwin:special-display-config)
   (push '("*compilation*" :position :right) popwin:special-display-config)
   (push '(" *auto-async-byte-compile*") popwin:special-display-config)
   (push '("*git now*") popwin:special-display-config)
@@ -1033,10 +1034,10 @@
              (t
               (set-face-attribute 'default nil
                                   :family "HackGen"
-                                  :height 130)
+                                  :height 150)
               (set-fontset-font t
                                 'japanese-jisx0208
-                                (font-spec :family "HackGen" :size 17))))))
+                                (font-spec :family "HackGen" :size 21))))))
 
 ;;========================================
 ;; Key Config
