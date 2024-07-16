@@ -155,6 +155,9 @@
 ;; Don't auto save
 (setq auto-save-default nil)
 
+;; Don't create lock files
+(setq create-lockfiles nil)
+
 ;; use auto-revert-mode
 (global-auto-revert-mode t)
 
@@ -347,7 +350,7 @@
   (global-set-key (kbd "C-c") popwin:keymap)
 
   (push '("*quickrun*") popwin:special-display-config)
-  (push '("*compilation*" :position :right) popwin:special-display-config)
+  (push '("*compilation*") popwin:special-display-config)
   (push '(" *auto-async-byte-compile*") popwin:special-display-config)
   (push '("*git now*") popwin:special-display-config)
   (push '("*git-gutter+-diff*") popwin:special-display-config)
@@ -616,6 +619,7 @@
 (use-package org-web-tools
   :bind
   ("C-c i l" . org-web-tools-insert-link-for-url))
+(use-package ox-gfm)
 
 ;;;; git
 (use-package git-gutter
@@ -707,7 +711,8 @@
   (lsp-rubocop-use-bundler t)
   :commands (lsp lsp-deferred)
   :config
-  (define-key lsp-mode-map (kbd "M-l") lsp-command-map))
+  (define-key lsp-mode-map (kbd "M-l") lsp-command-map)
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.minio.sys\\'"))
 
 (use-package lsp-ui
   :after (lsp)
@@ -746,10 +751,16 @@
 
 ;;;; JavaScript
 (use-package apheleia)
-(use-package js2-mode)
+(use-package js
+  :hook
+  (js-mode . apheleia-mode)
+  :mode (("\\.mjs$" . js-mode)))
 (use-package typescript-mode
+  :custom
+  (typescript-indent-level 2)
   :hook
   (typescript-mode . apheleia-mode)
+  (web-mode . apheleia-mode)
   :mode (("\\.ts$" . typescript-mode)))
 (use-package svelte-mode)
 (use-package tide
@@ -777,6 +788,8 @@
   (("\\.markdown$" . gfm-mode)
    ("\\.mkd$" . gfm-mode)
    ("\\.md$" . gfm-mode))
+  :hook
+  (markdown-mode . apheleia-mode)
   :config
   (set-face-attribute 'markdown-code-face nil :inherit 'default :weight 'bold)
   (set-face-foreground 'markdown-code-face "lightsteelblue3"))
@@ -902,7 +915,8 @@
 ;;;; YAML
 (use-package yaml-mode
   :mode
-  (("\\.yml$" . yaml-mode)))
+  (("\\.yml$" . yaml-mode))
+  (("\\.yml.sample$" . yaml-mode)))
 (use-package indent-guide
   :config
   (indent-guide-global-mode))
@@ -914,7 +928,7 @@
 (use-package yasnippet-snippets
   :after (yasnippet))
 
-;;;; Go
+;;;; golang
 (use-package go-mode
   :init
   (setenv "GOPATH" (expand-file-name "~/"))
@@ -928,6 +942,16 @@
   (font-lock-add-keywords
    'go-mode
    '(("\\b\\(err\\)\\b" 1 '((:foreground "yellow") (:weight bold)) t))))
+(use-package dap-mode
+  :after (lsp-mode)
+  :config
+  (dap-mode 1)
+  (dap-auto-configure-mode 1)
+  (require 'dap-hydra)
+  (require 'dap-dlv-go))
+
+;;;; protocol buffers
+(use-package protobuf-mode)
 
 ;;;; cue
 (use-package cue-mode)
