@@ -744,6 +744,11 @@
 ;; magit
 (use-package magit)
 
+;; direnv
+(use-package direnv
+  :config
+  (direnv-mode))
+
 ;; Programming Language
 
 ;;;; R
