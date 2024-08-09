@@ -326,9 +326,8 @@
     (set-face-foreground 'font-lock-doc-face "darkgray")))
 
 (use-package highlight-parentheses
-  :ensure t
   :custom (highlight-parentheses-colors '("red" "blue" "yellow" "green" "magenta" "peru" "cyan"))
-  :hook ((common-lisp-mode lisp-mode-hook emacs-lisp-mode-hook) . highlight-parentheses-mode))
+  :hook ((common-lisp-mode lisp-mode emacs-lisp) . highlight-parentheses-mode))
 
 ;;;; beacon
 (use-package beacon
@@ -349,7 +348,7 @@
   (popwin-mode t)
   (global-set-key (kbd "C-c") popwin:keymap)
 
-  (push '("*quickrun*") popwin:special-display-config)
+  (push '("*quickrun*" :dedicated t) popwin:special-display-config)
   (push '("*compilation*") popwin:special-display-config)
   (push '(" *auto-async-byte-compile*") popwin:special-display-config)
   (push '("*git now*") popwin:special-display-config)
@@ -365,7 +364,9 @@
   ;; Google Translate
   (push '("*Google Translate" :position :right) popwin:special-display-config)
   ;; xref
-  (push '("*xref*" :dedicated t :position :bottom) popwin:special-display-config))
+  (push '("*xref*" :dedicated t :position :bottom) popwin:special-display-config)
+  ;; ellama
+  (push '("ellama.*$" :regexp t) popwin:special-display-config))
 
 ;;;; quickrun
 (use-package quickrun
@@ -390,10 +391,9 @@
    :after flymake
    :hook (flymake-mode . flymake-diagnostic-at-point-mode))
 
-;;;; powerline
-(use-package powerline
-  :config
-  (powerline-center-evil-theme))
+;;;; doom-modeline(powerline)
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode))
 
 ;;;; RFC
 (use-package rfc-mode
@@ -402,7 +402,6 @@
 
 ;;;; editor-config
 (use-package editorconfig
-  :ensure t
   :config
   (editorconfig-mode t))
 
@@ -418,6 +417,10 @@
 ;; depends (dash editorconfig s)
 (el-get-bundle zerolfx/copilot.el)
   ;; (add-hook 'prog-mode-hook 'copilot-mode))
+
+(use-package ellama
+  :init
+  (setopt ellama-language "Japanese"))
 
 ;;========================================
 ;; evil
@@ -503,6 +506,10 @@
       (define-key evil-insert-state-map (kbd "C-TAB") 'copilot-accept-completion)
       (define-key evil-insert-state-map (kbd "C-<tab>") 'copilot-accept-completion)))
 
+  (with-eval-after-load 'lsp-mode
+    (progn
+      (define-key evil-normal-state-map (kbd "C-.") 'lsp-execute-code-action)))
+
   ;; visual-map
   (define-key evil-visual-state-map (kbd ";") 'evil-ex)
 
@@ -520,7 +527,6 @@
     "o" 'find-file-at-point))
 (use-package evil-numbers)
 (use-package evil-surround
-  :ensure t
   :config
   (global-evil-surround-mode 1))
 (use-package evil-matchit
@@ -585,7 +591,7 @@
               ("g g" . consult-git-grep)))
 (use-package consult-lsp)
 (use-package marginalia
-  :init
+  :config
   (marginalia-mode))
 (use-package orderless
   :custom
@@ -623,8 +629,8 @@
 
 ;;;; git
 (use-package git-gutter
+  :ensure t
   :init
-  (global-git-gutter-mode t)
   (defvar git-gutter-map (make-keymap))
   (define-key global-map (kbd "C-c C-g") git-gutter-map)
   :bind (:map git-gutter-map
@@ -639,53 +645,46 @@
   :custom
   (open-junk-file-format "~/.memo/junk/%Y-%m-%d-%H%M%S."))
 
-;;;; Company mode
-(use-package company
-  :init
-  (global-company-mode t)
+(use-package corfu
+  :config
+  (global-corfu-mode)
   :custom
-  (company-tooltip-limit 10)
-  (company-idle-delay .1)
-  (company-echo-delay 0)
-  (company-begin-commands '(self-insert-command))
-  (company-selection-wrap-around t)
-  (company-minimum-prefix-length 2)
-  :bind
-  (:map evil-insert-state-map
-              ("C-c C-e" . company-complete)
-              ([(control return)] . company-complete))
-  (:map company-active-map
-              ;; C-n, C-pで補完候補を次/前の候補を選択
-              ("C-n" . company-select-next)
-              ("C-p" . company-select-previous)
-              ("C-n" . company-select-next)
-              ("C-p" . company-select-previous)
-              ;; C-sで絞り込む
-              ("C-s" . company-filter-candidates)
-              ;; TABで候補を設定
-              ("C-i" . company-complete-selection)
-              ("<tab>" . company-complete-selection)
-              ("C-h". nil)
-              ("C-w". nil))
-  ;; company-box と干渉する
-  ;; :custom-face
-  ;;  (company-preview
-  ;;    ((t (:foreground "darkgray" :underline t))))
-  ;;  (company-preview-common
-  ;;    ((t (:inherit company-preview))))
-  ;;  (company-tooltip
-  ;;    ((t (:background "lightgray" :foreground "black"))))
-  ;;  (company-tooltip-selection
-  ;;    ((t (:background "steelblue" :foreground "white"))))
-  ;;  (company-tooltip-common
-  ;;    ((((type x)) (:inherit company-tooltip :weight bold))
-  ;;     (t (:inherit company-tooltip))))
-  ;;  (company-tooltip-common-selection
-  ;;    ((((type x)) (:inherit company-tooltip-selection :weight bold))
-  ;;     (t (:inherit company-tooltip-selection))))
-  )
-(use-package company-box
-  :hook (company-mode . company-box-mode))
+  (corfu-auto t)
+  (corfu-cycle t)           ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect 'prompt) ;; Always preselect the prompt
+  (corfu-preview-current t))
+
+;;;; Company mode
+;; (use-package company
+;;   :init
+;;   (global-company-mode t)
+;;   :custom
+;;   (company-tooltip-limit 10)
+;;   (company-idle-delay .1)
+;;   (company-echo-delay 0)
+;;   (company-begin-commands '(self-insert-command))
+;;   (company-selection-wrap-around t)
+;;   (company-minimum-prefix-length 2)
+;;   :bind
+;;   (:map evil-insert-state-map
+;;               ("C-c C-e" . company-complete)
+;;               ([(control return)] . company-complete))
+;;   (:map company-active-map
+;;               ;; C-n, C-pで補完候補を次/前の候補を選択
+;;               ("C-n" . company-select-next)
+;;               ("C-p" . company-select-previous)
+;;               ("C-n" . company-select-next)
+;;               ("C-p" . company-select-previous)
+;;               ;; C-sで絞り込む
+;;               ("C-s" . company-filter-candidates)
+;;               ;; TABで候補を設定
+;;               ("C-i" . company-complete-selection)
+;;               ("<tab>" . company-complete-selection)
+;;               ("C-h". nil)
+;;               ("C-w". nil))
+;;   )
+;; (use-package company-box
+;;   :hook (company-mode . company-box-mode))
 
 ;; LSP
 (use-package lsp-mode
@@ -698,12 +697,13 @@
            terraform-mode
            ruby-mode
            web-mode
-           typescript-mode
+           tsx-ts-mode
            svelte-mode
            go-mode
            ) . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
+  (lsp-completion-provider :none) ;; corfu
   (lsp-rust-server 'rust-analyzer)
   (lsp-rust-clippy-preference "on")
   (lsp-modeline-code-actions-segments '(count icon name))
@@ -738,7 +738,7 @@
 
 ;; which-keyboard
 (use-package which-key
-  :init
+  :config
   (which-key-mode))
 
 ;; magit
@@ -748,6 +748,10 @@
 (use-package direnv
   :config
   (direnv-mode))
+
+(use-package mise
+  :init
+  (add-hook 'after-init-hook #'global-mise-mode))
 
 ;; Programming Language
 
@@ -760,26 +764,41 @@
   :hook
   (js-mode . apheleia-mode)
   :mode (("\\.mjs$" . js-mode)))
-(use-package typescript-mode
-  :custom
-  (typescript-indent-level 2)
-  :hook
-  (typescript-mode . apheleia-mode)
-  (web-mode . apheleia-mode)
-  :mode (("\\.ts$" . typescript-mode)))
+(use-package typescript-ts-mode
+  :mode (("\\.tsx$" . tsx-ts-mode)
+         ("\\.ts$" . tsx-ts-mode))
+  :config
+  (setq typescript-ts-indent-level 2))
+(use-package treesit
+  :ensure nil
+  :config
+  (setq treesit-lock-level 4))
+(use-package treesit-auto
+  :init
+  (require 'treesit-auto)
+  (global-treesit-auto-mode)
+  :config
+  (setq treesit-auto-install t))
+(use-package tree-sitter
+  :hook ((typescript-ts-mode . tree-sitter-hl-mode)
+         (tsx-ts-mode . tree-sitter-hl-mode))
+  :config
+  (global-tree-sitter-mode))
+(use-package tree-sitter-langs
+  :after tree-sitter
+  :config
+  (tree-sitter-require 'tsx)
+  (add-to-list 'tree-sitter-major-mode-language-alist '(tsx-ts-mode . tsx)))
 (use-package svelte-mode)
 (use-package tide
-  :ensure t
-  :after (typescript-mode company flycheck)
   :hook
-  (typescript-mode . (lambda ()
+  (tsx-ts-mode . (lambda ()
                             (interactive)
                             (tide-setup)
                             (flycheck-mode +1)
                             (setq flycheck-check-syntax-automatically '(save mode-enabled))
                             (eldoc-mode +1)
-                            (tide-hl-identifier-mode +1)
-                            (company-mode +1))))
+                            (tide-hl-identifier-mode +1))))
 
 ;;;; GraphQL
 (use-package graphql-mode)
@@ -795,6 +814,9 @@
    ("\\.md$" . gfm-mode))
   :hook
   (markdown-mode . apheleia-mode)
+  ;; (markdown-mode . (lambda () (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))
+  ;; :custom
+  ;; (markdown-command "cmark-gfm -e table --github-pre-lang")
   :config
   (set-face-attribute 'markdown-code-face nil :inherit 'default :weight 'bold)
   (set-face-foreground 'markdown-code-face "lightsteelblue3"))
@@ -898,7 +920,6 @@
    ("\\.js[x]?$" . web-mode)
    ("\\.tag$" . web-mode)
    ("\\.json$" . web-mode)
-   ("\\.tsx$" . web-mode)
    ("\\.vue$" . web-mode)
    ("\\.ctp$" . web-mode))
   :custom
@@ -928,15 +949,13 @@
 
 ;;;; Yasnippet
 (use-package yasnippet
-  :init
+  :config
   (yas-global-mode t))
 (use-package yasnippet-snippets
   :after (yasnippet))
 
 ;;;; golang
 (use-package go-mode
-  :init
-  (setenv "GOPATH" (expand-file-name "~/"))
   :mode
   (("\\.go" . go-mode))
   :hook
@@ -949,11 +968,8 @@
    '(("\\b\\(err\\)\\b" 1 '((:foreground "yellow") (:weight bold)) t))))
 (use-package dap-mode
   :after (lsp-mode)
-  :config
-  (dap-mode 1)
-  (dap-auto-configure-mode 1)
-  (require 'dap-hydra)
-  (require 'dap-dlv-go))
+  :init
+  (setq dap-auto-configure-features '(session locals control tooltip)))
 
 ;;;; protocol buffers
 (use-package protobuf-mode)
