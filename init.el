@@ -742,7 +742,13 @@
   (which-key-mode))
 
 ;; magit
-(use-package magit)
+(use-package magit
+  :hook
+  (git-commit-mode . (setq auto-fill-mode nil)))
+
+(use-package blamer
+  :custom
+  (blamer-idle-time 0.1))
 
 ;; direnv
 (use-package direnv
