@@ -690,16 +690,16 @@
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "M-l")
-  :hook (((rust-mode
+  :hook (((rust-ts-mode
            scss-mode
-           c-mode
+           c-ts-mode
            dart-mode
            terraform-mode
-           ruby-mode
+           ruby-ts-mode
            web-mode
            typescript-ts-mode
            svelte-mode
-           go-mode
+           go-ts-mode
            ) . lsp-deferred)
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
@@ -765,16 +765,16 @@
 (use-package ess)
 
 ;;;; JavaScript
-(use-package apheleia)
+(use-package apheleia
+  :custom
+  (apheleia-formatters-respect-indent-level nil))
 (use-package js
   :hook
   (js-mode . apheleia-mode)
   :mode (("\\.mjs$" . js-mode)))
 (use-package typescript-ts-mode
   :mode (("\\.tsx$" . tsx-ts-mode)
-         ("\\.ts$" . tsx-ts-mode))
-  :config
-  (setq typescript-ts-indent-level 2))
+         ("\\.ts$" . tsx-ts-mode)))
 (use-package treesit
   :ensure nil
   :config
@@ -786,20 +786,17 @@
   :config
   (setq treesit-auto-install t))
 (use-package tree-sitter
-  :hook ((typescript-ts-mode . tree-sitter-hl-mode)
-         (tsx-ts-mode . tree-sitter-hl-mode))
   :config
-  (global-tree-sitter-mode t))
-(use-package tree-sitter-langs
-  :after tree-sitter
-  :config
-  (tree-sitter-require 'tsx)
-  (add-to-list 'tree-sitter-major-mode-language-alist '(tsx-ts-mode . tsx)))
+  (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-to-list 'tree-sitter-major-mode-language-alist '(bash-ts-mode . bash))
+  (add-hook 'tre-sitter-after-on-hook #'tree-sitter-hl-mode))
 (use-package svelte-mode)
 (use-package tide
   :hook
   (tsx-ts-mode . (lambda ()
                             (interactive)
+                            (apheleia-mode)
                             (tide-setup)
                             (flycheck-mode +1)
                             (setq flycheck-check-syntax-automatically '(save mode-enabled))
@@ -829,7 +826,10 @@
 
 ;;;; Rust
 (use-package rust-mode
-  :custom (rust-format-on-save t))
+  :init
+  (setq rust-mode-treesitter-derive t)
+  :custom
+  (rust-format-on-save t))
 (use-package cargo)
 (use-package toml-mode)
 (use-package flycheck-rust
