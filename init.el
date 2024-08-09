@@ -697,7 +697,7 @@
            terraform-mode
            ruby-mode
            web-mode
-           tsx-ts-mode
+           typescript-ts-mode
            svelte-mode
            go-mode
            ) . lsp-deferred)
