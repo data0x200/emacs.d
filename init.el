@@ -352,7 +352,6 @@
   (push '("*compilation*") popwin:special-display-config)
   (push '(" *auto-async-byte-compile*") popwin:special-display-config)
   (push '("*git now*") popwin:special-display-config)
-  (push '("*git-gutter+-diff*") popwin:special-display-config)
   (push '("\\`\\*eshell" :regexp t :dedicated t :position :bottom :height 0.3) popwin:special-display-config)
   ;; (push '("^\*helm .+\*$" :regexp t :position :right) popwin:special-display-config)
   ;; Sly
@@ -629,8 +628,9 @@
 
 ;;;; git
 (use-package git-gutter
-  :ensure t
   :init
+  (require 'git-gutter)
+  (global-git-gutter-mode)
   (defvar git-gutter-map (make-keymap))
   (define-key global-map (kbd "C-c C-g") git-gutter-map)
   :bind (:map git-gutter-map
@@ -789,7 +789,7 @@
   :hook ((typescript-ts-mode . tree-sitter-hl-mode)
          (tsx-ts-mode . tree-sitter-hl-mode))
   :config
-  (global-tree-sitter-mode))
+  (global-tree-sitter-mode t))
 (use-package tree-sitter-langs
   :after tree-sitter
   :config
